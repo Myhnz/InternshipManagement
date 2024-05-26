@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 0 10px;
+}
+
+    body::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #F0F4F9;
+    }
+
+
+.wrapper {
+    width: 400px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(10px);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333333;
+}
+
+.input-field {
+    position: relative;
+    margin: 15px 0;
+}
+
+    .input-field label {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        color: #454444;
+        font-size: 18px;
+        pointer-events: none;
+        transition: 0.15s ease;
+    }
+
+    .input-field input,
+    .input-field select {
+        width: 100%;
+        height: 40px;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 18px;
+        color: #333333;
+        border-bottom: 2px solid #ccc; /* Default border color */
+        transition: border-color 0.15s ease;
+    }
+
+        .input-field input:focus,
+        .input-field select:focus {
+            border-bottom-color: #007bff; /* Change border color when focused */
+        }
+
+            .input-field input:focus ~ label,
+            .input-field select:focus ~ label,
+            .input-field input:valid ~ label,
+            .input-field select:valid ~ label {
+                font-size: 0.8rem;
+                top: 10px;
+                transform: translateY(-120%);
+                color: #007bff; /* Change label color when focused or has value */
+            }
+        .input-field input:not(:focus) ~ label,
+        .input-field select:not(:focus) ~ label {
+            color: #454444; /* Default label color */
+        }
+
+
+.forget {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0 30px 0;
+    color: #333333;
+}
+
+#remember {
+    accent-color: #333333;
+}
+
+.forget label {
+    display: flex;
+    align-items: center;
+}
+
+    .forget label p {
+        margin-left: 8px;
+    }
+
+.wrapper a {
+    color: #0866ff;
+    text-decoration: none;
+}
+
+    .wrapper a:hover {
+        text-decoration: underline;
+    }
+
+.btn1 {
+    background-color: #007FFF;
+    color: white;
+    padding: 12px 20px; 
+    border: none; 
+    border-radius: 5px;
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block;
+    font-size: 18px; 
+    cursor: pointer;
+}
+
+    .btn1:hover {
+        background-color: #0053A0;
+    }
+.register {
+    text-align: center;
+    margin-top: 30px;
+    color: #333333;
+}
+.option {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+    .option:hover {
+        background-color: #f0f0f0; 
+    }
+    .option i {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+
+
+.otp-input {
+    margin: 15px 0;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+    .otp-input input[type="text"] {
+        flex: 1;
+        max-width: 40px; 
+        height: 40px; 
+        margin: 0 5px; 
+        padding: 10px; 
+        font-size: 18px; 
+        border: 2px solid #ccc; 
+        border-radius: 5px;
+        text-align: center; 
+        outline: none;
+    }
+
+        .otp-input input[type="text"]:focus {
+            border-color: #007bff;
+        }

@@ -1,0 +1,92 @@
+﻿@model InternshipManagement.Models.Project
+
+@{
+    ViewBag.Title = "Projects";
+    Layout = "~/Views/Shared/_LTELayout.cshtml";
+}
+
+   
+    <div class="modal-body">
+        @using (Html.BeginForm("CreateProject", "Instructor", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ProjectName, "Tên dự án", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MaxStudents, "Số lượng sinh viên tối đa", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.MaxStudents, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MaxStudents, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, "Mô tả", htmlAttributes: new { @class = "control-label" })
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 4 })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Tags", "Tags:", htmlAttributes: new { @class = "control-label" })
+                @Html.ListBox("Tags", ViewBag.Tags as MultiSelectList, new { @class = "form-control", multiple = "multiple" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        }
+        </div>
+
+
+
+<!-- Include jQuery and Summernote CSS/JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+    /* Tùy chỉnh CSS cho Select2 */
+   
+        .select2-search--inline .select2-search__field:focus {
+        outline: 0;
+        border: 1px solid #ffffff00 !important;
+        }
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border: solid #80bdff 1px;
+        outline: 0;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        $('#Tags').select2({
+            placeholder: "Nhập tag và dấu ',' để thêm tag",
+            tags: true,
+            tokenSeparators: [','],
+            ajax: {
+                url: '@Url.Action("SearchTag")',
+                dataType: 'json',
+                delay: 250,
+                allowClear: true,
+                maximumSelectionLength: 5,
+                data: function(params) {
+                    return {
+                        query: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 1
+        });
+
+    });
+</script>

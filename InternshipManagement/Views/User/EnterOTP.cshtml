@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "EnterOTP";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="wrapper">
+
+        @using (Html.BeginForm())
+        {
+            <div>
+                <h3>Xác nhận email</h3>
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <p class="text-danger">@ViewBag.ErrorMessage</p>
+                }
+                else
+                {
+                    <p>Vui lòng nhập mã OTP để tiếp tục.</p>
+                }
+                <div class="otp-input">
+                    <input type="text" id="otp1" name="otp1" maxlength="1" oninput="nextInput('otp1', 'otp2')" onkeydown="deleteInput(event, 'otp1', '')" onkeypress="return isNumber(event)" onpaste="handlePaste(event)">
+                    <input type="text" id="otp2" name="otp2" maxlength="1" oninput="nextInput('otp2', 'otp3')" onkeydown="deleteInput(event, 'otp2', 'otp1')" onkeypress="return isNumber(event)" onpaste="handlePaste(event)">
+                    <input type="text" id="otp3" name="otp3" maxlength="1" oninput="nextInput('otp3', 'otp4')" onkeydown="deleteInput(event, 'otp3', 'otp2')" onkeypress="return isNumber(event)" onpaste="handlePaste(event)">
+                    <input type="text" id="otp4" name="otp4" maxlength="1" oninput="nextInput('otp4', 'otp5')" onkeydown="deleteInput(event, 'otp4', 'otp3')" onkeypress="return isNumber(event)" onpaste="handlePaste(event)">
+                    <input type="text" id="otp5" name="otp5" maxlength="1" oninput="nextInput('otp5', 'otp6')" onkeydown="deleteInput(event, 'otp5', 'otp4')" onkeypress="return isNumber(event)" onpaste="handlePaste(event)">
+                    <input type="text" id="otp6" name="otp6" maxlength="1" oninput="nextInput('otp6', 'otp6')" onkeydown="deleteInput(event, 'otp6', 'otp5')" onkeypress="return isNumber(event)" onpaste="handlePaste(event)">
+                </div>
+                <div class="float-end">
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </div>
+
+        }
+    </div>
+
+    <script>
+        // Function to move to the next input when a character is entered
+        function nextInput(currentInput, nextInput) {
+            var input = document.getElementById(currentInput);
+            var nextInputField = document.getElementById(nextInput);
+
+            if (input.value.length >= input.maxLength && nextInputField) {
+                nextInputField.focus();
+            }
+        }
+
+        // Function to delete input if backspace is pressed
+        function deleteInput(event, currentInput, previousInput) {
+            var input = document.getElementById(currentInput);
+            var previousInput = document.getElementById(previousInput);
+
+            if (event.key === "Backspace" && input.value.length === 0 && previousInput) {
+                previousInput.focus();
+            }
+        }
+
+        // Function to allow only numbers to be entered
+        function isNumber(event) {
+            return /[0-9]/.test(event.key);
+        }
+
+        // Function to handle paste event
+        function handlePaste(event) {
+            var clipboardData, pastedData;
+
+            event.stopPropagation();
+            event.preventDefault();
+
+            clipboardData = event.clipboardData || window.clipboardData;
+            pastedData = clipboardData.getData('text/plain');
+
+            // Replace non-numeric characters
+            pastedData = pastedData.replace(/[^\d]/g, '');
+
+            // Split the pasted data into individual characters and paste them into each input
+            for (var i = 0; i < pastedData.length; i++) {
+                var nextInput = document.getElementById('otp' + (i + 1));
+                if (nextInput) {
+                    nextInput.value = pastedData[i];
+                    nextInput.dispatchEvent(new Event('input'));
+                }
+            }
+        }
+
+
+
+    </script>
+</body>
+</html>
+

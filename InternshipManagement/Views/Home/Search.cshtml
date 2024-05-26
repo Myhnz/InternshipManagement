@@ -1,0 +1,350 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+
+<link rel="stylesheet" href="~/Content/searchpage.css" />
+
+<!--content-->
+<div class="search_container">
+    <div class="container p-3 py-5">
+        <ul class="nav nav-tabs">
+            <li class="nav-item " style="max-width: 50%;">
+                <a class="nav-link active" data-toggle="tab" href="#form1">Dự án thực tập</a>
+            </li>
+            <li class="nav-item" style="max-width: 50%;">
+                <a class="nav-link" style="color: #fff;" data-toggle="tab" href="#form2">Người dùng</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="form1" class="tab-pane fade show active p4">
+                <form>
+                    <div class="row">
+                        <div class="col-lg-3 mb-3 mb-lg-0">
+                            <input class="form-control form-control-lg" type="search" placeholder="Search" name="" id="">
+                        </div>
+                        <div class="col-lg-3 mb-3 mb-lg-0">
+                            <select class="form-control form-control-lg" id="input2" size="1">
+                                <option value="">Choose...</option>
+                                <option class="w-100">Option 1</option>
+                                <option class="w-100">Option 2</option>
+                                <option class="w-100">Option 3</option>
+                            </select>
+                        </div>
+                        <div class=" col-lg-3 mb-3 mb-lg-0">
+                            <select class="form-control form-control-lg" id="input3" size="4">
+                                <option value="">Choose...</option>
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                                <option>Option 3</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 mb-3 mb-lg-0">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="form2" class="tab-pane fade p4">
+                <form>
+                    <!-- Form 2 inputs go here -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-lg-3 col-md-4">
+            <div class="select-wrapper">
+                <span class="icon">
+                    <i class="fa fa-filter"></i>
+                    </i> Lọc theo:
+                </span>
+                <select class="form-control form-control-lg w-100 bg-body" id="input2" size="1" style="border: 1px solid #ccc">
+                    <option value="">Mới nhất</option>
+                    <option>Cũ nhất</option>
+                    <option>Đánh giá</option>
+                </select>
+                <span class="arrow"><i class="fas fa-caret-down"></i></span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4">
+            <div class="select-wrapper">
+                <span class="icon">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h12M5 17h10" />
+                    </svg>
+                    </i> Trạng thái:
+                </span>
+                <select class="form-control form-control-lg w-100 bg-body" id="input2" size="1" style="border: 1px solid #ccc">
+                    <option value="">Đang mở</option>
+                    <option>Đã đóng</option>
+                    <option>Đã kết thúc</option>
+                </select>
+                <span class="arrow"><i class="fas fa-caret-down"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <div>
+            <div>
+
+                <div class="p-3 my-2 pj-item">
+                    <div class=" mx-2">
+                        <div>
+                            <div>
+                                <a class="fs-5" href="#">
+                                    Neque porro quisquam est qui dolorem ipsum quia dolor sit
+                                    amet, consectetur, adipisci velit...
+                                </a><br />
+                                <div class="d-flex justify-content-between">
+                                    <div><small>Trần Văn B</small></div>
+                                    <p class="text-end m-0">3/20 <i class="fa-regular fa-user"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-3 mx-2 rounded p-2 d-flex align-items-center justify-content-between"
+                         style="background-color: #0055ff1a !important">
+                        <div>Thiết kế web</div>
+                        <div>Đang mở</div>
+                    </div>
+                    <div class="my-3 mx-2">
+                        Mô tả: Contrary to popular belief, Lorem Ipsum is not simply
+                        random text. It has roots in a piece of classical Latin
+                        literature from 45 BC, making it over 2000 years old. Richard
+                        McClintock, a Latin professor at Hampden-Sydney College
+                    </div>
+                    <div class="mx-2 my-2 w-auto d-flex align-items-center justify-content-between">
+                        <div>
+                            <a href="#"><span class="bbadge badge bg-secondary">C# </span></a>
+                            <a href="#"><span class="bbadge badge bg-secondary">ASP.NET MVC </span></a>
+                            <a href="#"><span class="bbadge badge bg-secondary">Java </span></a>
+                        </div>
+                        <div class="row my-0" style="width:200px">
+                            <div style="display: flex;">
+                                <div class="mx-3">
+                                    <i class="heart-icon fas fa-heart"></i>
+                                </div>
+                                <div class="btn-container"><button class="btn btn-primary">Ứng tuyển</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 my-2 pj-item">
+                    <div class=" mx-2">
+                        <div>
+                            <div>
+                                <a class="fs-5" href="#">
+                                    Neque porro quisquam est qui dolorem ipsum quia dolor sit
+                                    amet, consectetur, adipisci velit...
+                                </a><br />
+                                <div class="d-flex justify-content-between">
+                                    <div><small>Trần Văn B</small></div>
+                                    <p class="text-end m-0">3/20 <i class="fa-regular fa-user"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-3 mx-2 rounded p-2 d-flex align-items-center justify-content-between"
+                         style="background-color: #0055ff1a !important">
+                        <div>Thiết kế web</div>
+                        <div>Đang mở</div>
+                    </div>
+                    <div class="my-3 mx-2">
+                        Mô tả: Contrary to popular belief, Lorem Ipsum is not simply
+                        random text. It has roots in a piece of classical Latin
+                        literature from 45 BC, making it over 2000 years old. Richard
+                        McClintock, a Latin professor at Hampden-Sydney College
+                    </div>
+                    <div class="mx-2 my-2 w-auto d-flex align-items-center justify-content-between">
+                        <div>
+                            <a href="#"><span class="badge bg-secondary">C# </span></a>
+                            <a href="#"><span class="badge bg-secondary">ASP.NET MVC </span></a>
+                            <a href="#"><span class="badge bg-secondary">Java </span></a>
+                        </div>
+                        <div class="row my-0" style="width:200px">
+                            <div style="display: flex;">
+                                <div class="mx-3">
+                                    <i class="heart-icon fas fa-heart"></i>
+                                </div>
+                                <div class="btn-container"><button class="btn btn-primary">Ứng tuyển</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 my-2 pj-item">
+                    <div class=" mx-2">
+                        <div>
+                            <div>
+                                <a class="fs-5" href="#">
+                                    Neque porro quisquam est qui dolorem ipsum quia dolor sit
+                                    amet, consectetur, adipisci velit...
+                                </a><br />
+                                <div class="d-flex justify-content-between">
+                                    <div><small>Trần Văn B</small></div>
+                                    <p class="text-end m-0">3/20 <i class="fa-regular fa-user"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-3 mx-2 rounded p-2 d-flex align-items-center justify-content-between"
+                         style="background-color: #0055ff1a !important">
+                        <div>Thiết kế web</div>
+                        <div>Đang mở</div>
+                    </div>
+                    <div class="my-3 mx-2">
+                        Mô tả: Contrary to popular belief, Lorem Ipsum is not simply
+                        random text. It has roots in a piece of classical Latin
+                        literature from 45 BC, making it over 2000 years old. Richard
+                        McClintock, a Latin professor at Hampden-Sydney College
+                    </div>
+                    <div class="mx-2 my-2 w-auto d-flex align-items-center justify-content-between">
+                        <div>
+                            <a href="#"><span class="badge bg-secondary">C# </span></a>
+                            <a href="#"><span class="badge bg-secondary">ASP.NET MVC </span></a>
+                            <a href="#"><span class="badge bg-secondary">Java </span></a>
+                        </div>
+                        <div class="row my-0" style="width:200px">
+                            <div style="display: flex;">
+                                <div class="mx-3">
+                                    <i class="heart-icon fas fa-heart"></i>
+                                </div>
+                                <div class="btn-container"><button class="btn btn-primary">Ứng tuyển</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 my-2 pj-item">
+                    <div class=" mx-2">
+                        <div>
+                            <div>
+                                <a class="fs-5" href="#">
+                                    Neque porro quisquam est qui dolorem ipsum quia dolor sit
+                                    amet, consectetur, adipisci velit...
+                                </a><br />
+                                <div class="d-flex justify-content-between">
+                                    <div><small>Trần Văn B</small></div>
+                                    <p class="text-end m-0">3/20 <i class="fa-regular fa-user"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-3 mx-2 rounded p-2 d-flex align-items-center justify-content-between"
+                         style="background-color: #0055ff1a !important">
+                        <div>Thiết kế web</div>
+                        <div>Đang mở</div>
+                    </div>
+                    <div class="my-3 mx-2">
+                        Mô tả: Contrary to popular belief, Lorem Ipsum is not simply
+                        random text. It has roots in a piece of classical Latin
+                        literature from 45 BC, making it over 2000 years old. Richard
+                        McClintock, a Latin professor at Hampden-Sydney College
+                    </div>
+                    <div class="mx-2 my-2 w-auto d-flex align-items-center justify-content-between">
+                        <div>
+                            <a href="#"><span class="badge bg-secondary">C# </span></a>
+                            <a href="#"><span class="badge bg-secondary">ASP.NET MVC </span></a>
+                            <a href="#"><span class="badge bg-secondary">Java </span></a>
+                        </div>
+                        <div class="row my-0" style="width:200px">
+                            <div style="display: flex;">
+                                <div class="mx-3">
+                                    <i class="heart-icon fas fa-heart"></i>
+                                </div>
+                                <div class="btn-container"><button class="btn btn-primary">Ứng tuyển</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 my-2 pj-item">
+                    <div class=" mx-2">
+                        <div>
+                            <div>
+                                <a class="fs-5" href="#">
+                                    Neque porro quisquam est qui dolorem ipsum quia dolor sit
+                                    amet, consectetur, adipisci velit...
+                                </a><br />
+                                <div class="d-flex justify-content-between">
+                                    <div><small>Trần Văn B</small></div>
+                                    <p class="text-end m-0">3/20 <i class="fa-regular fa-user"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-3 mx-2 rounded p-2 d-flex align-items-center justify-content-between"
+                         style="background-color: #0055ff1a !important">
+                        <div>Thiết kế web</div>
+                        <div>Đang mở</div>
+                    </div>
+                    <div class="my-3 mx-2">
+                        Mô tả: Contrary to popular belief, Lorem Ipsum is not simply
+                        random text. It has roots in a piece of classical Latin
+                        literature from 45 BC, making it over 2000 years old. Richard
+                        McClintock, a Latin professor at Hampden-Sydney College
+                    </div>
+                    <div class="mx-2 my-2 w-auto d-flex align-items-center justify-content-between">
+                        <div>
+                            <a href="#"><span class="badge bg-secondary">C# </span></a>
+                            <a href="#"><span class="badge bg-secondary">ASP.NET MVC </span></a>
+                            <a href="#"><span class="badge bg-secondary">Java </span></a>
+                        </div>
+                        <div class="row my-0" style="width:200px">
+                            <div style="display: flex;">
+                                <div class="mx-3">
+                                    <i class="heart-icon fas fa-heart"></i>
+                                </div>
+                                <div class="btn-container"><button class="btn btn-primary">Ứng tuyển</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var choices1 = new Choices('#input2', {
+            classNames: {
+                containerInner: 'form-control',
+            },
+            searchEnabled: true,
+            itemSelectText: '',
+            placeholder: true,
+            loadingText: 'Đang tải...',
+            noResultsText: 'Không tìm thấy kết quả',
+            noChoicesText: 'Không có tùy chọn nào để chọn'
+        });
+        var choices2 = new Choices('#input3', {
+            classNames: {
+                containerInner: 'form-control',
+            },
+            searchEnabled: true,
+            itemSelectText: '',
+            placeholder: true,
+            loadingText: 'Đang tải...',
+            noResultsText: 'Không tìm thấy kết quả',
+            noChoicesText: 'Không có tùy chọn nào để chọn'
+        });
+    });
+</script>
+
+('#input3', {
+            searchEnabled: true,
+            itemSelectText: '',
+            placeholder: true,
+            loadingText: 'Đang tải...',
+            noResultsText: 'Không tìm thấy kết quả',
+            noChoicesText: 'Không có tùy chọn nào để chọn'
+        });
+    });
+</script>
+

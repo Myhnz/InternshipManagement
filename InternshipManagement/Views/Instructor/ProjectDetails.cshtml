@@ -1,0 +1,159 @@
+﻿@model InternshipManagement.Models.ProjectDetails
+
+@{
+    ViewBag.Title = "ProjectDetails";
+    Layout = "~/Views/Shared/_LTELayout.cshtml";
+}
+<link href="~/Content/InstructorPd.css" rel="stylesheet" />
+<div style="background-color: #F0F4F9">
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="wrapper wrapper-content animated fadeInUp">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <a href="#" class="btn btn-outline-primary btn-sm float-right">Edit project</a>
+                                        <h2>@Model.ProjectName</h2>
+                                    </div>
+                                    <dl class="row">
+                                        <dt class="col-2">Trạng thái:</dt>
+                                        <dd class="col-10">
+                                            <span class="badge badge-primary">@(@Model.IsActive ? "Đang mở" : "Đã đóng")</span>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <dl class="row">
+                                        <dt class="col-4">Tạo bởi:</dt>
+                                        <dd class="col-sm-7">@Model.InstructorLastName @Model.InstructorFirstName </dd>
+                                        <dt class="col-4">Tin nhắn mới:</dt>
+                                        <dd class="col-8">0</dd>
+                                        <dt class="col-4">Công ty:</dt>
+                                        <dd class="col-8"><a href="#" class="text-primary">@Model.CompanyName</a></dd>
+                                    </dl>
+                                </div>
+                                <div class="col-lg-6" id="cluster_info">
+                                    <dl class="row">
+                                        <dt class="col-4">Cập nhật lần cuối:</dt>
+                                        <dd class="col-8">@Model.UpdateDate</dd>
+                                        <dt class="col-4">Ngày tạo:</dt>
+                                        <dd class="col-8">@Model.CreateDate</dd>
+                                        <dt class="col-4">Thành viên:</dt>
+                                        <dd class="col-8 project-people">
+                                            @foreach (var participant in Model.Members)
+                                            {
+                                                <a href="#"><img alt="image" class="rounded-circle" src="~/Materials/user/@participant.Avatar"></a>
+                                            }
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <dl class="row">
+                                        <dt class="col-3">Completed:</dt>
+                                        <dd class="col-9">
+                                            @if (Model.Tasks.Any())
+                                            {
+                                                int completedTasksCount = Model.Tasks.Count(t => t.Status == "Completed");
+                                                int totalTasksCount = Model.Tasks.Count();
+                                                int percentage = totalTasksCount > 0 ? (completedTasksCount * 100 / totalTasksCount) : 0;
+                                                <div class="progress mb-2">
+                                                    <div style="width: @percentage%;" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                                                </div>
+                                                <small>
+                                                    Tiến độ dự án <strong>@percentage%</strong>,
+                                                    @if (Model.Tasks != null && Model.Tasks.Any())
+                                                    {
+                                                        <span class="text-custom">@Model.Tasks.Count(t => t.Status == "Completed")/@Model.Tasks.Count</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-custom">0/0</span>
+                                                    }
+                                                </small>
+                                            }
+                                            else
+                                            {
+                                                <small>Chưa có task nào.</small>
+                                            }
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header" style="background-color: #f8f9fa;">
+                                            <ul class="nav nav-tabs card-header-tabs">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" href="#tab-1" data-toggle="tab">Tin nhắn chung</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#tab-2" data-toggle="tab">Hoạt động</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#tab-3" data-toggle="tab">Thành viên</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="tab-1">
+                                                    <!-- Your user messages content -->
+                                                </div>
+                                                <div class="tab-pane" id="tab-2">
+                                                    <!-- Your last activity content -->
+                                                </div>
+                                                <div class="tab-pane" id="tab-3">
+                                                    <!-- Your last activity content -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="wrapper wrapper-content project-manager">
+                    <h4>Mô tả dự án</h4>
+                    <p class="small">
+                        @Model.Description
+                    </p>
+                    <!-- Other project details -->
+                    <h4>Danh sách chờ</h4>
+                    @foreach (var student in Model.QueueStudents)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                            <span>@student.FirstName @student.LastName</span>
+
+                            <div class="ml-auto d-flex flex-column">
+                                <form action="@Url.Action("ApproveStudent", "Instructor")" method="post">
+                                    <input type="hidden" name="studentId" value="@student.StudentID" />
+                                    <input type="hidden" name="projectId" value="@Model.ProjectID" />
+                                    <button type="submit" class="btn btn-outline-primary btn-sm mb-2" style="background-color: green; color: white;">Approve</button>
+                                </form>
+                                <form action="@Url.Action("RejectStudent", "Instructor")" method="post">
+                                    <input type="hidden" name="studentId" value="@student.StudentID" />
+                                    <input type="hidden" name="projectId" value="@Model.ProjectID" />
+                                    <button type="submit" class="btn btn-outline-primary btn-sm" style="background-color: red; color: white;">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

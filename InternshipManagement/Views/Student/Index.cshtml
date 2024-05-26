@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_ULayout.cshtml";
+}
+
+<style>
+    .nav-tabs {
+        padding-left: 5px
+    }
+
+        .nav-tabs li.nav-item.active a {
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #357bde;
+            border-color: #dee2e6 #dee2e6 #357bde;
+            border-bottom-width: 3px;
+        }
+
+        .nav-tabs li.nav-item.dropdown-item a {
+            all: unset !important;
+        }
+
+            .nav-tabs li.nav-item.dropdown-item a:hover {
+                all: unset !important;
+            }
+
+        .nav-tabs li.nav-item a {
+            color: #17243e;
+        }
+
+        .nav-tabs li.nav-item:not(.active) a:hover {
+            color: #17243e;
+            border: 1px solid #ddd;
+            background-color: #efeded;
+        }
+
+    .content-wrapper {
+        padding-top: 55px;
+        height: calc(100% - 55px);
+    }
+</style>
+
+
+
+<div class="sidebar1" id="sidebar">
+    <div class="position-sticky pt-5">
+        <ul class="nav nav-pills nav-sidebar flex-column">
+
+            @*<li class="nav-item">
+                <a href="@Url.Action("Navigation")" class="px-3 d-flex flex-row multitabs align-items-center  bd-highlight" data-type="info" data-iframe="true">
+                    <i style="width:20px" class="fas fa-tasks bd-highlight"></i>
+                    <span class="sidebar-text bd-highlight">Dự án</span>
+                </a>
+            </li>*@
+            <!--<li class="nav-item">
+                <a href="https://www.blackbox.ai//" class="px-3 d-flex flex-row multitabs align-items-center  bd-highlight" data-type="info" data-iframe="true">
+                    <i style="width:20px" class="fas fa-home bd-highlight"></i>
+                    <span class="sidebar-text bd-highlight"> 🤯🤯🤯</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="http://google.com/" class="px-3 d-flex flex-row multitabs align-items-center bd-highlight" data-type="info" data-iframe="true">
+                    <i style="width:20px" class="fas fa-users bd-highlight"></i>
+                    <span class="sidebar-text bd-highlight"> Customers</span>
+                </a>
+            </li>-->
+            <!--collapse nav-->
+            <li class="nav-item">
+                <a class="px-3 d-flex flex-row align-items-center bd-highlight" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <i style="width:20px" class="fas fa-tasks bd-highlight"></i>
+                    <span class="sidebar-text bd-highlight"> Dự án</span>
+                    <i class="sidebar-down fas fa-angle-left right ms-auto"></i>
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <ul class="nav flex-column wcollapse">
+                        <li class="nav-item">
+                            <a class="px-3 d-flex flex-row multitabs align-items-center bd-highlight" href="" data-type="info" data-iframe="true">
+                                <i style="width:20px" class="fas fa-caret-right bd-highlight"></i>
+                                <span class="sidebar-text bd-highlight"> Đang tham gia</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="px-3 d-flex flex-row multitabs align-items-center bd-highlight" href="@Url.Action("SearchProject")" data-type="info" data-iframe="true">
+                                <i style="width:20px" class="fas fa-caret-right bd-highlight"></i>
+                                <span class="sidebar-text bd-highlight"> Tìm kiếm</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+
+</div>
+
+<div class="content" id="content">
+    <div id="content_wrapper" class="content-wrapper">
+
+    </div>
+</div>
+
+
+<script>
+    var multitabs = $('#content_wrapper').multitabs({
+        iframe: true,
+        nav: {
+            backgroundColor: '#f5f5f5',
+            layout: 'classic'
+        },
+        init: [
+            {
+                type: 'main',
+                title: 'Trang chủ dự án',
+                url: '@Url.Action("Navigation")'
+            }
+        ]
+    });
+
+</script>

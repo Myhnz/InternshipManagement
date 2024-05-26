@@ -1,0 +1,26 @@
+﻿
+.thead1 {
+    background-color: #f2f3fb;
+}
+.btn {
+    white-space: nowrap;
+}
+.checked-row {
+    background-color: #7cd1ff2a;
+    border: 2px solid #7cd1ff;
+    margin-bottom: -1px;
+}
+.square {
+    width: 100%; /* Định rộng tùy ý */
+    position: relative;
+    overflow: hidden; /* Ẩn phần ảnh vượt ra khỏi kích thước của div */
+}
+
+    .square img {
+        width: 100%; /* 100% chiều rộng của div */
+        height: auto; /* Tự động tính toán chiều cao dựa trên tỉ lệ */
+        display: block;
+        margin:0
+    }
+
+

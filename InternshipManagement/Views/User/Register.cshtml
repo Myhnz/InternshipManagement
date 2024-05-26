@@ -1,0 +1,43 @@
+﻿
+@model InternshipManagement.Models.Administrator
+
+@{
+    Layout = null;
+    ViewBag.Title = "Đăng ký";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="wrapper">
+            <h3>Bạn muốn tạo tài khoản với vai trò gì?</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="option" onclick="location.href='@Url.Action("Register", new { role = 1 })'">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>Sinh viên</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="option" onclick="location.href='@Url.Action("Register", new { role = 2 })'">
+                        <i class="fas fa-building"></i>
+                        <p>Doanh nghiệp</p>
+                    </div>
+                </div>
+            </div>
+            <div class="register">
+                <p>Đã có tài khoản? <a href="@Url.Action("Login")">Đăng nhập</a></p>
+            </div>
+    </div>
+    <script src="~/Scripts/bootstrap/bootstrap.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,56 @@
+﻿@model InternshipManagement.Models.Administrator
+
+@{
+    Layout = null;
+ViewBag.Title = "Đăng nhập";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="wrapper">
+        @using (Html.BeginForm("Login", "User", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <h2 class="title">Đăng nhập</h2>
+            if (ViewBag.Message != null)
+            {
+                <div style="color:#f34e4e; margin-bottom:20px" class="error-message">
+                    @ViewBag.Message
+                </div>
+            }
+            <div class="input-field">
+                @Html.TextBoxFor(model => model.Username, new { @type = "text", @required = "required" })
+                <label>Tên đăng nhập</label>
+            </div>
+            <div class="input-field">
+                @Html.PasswordFor(model => model.Password, new { @type = "password", @required = "required" })
+                <label>Mật khẩu</label>
+            </div>
+            <div class="forget">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="forgetpw">
+                    <label class="form-check-label" for="forgetpw">
+                        Nhớ tài khoản
+                    </label>
+                </div>
+                <a href="#">Quên mật khẩu?</a>
+            </div>
+            <button class="btn btn-primary" type="submit">Đăng nhập</button>
+
+            <div class="register">
+                <p>Chưa có tài khoản? <a href="@Url.Action("Register")">Đăng kí</a></p>
+            </div>
+        }
+    </div>
+</body>
+</html>
+

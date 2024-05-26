@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <!-- Font Awesome -->
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Ionicons -->
+    <link href="~/Content/admin.css" rel="stylesheet" />
+    <link href="~/multitab/css/style.css" rel="stylesheet" />
+
+    <style type="text/css">
+        body,
+        body.full-height-layout,
+        html {
+            height: 100%;
+        }
+
+            body.full-height-layout .content-wrapper {
+                height: calc(100% - 140px);
+            }
+    </style>
+</head>
+<body>
+    <div class="header1">
+        <div class="header-logo">
+            <div class="toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-IYpF36f0yDQWLyw1O3LlPe-oJXaOiJpbWTiqo3BtF3ztuIF2"
+                 alt="logo"
+                 style="height: 50px; margin: 0 10px" />
+        </div>
+        @Html.Action("headerMenu")
+    </div>
+    @RenderBody()
+
+
+    <!-- jQuery (cần thiết cho các plugin JavaScript của Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Popper.js (cần thiết cho các plugin JavaScript của Bootstrap) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript của Bootstrap -->
+    <script src="~/Scripts/bootstrap/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery 2.2.0 -->
+    <script src="~/multitab/demo/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="~/multitab/demo/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Slimscroll -->
+    <script src="~/multitab/demo/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/multitab/demo/plugins/adminLTE/js/app.js?v=2"></script>
+    <!-- Multi Tabs -->
+    <script src="~/multitab/js/multitabs.js"></script>
+
+    <script>
+        var multitabs = $('#content_wrapper').multitabs({
+            iframe: true,
+            nav: {
+                backgroundColor: '#f5f5f5',
+                layout: 'classic'
+            },
+            init: [
+                {
+                    refresh: true,
+                    type: 'main',
+                    title: 'Dashboard',
+                    url: '@Url.Action("Dashboard", "Admin")'
+                }
+            ]
+        });
+
+        window.addEventListener('beforeunload', function (event) {
+            // Kiểm tra nếu sự kiện đang xảy ra không phải là do refresh trang
+            if (event.currentTarget.performance.navigation.type !== 1) {
+                // Xóa sessionStorage
+                sessionStorage.clear();
+            }
+        });
+    </script>
+    <script src="~/Scripts/admin.js"></script>
+</body>
+</html>

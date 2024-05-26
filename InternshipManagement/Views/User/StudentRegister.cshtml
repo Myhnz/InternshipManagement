@@ -1,0 +1,178 @@
+﻿@model InternshipManagement.Models.User
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <style>
+        .step {
+            display: none;
+        }
+
+            .step.active {
+                display: block;
+            }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        @using (Html.BeginForm("StudentRegister", "User", FormMethod.Post, new { id = "registrationForm" }))
+        { 
+            @Html.AntiForgeryToken()
+
+    <!-- Bước 1: Họ tên sinh viên -->
+        <div class="step active" id="step1">
+            <h3>Tạo tài khoản sinh viên</h3>
+            <p class="message">Họ tên sinh viên</p>
+            <p class="error-message text-danger" style="display:none">Vui lòng nhập đầy đủ họ tên.</p>
+            <div class="input-field">
+                <input type="text" id="Lastname" name="Lastname" required>
+                <label>Họ</label>
+            </div>
+            <div class="input-field">
+                <input type="text" id="Firstname" name="Firstname" required>
+                <label>Tên</label>
+            </div>
+            <div class="float-end">
+                <button type="button" class="btn btn-primary" onclick="nextStep('step1', 'step2')">Tiếp theo</button>
+            </div>
+        </div>
+
+        <!-- Bước 2: Thông tin cơ bản -->
+        <div class="step" id="step2">
+            <h3>Thông tin cơ bản</h3>
+            <p class="message">Nhập ngày sinh và giới tính của bạn</p>
+            <p class="error-message text-danger" style="display:none">Vui lòng nhập đầy đủ thông tin.</p>
+            <div class="input-field">
+                <input type="date" id="DateOfBirth" name="DateOfBirth" required>
+            </div>
+            <div class="input-field">
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected></option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+                <label for="gender">Giới tính</label>
+            </div>
+            <div class="float-end">
+                <button type="button" class="btn btn-secondary" onclick="prevStep('step2', 'step1')">Quay lại</button>
+                <button type="button" class="btn btn-primary" onclick="nextStep('step2', 'step3')">Tiếp theo</button>
+            </div>
+        </div>
+
+        <!-- Bước 3: Thông tin liên hệ -->
+        <div class="step" id="step3">
+            <h3>Thông tin liên hệ</h3>
+            <p class="message">Nhập địa chỉ và số điện thoại của bạn</p>
+            <p class="error-message text-danger" style="display:none">Vui lòng nhập đầy đủ thông tin.</p>
+            <div class="input-field">
+                <input type="text" id="Address" name="Address" required>
+                <label>Địa chỉ</label>
+            </div>
+            <div class="input-field">
+                <input type="number" id="Phone" name="Phone" required>
+                <label>Số điện thoại</label>
+            </div>
+            <div class="float-end">
+                <button type="button" class="btn btn-secondary" onclick="prevStep('step3', 'step2')">Quay lại</button>
+                <button type="button" class="btn btn-primary" onclick="nextStep('step3', 'step4')">Tiếp theo</button>
+            </div>
+        </div>
+        <!-- Bước 4: Mật khẩu mới -->
+        <div class="step" id="step4">
+            <h3>Tạo mật khẩu</h3>
+            <p class="message">Nhập mật khẩu bạn muốn sử dụng với tài khoản của mình.</p>
+            <p class="error-message text-danger" style="display:none">Vui lòng nhập mật khẩu</p>
+            <div class="input-field">
+                <input type="password" id="Password" name="Password" required>
+                <label>Mật khẩu</label>
+            </div>
+            <div class="input-field">
+                <input type="password" id="RePassword" name="RePassword" required>
+                <label>Nhập lại mật khẩu</label>
+            </div>
+            <div class="form-check d-flex justify-content-start">
+                <input class="form-check-input" type="checkbox" id="ShowPassword" onclick="togglePasswordVisibility()">
+                <label class="form-check-label px-2" for="ShowPassword">Hiện mật khẩu</label>
+            </div>
+            <div class="float-end">
+                <button type="button" class="btn btn-secondary" onclick="prevStep('step4', 'step3')">Quay lại</button>
+                <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
+            </div>
+        </div>
+
+        }
+    </div>
+
+    <script>
+        
+
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("Password");
+            var rePasswordInput = document.getElementById("RePassword");
+            var showPasswordCheckbox = document.getElementById("ShowPassword");
+
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = "text";
+                rePasswordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+                rePasswordInput.type = "password";
+            }
+        }
+        function validateStep(currentStep, nextStep) {
+            // Kiểm tra các trường bắt buộc
+            var inputs = document.getElementById(currentStep).querySelectorAll('input[required], select[required]');
+            var isValid = true;
+
+            var messageParagraph = document.getElementById(currentStep).querySelector('.message');
+            var errorParagraph = document.getElementById(currentStep).querySelector('.error-message');
+
+            inputs.forEach(function (input) {
+                if (!input.value) {
+                    isValid = false;
+                    input.classList.add('error'); // Thêm lớp error để highlight trường lỗi
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+
+            // Nếu không hợp lệ, hiển thị thông báo
+            if (!isValid) {
+                messageParagraph.style.display = "none"; // Ẩn câu thông báo
+                errorParagraph.style.display = "block"; // Hiển thị thông báo lỗi
+                return false;
+            } else {
+                // Nếu hợp lệ, chuyển sang bước tiếp theo
+                messageParagraph.style.display = "block"; // Hiển thị lại câu thông báo
+                errorParagraph.style.display = "none"; // Xóa thông báo lỗi
+                document.getElementById(currentStep).classList.remove('active');
+                document.getElementById(nextStep).classList.add('active');
+                return true;
+            }
+        }
+
+        function nextStep(currentStep, nextStep) {
+            if (validateStep(currentStep, nextStep)) {
+                // Chỉ chuyển bước nếu validation thành công
+            }
+        }
+
+        function prevStep(currentStep, prevStep) {
+            document.getElementById(currentStep).classList.remove('active');
+            document.getElementById(prevStep).classList.add('active');
+        }
+
+    </script>
+</body>
+</html>
+

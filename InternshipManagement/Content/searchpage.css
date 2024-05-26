@@ -1,0 +1,133 @@
+.filter-a {
+    color: #353535;
+}
+
+    .filter-a:hover {
+        color: #3f66da;
+    }
+
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    background-color: #fff;
+    border-color: #fff;
+    border-radius: 5px 5px 0 0;
+    padding-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    background-color: #157efb;
+    border-color: #157efb;
+    color: #fff;
+    border-radius: 5px 5px 5px 5px;
+    margin-bottom: 0;
+    margin-right: 5px;
+}
+
+    .nav-tabs .nav-link:hover {
+        color: rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
+        color: rgba(0, 0, 0, 0.7);
+    }
+
+.nav-tabs .nav-link {
+    color: #007bff;
+}
+
+/* Custom class for form */
+.p4 {
+    background-color: white;
+    padding: 20px;
+}
+
+.search_container {
+    background: #43C6AC; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #191654, #43C6AC); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #191654, #43C6AC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.glass {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+    .glass:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+        color: #fff;
+    }
+
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+    .select-wrapper select {
+        width: 100%;
+        padding-left: 120px;
+    }
+
+.icon {
+    color: #8b8b8b;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+}
+
+.select-wrapper select:focus + .arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+
+
+
+.pj-item {
+    border:1px solid #ccc;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.044);
+    transition: box-shadow 0.3s, transform 0.2s;
+    cursor: pointer;
+    margin-bottom: 2px;
+    padding: 20px;
+}
+
+    .pj-item:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+.heart-icon {
+    font-size: 30px; /* Điều chỉnh kích thước icon tùy ý */
+    color: #9f9f9f; /* Màu xám */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+    .heart-icon:hover {
+        color: #e62525;
+        transform: scale(1.1); 
+        text-shadow: 0 0 20px rgba(255, 0, 0, 0.5); 
+    }
+
+    .heart-icon.active {
+        color: #e62525;
+    }
+
+span.bbadge:hover {
+    background-color: #0055ff !important
+}

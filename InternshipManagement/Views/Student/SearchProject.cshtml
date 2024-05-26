@@ -1,0 +1,258 @@
+﻿@model PagedList.IPagedList<InternshipManagement.Models.ProjectViewModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "SearchProject";
+    Layout = "~/Views/Shared/_LTELayout.cshtml";
+}
+
+<div class="container py-3">
+    <div class="row">
+        <div class="col-lg-8" id="main-content">
+            <div class="search-box">
+                <button id="toggle-sidebar" class="btn btn-secondary"><i class="fas fa-bars"></i></button>
+                @using (Html.BeginForm("SearchProject", "Student", FormMethod.Get))
+                {
+                    <input type="text" name="searchString" class="search-input" placeholder="Tìm kiếm..." value="@ViewBag.CurrentFilter">
+                    <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+                }
+            </div>
+
+            <div class="list-results d-flex align-items-center justify-content-between mb-3">
+                <div class="list-results-sort">
+                    <p class="m-0">Hiển thị @Model.FirstItemOnPage.ToString() - @Model.LastItemOnPage.ToString() trên @Model.TotalItemCount.ToString() kết quả</p>
+                </div>
+                <div class="click-menu d-sm-flex align-items-center justify-content-between">
+                    <div class="sortby d-flex align-items-center justify-content-between me-2 mb-1">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle custom-dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Show To: @ViewBag.PageSize
+                            </button>
+
+                            <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item custom-dropdown-item" href="@Url.Action("SearchProject", new { page = 1, pageSize = 10, searchString = ViewBag.CurrentFilter })">10</a>
+                                <a class="dropdown-item custom-dropdown-item" href="@Url.Action("SearchProject", new { page = 1, pageSize = 20, searchString = ViewBag.CurrentFilter })">20</a>
+                                <a class="dropdown-item custom-dropdown-item" href="@Url.Action("SearchProject", new { page = 1, pageSize = 30, searchString = ViewBag.CurrentFilter })">30</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sortby d-flex align-items-center justify-content-between me-2 mb-1">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle custom-dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Sắp xếp:
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="@Url.Action("SearchProject", new { page = 1, pageSize = ViewBag.PageSize, searchString = ViewBag.CurrentFilter, sortBy = "newest" })">Mới nhất</a>
+                                <a class="dropdown-item" href="@Url.Action("SearchProject", new { page = 1, pageSize = ViewBag.PageSize, searchString = ViewBag.CurrentFilter, sortBy = "mostLiked" })">Được ưa thích nhất</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-box">
+                <div class="row">
+                    @foreach (var project in Model)
+                    {
+                        <div class="col-lg-6 col-md-6 mb-4 job-box-item">
+                            <div class="card mx-2 box-shadow rounded bg-white position-relative">
+                                <div class="p-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="px-3 me-3">
+                                            <img width="60px" src="~/Materials/LogoCompany/@project.Logo" alt="..." class="rounded">
+                                        </div>
+                                        <div class="company-info">
+                                            <h5 class="mb-0"><a class="name-job theme" style="color: #1967D3 " href="">@project.CompanyName</a></h5>
+                                            <small>@project.InstructorName</small>
+                                        </div>
+                                    </div>
+                                    <div class="job-block-info">
+                                        <ul class="job-list pl-0 my-2">
+                                            @foreach (var tag in project.Tags)
+                                            {
+                                                <li class="badge badge-pill badge-primary">@tag</li>
+                                            }
+                                        </ul>
+                                        <h4 class="mb-1"><a href="@Url.Action("singleProject", new { ProjectID = project.ProjectID })">@project.ProjectName</a></h4>
+                                        <small>@project.Description</small>
+                                    </div>
+                                </div>
+                                <hr class="m-2" />
+                                <div class="d-flex flex-row-reverse p-3">
+                                    <form method="post" action="@Url.Action("ApplyProject")">
+                                        @Html.Hidden("projectID", project.ProjectID)
+                                        <!-- Additional fields for InternshipInformation if needed -->
+                                        <button type="submit" class="btn btn-primary">Ứng tuyển</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12 mb-4">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("SearchProject", new { page = 1, searchString = ViewBag.CurrentFilter })">First</a>
+                                </li>
+                                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("SearchProject", new { page = Model.PageNumber - 1, searchString = ViewBag.CurrentFilter })">&laquo;</a>
+                                </li>
+
+                                <!-- Previous ellipsis if needed -->
+                                @if (Model.PageNumber > 3)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                                }
+
+                                <!-- Numbered pages -->
+                                @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.PageCount, Model.PageNumber + 2); i++)
+                                {
+                                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("SearchProject", new { page = i, searchString = ViewBag.CurrentFilter })">@i</a>
+                                    </li>
+                                }
+
+                                <!-- Next ellipsis if needed -->
+                                @if (Model.PageCount - Model.PageNumber > 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                                }
+
+                                <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("SearchProject", new { page = Model.PageNumber + 1, searchString = ViewBag.CurrentFilter })">&raquo;</a>
+                                </li>
+                                <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+                                    <a class="page-link" href="@Url.Action("SearchProject", new { page = Model.PageCount, searchString = ViewBag.CurrentFilter })">Last</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* đây là side bar filter *@
+        <div class="p-3 pb-0 col-lg-4 ps-lg-4" id="sidebar">
+            <div style="position: -webkit-sticky; /* Safari */ position: sticky; top: 20px;">
+                <div class=" p-3 job-filter p-auto mb-3">
+                    <div class="my-3"><h4>Lĩnh vực</h4></div>
+                    <a class="filter-a my-2" href="">Tất cả</a>
+                    <div class="my-2">
+                        <div class="d-flex align-items-center">
+                            <div class="collapse-icon d-flex justify-content-between w-100" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                <div>
+                                    <a class="filter-a" data-toggle="collapse" href="#collapse1" role="button" aria-expanded="false" aria-controls="collapse1">Công nghệ thông tin (200)</a>
+                                </div>
+                                <div>
+                                    <i class="fa fa-chevron-down rotate"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse" id="collapse1">
+                            <div class="mt-2">
+                                <!-- Checkboxes for specializations -->
+
+                                @if (ViewBag.Specializations != null)
+                                {
+                                    foreach (var specialization in ViewBag.Specializations)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="specialization-@(specialization?.SpecializationID)" value="@(specialization?.SpecializationID)">
+                                            <label class="form-check-label" for="specialization-@(specialization?.SpecializationID)">
+                                                @(specialization?.SpecializationName)
+                                            </label>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-2">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <div class="collapse-icon d-flex justify-content-between w-100" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                <div><a class="filter-a" data-toggle="collapse" href="#collapse2" role="button" aria-expanded="false" aria-controls="collapse2">Thiết kế (10)</a></div>
+                                <div><i class="fa fa-chevron-down rotate"></i></div>
+                            </div>
+                        </div>
+                        <div class="collapse" id="collapse2">
+                            <div class="mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="collapse2-Check1">
+                                    <label class="form-check-label" for="collapse2-Check1">
+                                        Môn 1 (0)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="collapse2-Check2">
+                                    <label class="form-check-label" for="collapse2-Check2">
+                                        Môn 2 (0)
+                                    </label>
+                                </div>
+                                <!-- Add more checkboxes for other subjects -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" p-3 job-filter p-auto">
+                    <div class="my-3"><h4>Trạng thái</h4></div>
+                    <div class="my-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked="">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                Tất cả
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                Đang mở
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                                Đã đủ số lượng
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <script>
+        $(document).ready(function () {
+            alert("@Html.Raw(ViewBag.ErrorMessage)");
+        });
+    </script>
+}
+
+<script>
+    document.getElementById('toggle-sidebar').addEventListener('click', function () {
+        var sidebar = document.getElementById('sidebar');
+        var mainContent = document.getElementById('main-content');
+        var jobBoxItems = document.getElementsByClassName('job-box-item');
+
+        if (sidebar.style.display === 'none') {
+            sidebar.style.display = 'block';
+            mainContent.classList.remove('col-12');
+            mainContent.classList.add('col-lg-8');
+            for (var i = 0; i < jobBoxItems.length; i++) {
+                jobBoxItems[i].classList.remove('col-lg-4');
+                jobBoxItems[i].classList.add('col-lg-6');
+            }
+        } else {
+            sidebar.style.display = 'none';
+            mainContent.classList.remove('col-lg-8');
+            mainContent.classList.add('col-12');
+            for (var i = 0; i < jobBoxItems.length; i++) {
+                jobBoxItems[i].classList.remove('col-lg-6');
+                jobBoxItems[i].classList.add('col-lg-4');
+            }
+        }
+    });
+</script>

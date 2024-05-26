@@ -1,0 +1,51 @@
+﻿@model InternshipManagement.Models.Administrator
+
+@{
+    Layout = null;
+    ViewBag.Title = "Đăng nhập";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link href="~/Content/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="wrapper">
+        @using (Html.BeginForm("Login", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <h2>Đăng nhập</h2>
+            if (ViewBag.Message != null)
+            {
+                <div style="color:#fcb1b1; margin-bottom:20px" class="error-message">
+                    @ViewBag.Message
+                </div>
+            }
+            <div class="input-field">
+                @Html.TextBoxFor(model => model.Username, new { @type = "text", @required = "required" })
+                <label>Tên đăng nhập</label>
+            </div>
+            <div class="input-field">
+                @Html.PasswordFor(model => model.Password, new { @type = "password", @required = "required" })
+                <label>Mật khẩu</label>
+            </div>
+            <div class="forget">
+                <label for="remember">
+                    <input type="checkbox" id="remember">
+                    <p>Nhớ tài khoản</p>
+                </label>
+                <a href="#">Quên mật khẩu?</a>
+            </div>
+            <button type="submit">Log In</button>
+            <div class="register">
+                <p>Chưa có tài khoản? <a href="@Url.Action("Register")">Đăng kí</a></p>
+            </div>
+        }
+    </div>
+</body>
+</html>
+

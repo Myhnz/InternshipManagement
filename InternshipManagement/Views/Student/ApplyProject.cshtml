@@ -1,0 +1,25 @@
+﻿@model InternshipManagement.Models.InternshipQueue
+@{
+    ViewBag.Title = "Apply Project";
+}
+
+<h2>Apply for Project</h2>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>InternshipQueue</h4>
+        <hr />
+        @Html.HiddenFor(model => model.StudentID)
+        @Html.HiddenFor(model => model.ProjectID)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Apply" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

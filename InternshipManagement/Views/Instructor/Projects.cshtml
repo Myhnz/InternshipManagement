@@ -1,0 +1,239 @@
+﻿@model List<InternshipManagement.Models.ProjectDetails>
+
+@{
+    ViewBag.Title = "Projects";
+    Layout = "~/Views/Shared/_LTELayout.cshtml";
+}
+
+<!-- The Modal -->
+<div class="modal" id="createProjectModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div class="modal-header">
+                <h3 class="card-title">Tạo dự án mới</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="createProjectModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for changing color -->
+<div class="modal fade" id="colorModal" tabindex="-1" role="dialog" aria-labelledby="colorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="colorModalLabel">Chọn màu nền</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="colorPicker">Màu nền</label>
+                    <input  value="#ffffff" type="color" class="form-control" id="colorPicker">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                <button type="button" class="btn btn-primary" id="saveColor">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-sm-4">
+                <!-- Button to Open the Modal -->
+                <button type="button" class="btn btn-custom btn-rounded w-md waves-effect waves-light mb-4" data-toggle="modal" data-target="#createProjectModal"><i class="fas fa-plus-circle"></i> Tạo dự án mới</button>
+            </div>
+            <div class="col-sm-8">
+                <div class="project-sort float-right">
+                    <div class="project-sort-item">
+                        <form class="form-inline">
+
+                            <div class="form-group">
+                                <label for="sort-select">Sắp xếp theo:</label>
+                                <select class="form-control ml-2 form-control-sm" id="sort-select">
+                                    <option>Ngày</option>
+                                    <option>Tên</option>
+                                    <option>Ngày bắt đầu</option>
+                                    <option>Ngày kết thúc</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <thead style="background-color: #f8f9fa;">
+                        <tr>
+                            <th>Tên dự án</th>
+                            <th>Hàng đợi</th>
+                            <th>Thành viên</th>
+                            <th>Tasks</th>
+                            <th>Trạng thái</th>
+                            <th>Completed Tasks</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model)
+                        {
+                            var totalTasks = project.Tasks?.Count ?? 0;
+                            var completedTasks = project.Tasks?.Count(t => t.Status == "Completed") ?? 0;
+                            var progressPercentage = totalTasks > 0 ? (completedTasks * 100 / totalTasks) : 0;
+                            var dropdownId = "dropdownMenuButton" + project.ProjectID;
+
+                            <tr style="background-color: @(project.Personalize?.Color);">
+                                <td>
+                                    @if (project.Personalize?.Pinned == true)
+                                    {
+                                        <span class="badge badge-info"><i class="fas fa-thumbtack"></i></span>
+                                    }
+                                    <a href="@Url.Action("ProjectDetails", "Instructor", new { id = project.ProjectID })">@project.ProjectName</a>
+                                </td>
+                                <td>@project.QueueStudents.Count</td>
+                                <td>
+                                    @if (project.Members.Any())
+                                    {
+                                        foreach (var participant in project.Members)
+                                        {
+                                            <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
+                                                <img alt="image" class="rounded-circle avatar" src="~/Materials/user/@participant.Avatar">
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="m-0">Chưa có thành viên</p>
+                                    }
+                                </td>
+                                <td>@totalTasks</td>
+                                <td>
+                                    @if (project.IsActive)
+                                    {
+                                        <span class="badge badge-success">Đang mở</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">Đã đóng</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="progress" data-toggle="tooltip" title="Đã hoàn thành: @completedTasks trên tổng số: @totalTasks">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @(progressPercentage)%" aria-valuenow="@(progressPercentage)" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle" id="@dropdownId" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="@dropdownId">
+                                            @if (project.Personalize?.Pinned == true)
+                                            {
+                                                <form action="@Url.Action("UnpinProject", "Instructor")" method="post">
+                                                    <input type="hidden" name="projectId" value="@project.ProjectID" />
+                                                    <button type="submit" class="dropdown-item">Bỏ ghim</button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                        <form action="@Url.Action("PinProject", "Instructor")" method="post">
+                                            <input type="hidden" name="projectId" value="@project.ProjectID" />
+                                            <button type="submit" class="dropdown-item">Ghim</button>
+                                        </form>
+                                            }
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#colorModal" data-project-id="@project.ProjectID">Đổi màu nền</a>
+                                            <a class="dropdown-item" href="#">Đóng dự án</a>
+                                            <a class="dropdown-item" href="#">Thêm thành viên</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // Initialize Bootstrap popovers
+        $('.avatar-popover').popover({
+            html: true, // Enable HTML content in popover
+            placement: 'top', // Display popover above the avatars
+        });
+    });
+    $(document).ready(function () {
+        $('#colorModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var projectId = button.data('project-id');
+            var modal = $(this);
+            modal.find('#saveColor').data('project-id', projectId);
+        });
+
+        $('#saveColor').click(function () {
+            var projectId = $(this).data('project-id');
+            var color = $('#colorPicker').val();
+            $.ajax({
+                url: '@Url.Action("ChangeProjectColor")',
+                type: 'POST',
+                data: { projectId: projectId, color: color },
+                success: function () {
+                    location.reload();
+                }
+            });
+            $('#colorModal').modal('hide');
+        });
+    });
+</script>
+
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#createProjectModal').on('show.bs.modal', function (e) {
+        $.get('@Url.Action("CreateProject", "Instructor")', function (data) {
+            $('#createProjectModalBody').html(data);
+        });
+    });
+    $('#Tags').select2({
+        placeholder: "Nhập tag và dấu ',' để thêm tag",
+        tags: true,
+        tokenSeparators: [','],
+        ajax: {
+            url: '@Url.Action("SearchTag")',
+            dataType: 'json',
+            delay: 250,
+            allowClear: true,
+            maximumSelectionLength: 5,
+            data: function(params) {
+                return {
+                    query: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1
+    });
+});
+</script>

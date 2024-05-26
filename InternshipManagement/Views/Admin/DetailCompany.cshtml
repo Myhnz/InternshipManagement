@@ -1,0 +1,45 @@
+﻿@model InternshipManagement.Models.Company
+
+<div class="modal-header">
+    <h5 class="modal-title" id="viewCompanyModalLabel">Thông tin doanh nghiệp</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="@Url.Content("~/Materials/LogoCompany/")@Model.Logo" alt="Company Logo" class="img-fluid mb-3" style="max-height: 150px;" />
+        </div>
+        <div class="col-md-8">
+            <dl class="row">
+                <dt class="col-sm-4">Tên công ty:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CompanyName)</dd>
+
+                <dt class="col-sm-4">Địa chỉ:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Address)</dd>
+
+                <dt class="col-sm-4">Số điện thoại:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Phone)</dd>
+
+                <dt class="col-sm-4">Email:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+
+                <!-- Thêm các thông tin khác ở đây -->
+
+                <dt class="col-sm-4">Trạng thái:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.isActive)</dd>
+
+                <dt class="col-sm-4">Ngày tạo:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CreateDate)</dd>
+
+                <dt class="col-sm-4">Cập nhật gần nhất:</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.UpdateDate)</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <!-- Add any additional buttons here if needed -->
+</div>

@@ -1,0 +1,77 @@
+﻿@model InternshipManagement.Models.User
+
+<div>
+
+    <div class="absolute-card" id="setting" style="width: 18rem; padding: 5px 0; display: none;">
+        <div class=" setting-menu">
+            <div id="Language" class="carousel slide" data-bs-interval="false">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a class="setting-item d-flex align-items-center" href="#">
+                            <i class="fas fa-user" style="width:25px"></i>
+                            Xem hồ sơ
+                        </a>
+                        <a class="setting-item d-flex align-items-center" href="#Language" data-bs-slide="next">
+                            <i class="fas fa-globe" style="width:25px"></i>
+                            Ngôn ngữ
+                            <i class="fas fa-chevron-right ms-auto"></i>
+                        </a>
+                        <hr style="margin: 5px 0; color: #797979" />
+                        <a class="setting-item d-flex align-items-center" href="@Url.Action("Logout","User")">
+                            <i class="fas fa-sign-out-alt" style="width:25px"></i>
+                            Đăng xuất
+                        </a>
+                    </div>
+                    <div class="carousel-item user-select-none">
+                        <div class="d-flex align-items-center setting-title" href="#Language" data-bs-slide="prev">
+                            <div class=" btn-circle">
+                                <i class="fas fa-chevron-left"></i>
+                            </div>
+                            <h5 class="m-0 px-3">Ngôn ngữ</h5>
+                        </div>
+                        <hr style="margin: 5px 0; color: #797979" />
+                        <label class="setting-item d-flex align-items-center" for="vie">
+                            Tiếng Việt
+                            <input class="form-check-input ms-auto" type="radio" name="lang" id="vie" checked>
+                        </label>
+                        <label class="setting-item d-flex align-items-center" for="eng">
+                            English
+                            <input class="form-check-input ms-auto" type="radio" name="lang" id="eng">
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end; align-items:center">
+        <div class="dropdown notification-button text-end mx-3">
+            <a href="#" class="d-block text-decoration-none d-flex justify-content-center align-items-center"
+               id="dropdownNoti"
+               aria-expanded="false">
+                <i class="fas fa-bell fs-5"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    99+
+                    <span class="visually-hidden">Thông báo</span>
+                </span>
+            </a>
+        </div>
+        <div class="text-end header-item" style="margin-right: 30px; user-select: none;">
+            <a class="d-block text-decoration-none"
+               onclick="toggleMenu()"
+               id="dropdownUser"
+               style="color: #ffffffdf;">
+                <img src="https://github.com/mdo.png"
+                     alt="mdo"
+                     width="32"
+                     height="32"
+                     class="rounded-circle m-2" />
+                <small class="header-user" style="color: #ffffffdf; margin-right:5px">
+                    @Model.LastName @Model.FirstName
+                </small><i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+

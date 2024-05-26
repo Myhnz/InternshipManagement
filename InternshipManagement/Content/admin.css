@@ -1,0 +1,251 @@
+﻿
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.header1 {
+    background-color: #0a558c;
+    border-bottom: 2px solid #ff3a3abe;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo {
+    color: #343a40;
+    padding: 0 37px;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+}
+
+.notification-button #dropdownNoti {
+    width: 32px;
+    height: 32px;
+    color: white;
+    border: none;
+    padding: 0;
+}
+
+    .notification-button:hover {
+    }
+
+
+.hide-notification-button{
+    display:none;
+}
+
+.logo1 {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+
+.absolute-card {
+    background-color: #fff;
+    position: absolute;
+    top: 52px;
+    right: 5px;
+    z-index: 1000;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.setting-menu .setting-item {
+    display: block;
+    text-decoration: none;
+    color: #212529;
+    padding: 6px 30px;
+    width: 100%
+}
+
+    .setting-menu .setting-item:hover {
+        background-color: #e6e6e6
+    }
+
+.setting-menu .setting-title {
+    display: block;
+    text-decoration: none;
+    color: #212529;
+    padding: 2px 30px;
+    width: 100%
+}
+
+.btn-circle {
+    background-color: #fff;
+    border-color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .btn-circle:hover {
+        color: #555;
+        background-color: #e6e6e6;
+        border-color: #e6e6e6;
+        cursor: pointer;
+    }
+
+.header-item:hover {
+    background-color:#0e4b79
+}
+
+.sidebar1 {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: fixed;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    background-color: #0a558c;
+    padding-top: 20px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    z-index: 5000;
+}
+    .sidebar1 .wcollapse {
+        margin-left: 20px
+    }
+
+    .sidebar1 i {
+        margin-right: 10px;
+    }
+
+    .sidebar1 .sidebar-text {
+        left: 50px;
+        position: absolute;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar1 .sidebar-down {
+        transition: transform 0.3s ease;
+    }
+
+@media (max-width: 700px) {
+    .header-logo img{
+        display: none;
+    }
+    .header-logo {
+        background-color: #0a558c;
+        color: #fff
+    }
+    .sidebar1.collapsed {
+        width: 0px !important;
+    }
+
+    .content {
+        margin-left: 0px !important;
+    }
+
+    .sidebar1.collapsed a {
+        display: none !important;
+    }
+
+    .header-user {
+        display: none;
+    }
+    .hide-notification-button{display:block}
+}
+
+
+.sidebar1.collapsed {
+    width: 50px;
+}
+
+    .sidebar1.collapsed:hover {
+        width: 250px;
+    }
+
+    .sidebar1.collapsed .sidebar-down,
+    .sidebar1.collapsed .sidebar-text {
+        transform: translateX(-500px);
+        opacity: 0;
+    }
+
+
+    .sidebar1.collapsed:hover .sidebar-text,
+    .sidebar1.collapsed:hover .sidebar-down {
+        transform: translateX(0px);
+        display: inline !important;
+        opacity: 1;
+    }
+
+    .sidebar1.collapsed:hover .nav-item {
+        width: 250px;
+    }
+    .sidebar1.collapsed:hover .wcollapse .nav-item {
+        width: 240px;
+    }
+
+    .sidebar1.collapsed .nav-item {
+        width: 50px;
+    }
+
+    .sidebar1.collapsed .wcollapse {
+        margin-left: 0px
+    }
+    .sidebar1.collapsed:hover .wcollapse {
+        margin-left: 10px
+    }
+
+
+.sidebar1 a {
+    overflow:hidden;
+    position:relative;
+    padding: 10px;
+    text-decoration: none;
+    color: #ffffff;
+    display: block;
+}
+
+    .sidebar1 a.active {
+        background-color: #044470;
+        color: #fff;
+    }
+
+    .sidebar1 a:hover {
+        background-color: #044470;
+        color: #fff;
+    }
+
+    .sidebar1 a::selection {
+        color: #fff;
+    }
+
+
+.content {
+    flex: 1;
+    padding: 0px;
+    transition: margin-left 0.3s ease;
+    margin-left: 250px; /* Giá trị mặc định */
+}
+
+    .content.collapsed {
+        margin-left: 50px;
+    }
+
+.toggle-btn {
+    cursor: pointer;
+}
+
+.rotate-90 {
+    transform: rotate(-90deg);
+}
