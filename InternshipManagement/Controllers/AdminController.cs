@@ -11,6 +11,8 @@ using System.Web.Mvc;
 using System.Web.Security;
 using System.Web.UI.WebControls;
 using InternshipManagement.Models;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace InternshipManagement.Controllers
 {
@@ -357,68 +359,67 @@ namespace InternshipManagement.Controllers
         [HttpGet]
         public ActionResult CreateUserAccount()
         {
-            //Đưa danh sách Role từ Database vào DropDownList
             ViewBag.Roles = new SelectList(aData.UserRoles.ToList().OrderBy(r => r.RoleName), "RoleID", "RoleName");
             ViewBag.Companies = new SelectList(aData.Companies.ToList().OrderBy(r => r.CompanyID), "CompanyID", "CompanyName");
             return PartialView();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateUserAccount(User user, int? CompanyID)
         {
             try
             {
-                // Retrieve user roles from the database
                 ViewBag.Roles = new SelectList(aData.UserRoles.ToList().OrderBy(r => r.RoleID), "RoleID", "RoleName");
                 ViewBag.Companies = new SelectList(aData.Companies.ToList().OrderBy(r => r.CompanyID), "CompanyID", "CompanyName");
 
                 if (ModelState.IsValid)
                 {
-                    // Hash password
                     user.Password = PasswordHasher.HashPassword(user.Password);
-                    user.Avatar = "default.jpg";
+                    user.Avatar = GenerateDefaultAvatar(user.FirstName);
                     user.CreateDate = DateTime.Now;
                     user.UpdateDate = DateTime.Now;
 
-                    // Disable validation on save for the current context
                     aData.Configuration.ValidateOnSaveEnabled = false;
 
-                    // Add user based on role
                     if (user.RoleID == 1) // Sinh viên
                     {
-                        var existingStudent = new Student();
-                        existingStudent.FirstName = user.FirstName;
-                        existingStudent.LastName = user.LastName;
-                        existingStudent.DateOfBirth = null;
-                        existingStudent.Avatar = user.Avatar;
-                        existingStudent.Description = null;
-                        existingStudent.CV = null;
-                        existingStudent.Class = null;
-                        existingStudent.UserID = user.UserID;
-                        existingStudent.isActive = true;
-                        existingStudent.isDelete = false;
-                        existingStudent.CreateDate = DateTime.Now;
-                        existingStudent.UpdateDate = DateTime.Now;
+                        var existingStudent = new Student
+                        {
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            DateOfBirth = null,
+                            Avatar = user.Avatar,
+                            Description = null,
+                            CV = null,
+                            Class = null,
+                            UserID = user.UserID,
+                            isActive = true,
+                            isDelete = false,
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now
+                        };
                         aData.Students.Add(existingStudent);
                     }
                     else if (user.RoleID == 2) // Giảng viên
                     {
-                        var existingInstructor = new Instructor();
-                        existingInstructor.FirstName = user.FirstName;
-                        existingInstructor.LastName = user.LastName;
-                        existingInstructor.DateOfBirth = null;
-                        existingInstructor.Avatar = user.Avatar;
-                        existingInstructor.Description = null;
-                        existingInstructor.CompanyID = CompanyID.Value;
-                        existingInstructor.UserID = user.UserID;
-                        existingInstructor.isActive = true;
-                        existingInstructor.isDelete = false;
-                        existingInstructor.CreateDate = DateTime.Now;
-                        existingInstructor.UpdateDate = DateTime.Now;
+                        var existingInstructor = new Instructor
+                        {
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            DateOfBirth = null,
+                            Avatar = user.Avatar,
+                            Description = null,
+                            CompanyID = CompanyID.Value,
+                            UserID = user.UserID,
+                            isActive = true,
+                            isDelete = false,
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now
+                        };
                         aData.Instructors.Add(existingInstructor);
                     }
 
-                    // Add user to database
                     aData.Users.Add(user);
                     aData.SaveChanges();
                     return RedirectToAction("Users");
@@ -432,6 +433,39 @@ namespace InternshipManagement.Controllers
             return RedirectToAction("Users");
         }
 
+        private string GenerateDefaultAvatar(string firstName)
+        {
+            int width = 400;
+            int height = 400;
+
+            using (Bitmap bitmap = new Bitmap(width, height))
+            {
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                {
+                    Random random = new Random();
+                    Color randomColor = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+                    graphics.Clear(randomColor);
+
+                    using (Font font = new Font("Arial", 200, FontStyle.Bold, GraphicsUnit.Pixel))
+                    {
+                        using (SolidBrush brush = new SolidBrush(Color.White))
+                        {
+                            string initial = firstName[0].ToString();
+                            SizeF textSize = graphics.MeasureString(initial, font);
+                            PointF position = new PointF((width - textSize.Width) / 2, (height - textSize.Height) / 2);
+
+                            graphics.DrawString(initial, font, brush, position);
+
+                            string avatarFileName = $"{Guid.NewGuid()}.jpg";
+                            string avatarFilePath = Server.MapPath($"~/Content/avatars/{avatarFileName}");
+                            bitmap.Save(avatarFilePath, ImageFormat.Jpeg);
+
+                            return avatarFileName;
+                        }
+                    }
+                }
+            }
+        }
 
 
         // Chức năng chỉnh sửa Người dùng

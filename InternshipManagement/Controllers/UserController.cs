@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using InternshipManagement.Models;
@@ -104,16 +105,10 @@ namespace InternshipManagement.Controllers
                 }
                 else if (role == 2)
                 {
-                    return RedirectToAction("InstructorRegister");
+                    return RedirectToAction("RegisterEmail");
                 }
             }
             return View();
-        }
-
-
-        public ActionResult InstructorRegister()
-        {
-            return View("InstructorRegister");
         }
         //Chức năng đăng xuất
         public ActionResult Logout()
@@ -232,11 +227,24 @@ namespace InternshipManagement.Controllers
 
                 // Disable validation on save for the current context
                 data.Configuration.ValidateOnSaveEnabled = false;
+                // Assuming Session["Email"] is a valid string
+                string email = Session["Email"].ToString();
 
+                // Find the index of '@' character
+                int atIndex = email.IndexOf('@');
+                // Check if the '@' character is found
+                if (atIndex != -1)
+                {
+                    // Extract the substring from the beginning of the email string up to (but not including) the '@' character
+                    string username = email.Substring(0, atIndex);
+
+                    // Now username contains the part of the email before the '@' character
+                    user.Username = username;
+                }
 
                 var existingStudent = new Student();
                 existingStudent.FirstName = user.FirstName;
-                existingStudent.LastName = user.FirstName;
+                existingStudent.LastName = user.LastName;
                 existingStudent.DateOfBirth = user.DateOfBirth;
                 existingStudent.Email = user.Email;
                 existingStudent.Phone = user.Phone;
@@ -285,7 +293,20 @@ namespace InternshipManagement.Controllers
 
                 // Disable validation on save for the current context
                 data.Configuration.ValidateOnSaveEnabled = false;
+                // Assuming Session["Email"] is a valid string
+                string email = Session["Email"].ToString();
 
+                // Find the index of '@' character
+                int atIndex = email.IndexOf('@');
+                // Check if the '@' character is found
+                if (atIndex != -1)
+                {
+                    // Extract the substring from the beginning of the email string up to (but not including) the '@' character
+                    string username = email.Substring(0, atIndex);
+
+                    // Now username contains the part of the email before the '@' character
+                    user.Username = username;
+                }
 
                 var existingInstructor = new Instructor();
                 existingInstructor.FirstName = user.FirstName;
@@ -357,77 +378,91 @@ namespace InternshipManagement.Controllers
                 return View();
             }
         }
-        //Chức năng quên mật khẩu, reset mật khẩu thành 123456 rồi gửi email cho người dùng
         [HttpGet]
         public ActionResult ForgotPassword()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ForgotPassword(string email)
         {
             OTPStorage otpStorage = new OTPStorage();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ModelState.AddModelError("Email", "Vui lòng nhập địa chỉ email.");
+                return View();
+            }
+
             var user = data.Users.FirstOrDefault(x => x.Email == email);
             if (user == null)
             {
                 ViewBag.Message = "Không tìm thấy người dùng với email này hoặc email không hợp lệ";
                 return View();
             }
-            else
-            {
-                // Tạo mã OTP ngẫu nhiên
-                Random random = new Random();
-                int otp = random.Next(100000, 999999); // OTP có 6 chữ số
 
-                // Lưu mã OTP vào OTPStorage
-                OTPStorage.AddOTP(email, otp.ToString());
+            string otp = otpStorage.GenerateOTP();
 
-                // Gửi mã OTP đến địa chỉ email của người dùng
-                string subject = "Xác nhận đổi mật khẩu";
-                string body = "Mã OTP của bạn là: " + otp.ToString() + ". Vui lòng sử dụng mã này để đổi mật khẩu.";
-                bool emailSent = otpStorage.SendEmail(email, subject, body);
+            // Lưu mã OTP vào phiên làm việc
+            Session["OTP"] = otp;
+            Session["Email"] = email;
+            //Session["UserID"] = user.UserID;
 
-                if (emailSent)
-                {
-                    ViewBag.Message = "OTP đã được gửi đến địa chỉ email của bạn.";
-                }
-                else
-                {
-                    ViewBag.Message = "Đã xảy ra lỗi trong quá trình gửi email. Vui lòng thử lại sau.";
-                }
-            }
-            return View();
+            // Gửi mã OTP đến địa chỉ email của người dùng
+            string subject = "Xác nhận đổi mật khẩu";
+            string body = "Mã OTP của bạn là: " + otp.ToString() + ". Vui lòng sử dụng mã này để đổi mật khẩu.";
+            bool emailSent = otpStorage.SendEmail(email, subject, body);
+
+            // Chuyển hướng đến trang nhập mã OTP
+            return RedirectToAction("CheckOTP");
         }
+
         [HttpGet]
         public ActionResult CheckOTP()
         {
+            ViewBag.Email = (string)Session["Email"];
             return View();
         }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CheckOTP(string email, string otp)
+        public ActionResult CheckOTP(string otp1, string otp2, string otp3, string otp4, string otp5, string otp6)
         {
-            // Kiểm tra xem mã OTP nhập vào có khớp với mã OTP đã gửi hay không
-            string storedOTP = OTPStorage.GetOTP(email);
-            if (storedOTP == null || storedOTP != otp)
+            try
             {
-                ViewBag.Message = "Mã OTP không hợp lệ. Vui lòng kiểm tra lại.";
+                string otp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+                string storedOTP = Session["OTP"] as string;
+
+                if (otp == storedOTP)
+                {
+                    return RedirectToAction("ResetPassword");
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Mã OTP không hợp lệ.";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ nếu có
+                ViewBag.ErrorMessage = "Đã xảy ra lỗi khi nhập mã OTP: " + ex.Message;
                 return View();
             }
-            else
-            {
-                // Xóa mã OTP khỏi OTPStorage sau khi sử dụng thành công
-                OTPStorage.RemoveOTP(email);
-                ViewBag.Email = email;
-                return RedirectToAction("ResetPassword", new { resetEmail = email });
-            }
         }
+
+        [HttpGet]
+        public ActionResult ResetPassword()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ResetPassword(string resetEmail, string newPassword, string confirmPassword)
+        public ActionResult ResetPassword(string newPassword, string confirmPassword)
         {
-            var user = data.Users.FirstOrDefault(x => x.Email == resetEmail);
+            string email = (string)Session["Email"];
+            var user = data.Users.FirstOrDefault(x => x.Email == email);    
             if (user == null)
             {
                 ViewBag.Message = "Không tìm thấy người dùng với email này hoặc email không hợp lệ";
@@ -448,7 +483,7 @@ namespace InternshipManagement.Controllers
                     // Lưu thay đổi vào cơ sở dữ liệu
                     data.SaveChanges();
 
-                    ViewBag.Message = "Đổi mật khẩu thành công.";
+                    ViewBag.Message = "Đổi mật khẩu thành công. Mật khẩu mới đã được gửi đến email của bạn.";
                     return RedirectToAction("Login"); // Hoặc chuyển hướng đến trang khác
                 }
             }

@@ -2721,7 +2721,6 @@
     <Content Include="Views\Shared\_pageLayout.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\User\StudentRegister.cshtml" />
-    <Content Include="Views\User\InstructorRegister.cshtml" />
     <Content Include="Views\Student\singleProject.cshtml" />
     <Content Include="Views\Student\DetailProject.cshtml" />
     <Content Include="Views\User\ChooseRole.cshtml" />
@@ -2731,6 +2730,10 @@
     <Content Include="Views\User\RegisterStudent.cshtml" />
     <Content Include="Views\Instructor\ProjectDetails.cshtml" />
     <Content Include="Views\Student\ApplyProject.cshtml" />
+    <Content Include="Views\User\ForgotPassword.cshtml" />
+    <Content Include="Views\User\CheckOTP.cshtml" />
+    <Content Include="Views\User\ResetPassword.cshtml" />
+    <Content Include="Views\User\InstructorRegister.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

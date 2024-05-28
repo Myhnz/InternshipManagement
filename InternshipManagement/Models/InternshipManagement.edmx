@@ -157,7 +157,6 @@
           <Property Name="isDelete" Type="bit" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="RecruitmentPosition" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="ProjectSpecializations">
           <Key>
@@ -906,7 +905,6 @@
           <NavigationProperty Name="ProjectSpecializations" Relationship="Self.FK_ProjectSpecializations_Project" FromRole="Projects" ToRole="ProjectSpecializations" />
           <NavigationProperty Name="ProjectTags" Relationship="Self.FK_ProjectTags_Project" FromRole="Projects" ToRole="ProjectTags" />
           <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_Projects" FromRole="Projects" ToRole="Tasks" />
-          <Property Name="RecruitmentPosition" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Personalizes" Relationship="InternshipManagementModel.FK_ProjectPersonalize" FromRole="Project" ToRole="Personalize" />
         </EntityType>
         <EntityType Name="ProjectSpecialization">
@@ -1491,7 +1489,7 @@
           <Key>
             <PropertyRef Name="PersonalizeID" />
           </Key>
-          <Property Name="PersonalizeID" Type="Int32" Nullable="false" />
+          <Property Name="PersonalizeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProjectID" Type="Int32" />
           <Property Name="Color" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Pinned" Type="Boolean" />
@@ -1653,7 +1651,6 @@
           <EntitySetMapping Name="Projects">
             <EntityTypeMapping TypeName="InternshipManagementModel.Project">
               <MappingFragment StoreEntitySet="Projects">
-                <ScalarProperty Name="RecruitmentPosition" ColumnName="RecruitmentPosition" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
                 <ScalarProperty Name="StudentsCount" ColumnName="StudentsCount" />
