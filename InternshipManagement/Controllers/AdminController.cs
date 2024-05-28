@@ -13,6 +13,8 @@ using System.Web.UI.WebControls;
 using InternshipManagement.Models;
 using System.Drawing;
 using System.Drawing.Imaging;
+using static System.Net.WebRequestMethods;
+using System.Web.Helpers;
 
 namespace InternshipManagement.Controllers
 {
@@ -532,6 +534,12 @@ namespace InternshipManagement.Controllers
 
                     aData.Users.Add(user);
                     aData.SaveChanges();
+                    OTPStorage otpStorage = new OTPStorage();
+                    string userEmail = user.Email;
+                    // Gửi email thông báo tài khoản và mật khẩu
+                    string subject = "Thông tin tài khoản của bạn";
+                    string body = $"Tài khoản của bạn đã được tạo thành công. Tên đăng nhập: {user.Username}, Mật khẩu: {user.Password}";
+                    otpStorage.SendEmail(userEmail, subject, body);
                     return RedirectToAction("Users");
                 }
             }

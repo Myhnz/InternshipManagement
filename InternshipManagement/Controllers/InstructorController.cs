@@ -651,7 +651,7 @@ namespace InternshipManagement.Controllers
             iData.SaveChanges();
 
             // Chuyển hướng người dùng đến trang nào đó sau khi thêm nhiệm vụ thành công
-            return RedirectToAction("Tasks");
+            return RedirectToAction("Tasks", new { projectID});
         }
         //Chức năng chỉnh sửa Task
         [HttpGet]

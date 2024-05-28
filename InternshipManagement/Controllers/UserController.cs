@@ -407,7 +407,7 @@ namespace InternshipManagement.Controllers
             // Lưu mã OTP vào phiên làm việc
             Session["OTP"] = otp;
             Session["Email"] = email;
-            //Session["UserID"] = user.UserID;
+            
 
             // Gửi mã OTP đến địa chỉ email của người dùng
             string subject = "Xác nhận đổi mật khẩu";
