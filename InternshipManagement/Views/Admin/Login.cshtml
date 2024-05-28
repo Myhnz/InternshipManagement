@@ -12,6 +12,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login </title>
     <link href="~/Content/login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="wrapper">
@@ -34,13 +36,13 @@
                 <label>Mật khẩu</label>
             </div>
             <div class="forget">
-                <label for="remember">
+                @*<label for="remember">
                     <input type="checkbox" id="remember">
                     <p>Nhớ tài khoản</p>
-                </label>
-                <a href="#">Quên mật khẩu?</a>
+                </label>*@
+                <a href="@Url.Action("ForgotPassword")">Quên mật khẩu?</a>
             </div>
-            <button type="submit">Log In</button>
+            <button class="btn btn-primary" type="submit">Đăng nhập</button>
             <div class="register">
                 <p>Chưa có tài khoản? <a href="@Url.Action("Register")">Đăng kí</a></p>
             </div>
