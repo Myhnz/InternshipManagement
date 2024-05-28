@@ -1,107 +1,111 @@
-﻿@model InternshipManagement.Models.InternshipInformation
-
+﻿@model InternshipManagement.Models.ProjectDetailViewModel
 @{
-    ViewBag.Title = "DetailProject";
+    ViewBag.Title = "ProjectDetails";
     Layout = "~/Views/Shared/_LTELayout.cshtml";
 }
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<link href="~/Content/InstructorPd.css" rel="stylesheet" />
 
-<h2>DetailProject</h2>
+<div class="container">
+    <div class="project-detail">
+        <h2 class="my-4">@Model.ProjectName</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <img src="@Model.CompanyLogo" class="img-fluid" alt="Company Logo" />
+            </div>
+            <div class="col-md-9">
+                <h4>Company: @Model.CompanyName</h4>
+                <h4>Instructor: @Model.InstructorName</h4>
+            </div>
+        </div>
+        <div class="members my-4">
+            <h3>Project Members</h3>
+            <div class="row">
+                @foreach (var member in Model.Members)
+                {
+                    <div class="col-md-2 text-center">
+                        <img src="~/Content/avatars/@member.Avatar" class="img-thumbnail mb-2 rounded-circle" alt="avt" />
+                    </div>
+                }
+            </div>
+        </div>
 
-<div>
-    <h4>InternshipInformation</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.isActive)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.isActive)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.isDelete)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.isDelete)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Company.CompanyName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Company.CompanyName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Instructor.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Instructor.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Project.ProjectName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Project.ProjectName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Student.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Student.FirstName)
-        </dd>
-
-    </dl>
+        <div id="calendar"></div>
+        
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.InternshipID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung chi tiết của task sẽ được thêm vào đây -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+       document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        dayMaxEvents: 4, // Giới hạn số lượng sự kiện hiển thị trong một ngày là 4
+        events: function (fetchInfo, successCallback, failureCallback) {
+            // Tạo mảng sự kiện
+            var events = [];
+
+            // Thêm sự kiện cho ngày bắt đầu
+            @foreach (var task in Model.Tasks.Where(t => t.StartDate.HasValue))
+            {
+                <text>events.push({
+                    title: '@task.Description' + ' (Start)',
+                    start: '@task.StartDate.Value.ToString("yyyy-MM-dd")',
+                    allDay: true,
+                    color: 'blue' // Màu xanh cho ngày bắt đầu
+                });</text>
+            }
+
+            // Thêm sự kiện cho ngày kết thúc
+            @foreach (var task in Model.Tasks.Where(t => t.EndDate.HasValue))
+            {
+                <text>events.push({
+                    title: '@task.Description' + ' (End)',
+                    start: '@task.EndDate.Value.ToString("yyyy-MM-dd")',
+                    allDay: true,
+                    color: 'red' // Màu đỏ cho ngày kết thúc
+                });</text>
+            }
+
+            // Gọi hàm callback để trả về mảng sự kiện
+            successCallback(events);
+        },
+        eventClick: function (info) {
+            // Hiển thị modal với thông tin chi tiết của task
+            showTaskModal(info.event.title, info.event.start, info.event.end);
+        }
+    });
+    calendar.render();
+});
+
+function showTaskModal(title, start, end) {
+    // Hiển thị modal với thông tin chi tiết của task
+    // Ví dụ sử dụng Bootstrap Modal
+    $('#taskModal .modal-title').text(title);
+    $('#taskModal .modal-body').html(`
+        <p>Date: ${new Date(start).toDateString()}</p>
+    `);
+    $('#taskModal').modal('show');
+}
+
+    </script>
+}

@@ -201,6 +201,7 @@
       <DependentUpon>InternshipManagement.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProjectDetails.cs" />
+    <Compile Include="Models\ProjectDetailViewModel.cs" />
     <Compile Include="Models\ProjectSpecialization.cs">
       <DependentUpon>InternshipManagement.tt</DependentUpon>
     </Compile>

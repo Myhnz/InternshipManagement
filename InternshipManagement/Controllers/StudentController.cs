@@ -352,17 +352,51 @@ namespace InternshipManagement.Controllers
         //Trang chi tiết dự án
         public ActionResult DetailProject(int studentID)
         {
-            var internship = sData.InternshipInformations.SingleOrDefault(p => p.StudentID == studentID);
+            var context = new InternshipManagementEntities();
 
-            if (internship != null)
+            // Lấy thông tin thực tập của sinh viên
+            var internship = context.InternshipInformations
+                .Include("Project")
+                .Include("Project.Company")
+                .Include("Project.Instructor")
+                .Include("Project.Tasks")
+                .Include("Project.InternshipInformations.Student")
+                .SingleOrDefault(p => p.StudentID == studentID && p.isActive == true);
+
+            if (internship == null)
             {
-                return View(internship);
+                return RedirectToAction("SearchProject"); // Nếu không tìm thấy, chuyển hướng tới trang khác
             }
-            else
+
+            // Tạo ViewModel để truyền dữ liệu tới view
+            var projectDetailViewModel = new ProjectDetailViewModel
             {
-                // Handle case where internship information is not found for the given studentID
-                return RedirectToAction("Index"); // or any other action you want to redirect to
-            }
+                ProjectID = internship.ProjectID.Value,
+                ProjectName = internship.Project.ProjectName,
+                CompanyName = internship.Project.Company.CompanyName,
+                CompanyLogo = internship.Project.Company.Logo,
+                InstructorName = internship.Project.Instructor.LastName + " " + internship.Project.Instructor.FirstName,
+                Members = internship.Project.InternshipInformations
+                                    .Where(i => i.isActive == true)
+                                    .Select(i => new ProjectMemberViewModel
+                                    {
+                                        StudentID = i.Student.StudentID,
+                                        StudentName = i.Student.LastName + " " + i.Student.FirstName,
+                                        Avatar = i.Student.Avatar
+                                    }).ToList(),
+                Tasks = internship.Project.Tasks
+                                     .Where(t => t.StudentID == studentID && t.isDelete == false)
+                                     .Select(t => new TaskViewModel
+                                     {
+                                         TaskID = t.TaskID,
+                                         Description = t.TaskDescription,
+                                         Status = t.Status,
+                                         StartDate = t.StartDate,
+                                         EndDate = t.EndDate
+                                     }).ToList()
+            };
+
+            return View(projectDetailViewModel);
         }
         //Trang chi tiết dự án 
         public ActionResult singleProject(int ProjectID)
