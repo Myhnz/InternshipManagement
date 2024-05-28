@@ -32,7 +32,7 @@
         </div>
 
         <div id="calendar"></div>
-        
+
     </div>
 </div>
 <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
@@ -45,8 +45,17 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Nội dung chi tiết của task sẽ được thêm vào đây -->
+                <p>Date: <span id="taskDate"></span></p>
+                <div class="form-group">
+                    <label for="statusSelect">Status:</label>
+                    <select class="form-control" id="statusSelect">
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </div>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -55,57 +64,104 @@
 </div>
 @section Scripts {
     <script>
-       document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        dayMaxEvents: 4, // Giới hạn số lượng sự kiện hiển thị trong một ngày là 4
-        events: function (fetchInfo, successCallback, failureCallback) {
-            // Tạo mảng sự kiện
-            var events = [];
+        // Check if the script has already been included
+        if (!window.fullCalendarScriptLoaded) {
+            window.fullCalendarScriptLoaded = true; // Mark the script as loaded
 
-            // Thêm sự kiện cho ngày bắt đầu
-            @foreach (var task in Model.Tasks.Where(t => t.StartDate.HasValue))
-            {
-                <text>events.push({
-                    title: '@task.Description' + ' (Start)',
-                    start: '@task.StartDate.Value.ToString("yyyy-MM-dd")',
-                    allDay: true,
-                    color: 'blue' // Màu xanh cho ngày bắt đầu
-                });</text>
-            }
+            document.addEventListener('DOMContentLoaded', function () {
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    dayMaxEvents: 4,
+                    events: function (fetchInfo, successCallback, failureCallback) {
+                        var events = [];
 
-            // Thêm sự kiện cho ngày kết thúc
-            @foreach (var task in Model.Tasks.Where(t => t.EndDate.HasValue))
-            {
-                <text>events.push({
-                    title: '@task.Description' + ' (End)',
-                    start: '@task.EndDate.Value.ToString("yyyy-MM-dd")',
-                    allDay: true,
-                    color: 'red' // Màu đỏ cho ngày kết thúc
-                });</text>
-            }
+                        @foreach (var task in Model.Tasks.Where(t => t.StartDate.HasValue))
+                        {
+                            var color = "#007bff"; // Default color
+                            if (task.Status == "Completed")
+                            {
+                                color = "#28a745"; // Green color for completed tasks
+                            }
+                            <text>events.push({
+                                title: '@task.Description' + ' (Start)',
+                                start: '@task.StartDate.Value.ToString("yyyy-MM-dd")',
+                                allDay: true,
+                                color: '@color'
+                            });</text>
+                        }
 
-            // Gọi hàm callback để trả về mảng sự kiện
-            successCallback(events);
-        },
-        eventClick: function (info) {
-            // Hiển thị modal với thông tin chi tiết của task
-            showTaskModal(info.event.title, info.event.start, info.event.end);
+                        @foreach (var task in Model.Tasks.Where(t => t.EndDate.HasValue))
+                        {
+                            var color1 = "#dc3545"; // Default color
+                            if (task.Status == "Completed")
+                            {
+                                color1 = "#28a745"; // Green color for completed tasks
+                            }
+                            <text>events.push({
+                                title: '@task.Description' + ' (End)',
+                                start: '@task.EndDate.Value.ToString("yyyy-MM-dd")',
+                                allDay: true,
+                                color: '@color1'
+                            });</text>
+                        }
+
+                        successCallback(events);
+                    },
+                    eventClick: function (info) {
+                        showTaskModal(info.event.title, info.event.start, info.event.end, info.event.id);
+                    }
+                });
+                calendar.render();
+
+                function showTaskModal(title, start, end, taskId) {
+                    // Lấy trạng thái của task từ tiêu đề sự kiện
+                    var status = title.includes('Start') ? 'In Progress' : 'Completed';
+
+                    $('#taskModal .modal-title').text(title);
+                    $('#taskModal .modal-body').html(`
+                        <p>Date: ${new Date(start).toDateString()}</p>
+                        <input type="hidden" id="taskId" value="${taskId}" />
+                        <div class="form-group">
+                            <label for="statusSelect">Status:</label>
+                            <select class="form-control" id="statusSelect">
+                                <option value="In Progress" ${status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="Completed" ${status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            </select>
+                        </div>
+                    `);
+                    $('#taskModal').modal('show');
+                }
+
+                $('#updateStatusBtn').click(function () {
+                    updateStatus();
+                });
+
+                function updateStatus() {
+                    var taskId = $('#taskId').val();
+                    var newStatus = $('#statusSelect').val();
+                    $.ajax({
+                        url: '/Student/UpdateStatus',
+                        type: 'POST',
+                        data: {
+                            taskId: taskId,
+                            newStatus: newStatus
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                console.log('Status updated successfully');
+                                $('#taskModal').modal('hide');
+                            } else {
+                                console.error('Failed to update status');
+                            }
+                        },
+                        error: function () {
+                            console.error('Failed to update status. Server error.');
+                        }
+                    });
+                }
+            });
         }
-    });
-    calendar.render();
-});
-
-function showTaskModal(title, start, end) {
-    // Hiển thị modal với thông tin chi tiết của task
-    // Ví dụ sử dụng Bootstrap Modal
-    $('#taskModal .modal-title').text(title);
-    $('#taskModal .modal-body').html(`
-        <p>Date: ${new Date(start).toDateString()}</p>
-    `);
-    $('#taskModal').modal('show');
-}
-
     </script>
 }
