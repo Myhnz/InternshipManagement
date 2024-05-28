@@ -1,0 +1,35 @@
+﻿@model InternshipManagement.Models.Task
+
+@{
+    ViewBag.Title = "DetailTask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detail Task</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>Task ID:</dt>
+        <dd>@Model.TaskID</dd>
+        <dt>Description:</dt>
+        <dd>@Model.TaskDescription</dd>
+        <dt>Status:</dt>
+        <dd>@Model.Status</dd>
+    </dl>
+
+    @using (Html.BeginForm("EditTaskStatus", "Instructor", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.TaskID)
+
+        <div class="form-group">
+            <label for="status">New Status:</label>
+            <select name="status" id="status" class="form-control">
+                <option value="InProgress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Status</button>
+    }
+</div>

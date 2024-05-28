@@ -301,9 +301,8 @@ a {
     }
 
 .avatar {
-    width: 50px; /* Adjust the width and height as needed */
-    height: 50px;
+    width: 25px; /* Adjust the width and height as needed */
+    height: 25px;
     object-fit: cover;
     border-radius: 50%;
 }
-

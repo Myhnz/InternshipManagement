@@ -110,7 +110,7 @@
                                         foreach (var participant in project.Members)
                                         {
                                             <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
-                                                <img alt="image" class="rounded-circle avatar" src="~/Materials/user/@participant.Avatar">
+                                                <img alt="image" class="rounded-circle avatar" src="~/Content/avatars/@participant.Avatar">
                                             </a>
                                         }
                                     }

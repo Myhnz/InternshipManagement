@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_LTELayout.cshtml";
 }
 <link href="~/Content/InstructorPd.css" rel="stylesheet" />
+
 <div style="background-color: #F0F4F9">
     <div class="container py-3">
         <div class="row">
@@ -14,8 +15,16 @@
                         <div class="ibox-content">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="@Url.Action("Projects", "Instructor")">Projects</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">@Model.ProjectName</li>
+                                        </ol>
+                                    </nav>
+
+
                                     <div class="mb-3">
-                                        <a href="#" class="btn btn-outline-primary btn-sm float-right">Edit project</a>
+                                        <a href="#" class="btn btn-outline-primary btn-sm float-right" data-toggle="modal" data-target="#createTaskModal" data-project-id="@Model.ProjectID">Tạo task mới</a>
                                         <h2>@Model.ProjectName</h2>
                                     </div>
                                     <dl class="row">
@@ -47,7 +56,9 @@
                                         <dd class="col-8 project-people">
                                             @foreach (var participant in Model.Members)
                                             {
-                                                <a href="#"><img alt="image" class="rounded-circle" src="~/Materials/user/@participant.Avatar"></a>
+                                                <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
+                                                    <img alt="image" class="rounded-circle avatar" src="~/Content/avatars/@participant.Avatar">
+                                                </a>
                                             }
                                         </dd>
                                     </dl>
@@ -57,7 +68,7 @@
                                 <div class="col-lg-12">
                                     <dl class="row">
                                         <dt class="col-3">Completed:</dt>
-                                        <dd class="col-9">
+                                        <dd class="col-9" id="taskProgress">
                                             @if (Model.Tasks.Any())
                                             {
                                                 int completedTasksCount = Model.Tasks.Count(t => t.Status == "Completed");
@@ -68,14 +79,7 @@
                                                 </div>
                                                 <small>
                                                     Tiến độ dự án <strong>@percentage%</strong>,
-                                                    @if (Model.Tasks != null && Model.Tasks.Any())
-                                                    {
-                                                        <span class="text-custom">@Model.Tasks.Count(t => t.Status == "Completed")/@Model.Tasks.Count</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-custom">0/0</span>
-                                                    }
+                                                    <span class="text-custom">@completedTasksCount/@totalTasksCount</span>
                                                 </small>
                                             }
                                             else
@@ -89,13 +93,13 @@
                             <div class="row mt-3">
                                 <div class="col-lg-12">
                                     <div class="card">
-                                        <div class="card-header" style="background-color: #f8f9fa;">
+                                        <div class="card-header" style="background-color: #e9ecef;">
                                             <ul class="nav nav-tabs card-header-tabs">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" href="#tab-1" data-toggle="tab">Tin nhắn chung</a>
+                                                    <a class="nav-link" href="#tab-1" data-toggle="tab">Tin nhắn chung</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#tab-2" data-toggle="tab">Hoạt động</a>
+                                                    <a class="nav-link active" href="#tab-2" data-toggle="tab">Hoạt động</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" href="#tab-3" data-toggle="tab">Thành viên</a>
@@ -104,11 +108,61 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="tab-content">
-                                                <div class="tab-pane active" id="tab-1">
+                                                <div class="tab-pane" id="tab-1">
                                                     <!-- Your user messages content -->
                                                 </div>
-                                                <div class="tab-pane" id="tab-2">
-                                                    <!-- Your last activity content -->
+                                                <div class="tab-pane active" id="tab-2">
+                                                    <h4>Danh sách Task</h4>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Mô tả Task</th>
+                                                                    <th>Thành viên</th>
+                                                                    <th>Ngày bắt đầu</th>
+                                                                    <th>Ngày kết thúc</th>
+                                                                    <th>Trạng thái</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var task in Model.Tasks)
+                                                                {
+                                                                    var student = task.Student;
+                                                                    <tr>
+                                                                        <td>@task.TaskDescription</td>
+                                                                        <td>
+                                                                            @if (student != null && !string.IsNullOrEmpty(student.Avatar))
+                                                                            {
+                                                                                <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{student.FirstName} {student.LastName}")" data-content="@($"Email: {student.Email}<br>Phone: {student.Phone}<br>Address: {student.Address}")">
+                                                                                    <img alt="image" class="rounded-circle avatar m-0" src="~/Content/avatars/@Url.Content(student.Avatar)" width="50" height="50">
+                                                                                </a>
+                                                                            }
+
+                                                                            else
+                                                                            {
+                                                                                <span>No avatar</span>
+                                                                            }
+                                                                        </td>
+                                                                        <td>@(task.StartDate.HasValue ? task.StartDate.Value.ToShortDateString() : "")</td>
+                                                                        <td>@(task.EndDate.HasValue ? task.EndDate.Value.ToShortDateString() : "")</td>
+                                                                        <td>
+                                                                            <div class="form-group my-0">
+                                                                                <select class="form-control form-control-sm status-select"
+                                                                                        onchange="updateTaskStatus(this, @task.TaskID)"
+                                                                                       >
+                                                                                    <option value="In Progress" class="text-info" @(task.Status == "In Progress" ? "selected" : "")>Đang tiến hành</option>
+                                                                                    <option value="Completed" class="text-success" @(task.Status == "Completed" ? "selected" : "")>Đã hoàn thành</option>
+                                                                                    <option value="Pending" class="text-warning" @(task.Status == "Pending" ? "selected" : "")>Đang chờ</option>
+                                                                                    <!-- Thêm các trạng thái khác nếu cần -->
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                                 <div class="tab-pane" id="tab-3">
                                                     <!-- Your last activity content -->
@@ -118,6 +172,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -134,7 +189,7 @@
                     @foreach (var student in Model.QueueStudents)
                     {
                         <div class="d-flex align-items-center mb-3">
-                            <img src="@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                            <img src="~/Content/avatars/@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
                             <span>@student.FirstName @student.LastName</span>
 
                             <div class="ml-auto d-flex flex-column">
@@ -154,6 +209,143 @@
                 </div>
             </div>
         </div>
+
+        <!-- Toast Notification -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="toast" style="position: absolute; bottom: 10px; right: 10px;" data-delay="9000">
+                <div class="toast-header">
+                    <strong class="mr-auto">Thông báo</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    @Html.Raw(TempData["SuccessMessage"])
+                </div>
+            </div>
+        }
+
+        <!-- End Toast Notification -->
     </div>
 </div>
 
+<!-- Create Task Modal -->
+<div class="modal fade" id="createTaskModal" tabindex="-1" role="dialog" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createTaskModalLabel">Tạo Task mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("CreateTask", "Instructor", new { projectID = Model.ProjectID }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="projectID" value="@Model.ProjectID" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Tasks.First().TaskDescription, "Mô tả Task", htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBox("TaskDescription", null, new { @class = "form-control" })
+                        @Html.ValidationMessage("TaskDescription", "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Tasks.First().StartDate, "Ngày bắt đầu", htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBox("StartDate", null, new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessage("StartDate", "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Tasks.First().EndDate, "Ngày kết thúc", htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBox("EndDate", null, new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessage("EndDate", "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Sinh viên", htmlAttributes: new { @class = "control-label" })
+                        @{
+                            var studentNames = Model.Members.Select(s => $"{s.LastName} {s.FirstName}").ToList();
+                            var studentIDs = Model.Members.Select(s => s.StudentID).ToList();
+                        }
+
+                        @Html.DropDownList("StudentID", new SelectList(studentNames.Zip(studentIDs, (name, id) => new { Name = name, ID = id }), "ID", "Name"), "Chọn sinh viên", new { @class = "form-control" })
+
+                        @Html.ValidationMessage("StudentID", "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu Task</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Initialize Bootstrap popovers
+            $('.avatar-popover').popover({
+                html: true, // Enable HTML content in popover
+                placement: 'top', // Display popover above the avatars
+            });
+        });
+        $(document).ready(function () {
+            $('#createTaskModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var projectID = button.data('project-id');
+                var modal = $(this);
+                modal.find('form').attr('action', '/Instructor/CreateTask?projectID=' + projectID);
+            });
+
+            // Show toast notification if success message exists
+            /**/
+            @if(ViewBag.SuccessMessage != null)
+        {
+            <text>
+                $('.toast').toast('show');
+            </text>
+        }
+        /**/
+        }
+        );
+    function updateTaskStatus(selectElement, taskID) {
+    var newStatus = selectElement.value;
+    $.ajax({
+        type: "POST",
+        url: "@Url.Action("UpdateTaskStatus", "Instructor")",
+        data: JSON.stringify({ taskID: taskID, newStatus: newStatus }),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            if (data.success) {
+                var percentage = data.percentage;
+                var completedTasksCount = data.completedTasksCount;
+                var totalTasksCount = data.totalTasksCount;
+                var progressHtml = '';
+
+                if (totalTasksCount > 0) {
+                    progressHtml = '<div class="progress mb-2">' +
+                                       '<div style="width: ' + percentage + '%;" class="progress-bar progress-bar-striped progress-bar-animated"></div>' +
+                                   '</div>' +
+                                   '<small>' +
+                                       'Tiến độ dự án <strong>' + percentage + '%</strong>,' +
+                                       '<span class="text-custom">' + completedTasksCount + '/' + totalTasksCount + '</span>' +
+                                   '</small>';
+                } else {
+                    progressHtml = '<small>Chưa có task nào.</small>';
+                }
+
+                $('#taskProgress').html(progressHtml);
+            } else {
+                console.error("Error: " + data.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
+}
+
+    </script>
+}
