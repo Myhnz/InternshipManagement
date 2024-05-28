@@ -210,11 +210,19 @@ namespace InternshipManagement.Controllers
         {
             try
             {
+                
                 // Lấy UserID từ Session
                 int userID = Convert.ToInt32(Session["UserID"]);
 
                 // Lấy StudentID từ UserID
                 int studentID = GetStudentIDFromSession(userID);
+
+                //Kiểm tra sinh viên đã trong dự án nào chưa? 
+                if (IsStudentInAnyProject(studentID))
+                {
+                    ModelState.AddModelError("", "Sinh viên đã tham gia một dự án khác.");
+                    return View();
+                }
 
                 // Kiểm tra xem StudentID và ProjectID đã tồn tại trong bảng Students và Projects chưa
                 var student = sData.Students.Find(studentID);
@@ -394,6 +402,12 @@ namespace InternshipManagement.Controllers
                 ViewBag.Message = "Không tìm thấy dự án!";
                 return false; // Dự án không tồn tại
             }
+        }
+        //Kiểm tra sinh viên có trong dự án nào không? 
+        private bool IsStudentInAnyProject(int studentID)
+        {
+            var internship = sData.InternshipInformations.SingleOrDefault(p => p.StudentID == studentID);
+            return internship != null;
         }
 
 
