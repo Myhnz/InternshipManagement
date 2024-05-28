@@ -163,6 +163,116 @@ namespace InternshipManagement.Controllers
             var admins = aData.Administrators.OrderBy(a => a.AdminID).ToList();
             return View(admins);
         }
+        //Trang quên mật khẩu nhập email để xác thực
+        [HttpGet]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ForgotPassword(string email)
+        {
+            OTPStorage otpStorage = new OTPStorage();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ModelState.AddModelError("Email", "Vui lòng nhập địa chỉ email.");
+                return View();
+            }
+
+            var user = aData.Administrators.FirstOrDefault(x => x.Email == email);
+            if (user == null)
+            {
+                ViewBag.Message = "Không tìm thấy người dùng với email này hoặc email không hợp lệ";
+                return View();
+            }
+
+            string otp = otpStorage.GenerateOTP();
+
+            // Lưu mã OTP vào phiên làm việc
+            Session["OTP"] = otp;
+            Session["Email"] = email;
+            //Session["UserID"] = user.UserID;
+
+            // Gửi mã OTP đến địa chỉ email của người dùng
+            string subject = "Xác nhận đổi mật khẩu";
+            string body = "Mã OTP của bạn là: " + otp.ToString() + ". Vui lòng sử dụng mã này để đổi mật khẩu.";
+            bool emailSent = otpStorage.SendEmail(email, subject, body);
+
+            // Chuyển hướng đến trang nhập mã OTP
+            return RedirectToAction("CheckOTP");
+        }
+        //Trang nhập OTP để xác thực 
+        [HttpGet]
+        public ActionResult CheckOTP()
+        {
+            ViewBag.Email = (string)Session["Email"];
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CheckOTP(string otp1, string otp2, string otp3, string otp4, string otp5, string otp6)
+        {
+            try
+            {
+                string otp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+                string storedOTP = Session["OTP"] as string;
+
+                if (otp == storedOTP)
+                {
+                    return RedirectToAction("ResetPassword");
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Mã OTP không hợp lệ.";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ nếu có
+                ViewBag.ErrorMessage = "Đã xảy ra lỗi khi nhập mã OTP: " + ex.Message;
+                return View();
+            }
+        }
+        //Trang reset mật khẩu
+        [HttpGet]
+        public ActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPassword(string newPassword, string confirmPassword)
+        {
+            string email = (string)Session["Email"];
+            var user = aData.Administrators.FirstOrDefault(x => x.Email == email);
+            if (user == null)
+            {
+                ViewBag.Message = "Không tìm thấy người dùng với email này hoặc email không hợp lệ";
+                return View();
+            }
+            else
+            {
+                if (newPassword != confirmPassword)
+                {
+                    ViewBag.Message = "Mật khẩu không trùng khớp. Vui lòng nhập lại";
+                    return View();
+                }
+                else
+                {
+                    // Hash mật khẩu mới trước khi lưu vào cơ sở dữ liệu
+                    user.Password = PasswordHasher.HashPassword(newPassword);
+
+                    // Lưu thay đổi vào cơ sở dữ liệu
+                    aData.SaveChanges();
+
+                    ViewBag.Message = "Đổi mật khẩu thành công. Mật khẩu mới đã được gửi đến email của bạn.";
+                    return RedirectToAction("Login"); // Hoặc chuyển hướng đến trang khác
+                }
+            }
+        }
         //Chức năng tạo tài khoản cho Quản trị viên
         [HttpGet]
         public ActionResult CreateAdminAccount()
