@@ -2738,6 +2738,7 @@
     <Content Include="Views\Admin\ForgotPassword.cshtml" />
     <Content Include="Views\Admin\CheckOTP.cshtml" />
     <Content Include="Views\Admin\ResetPassword.cshtml" />
+    <Content Include="Views\Student\DetailProject .cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

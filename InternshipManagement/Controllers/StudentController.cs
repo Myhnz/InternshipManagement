@@ -443,7 +443,20 @@ namespace InternshipManagement.Controllers
             var internship = sData.InternshipInformations.SingleOrDefault(p => p.StudentID == studentID);
             return internship != null;
         }
-
+        //Chức năng cập nhật trạng thái cho dự án
+        [HttpPost]
+        public ActionResult UpdateStatus(int taskId, string newStatus)
+        {
+            var context = new InternshipManagementEntities();
+            var task = context.Tasks.FirstOrDefault(t => t.TaskID == taskId);
+            if (task != null)
+            {
+                task.Status = newStatus;
+                context.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
 
     }
 }
