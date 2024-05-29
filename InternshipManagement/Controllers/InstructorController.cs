@@ -629,20 +629,20 @@ namespace InternshipManagement.Controllers
             }
 
             // Tạo một đối tượng Task mới
-
-            var newTask = new InternshipManagement.Models.Task();
-            newTask.TaskDescription = task.TaskDescription;
-            newTask.CompletionDate = null;
-            newTask.Status = task.Status;
-            newTask.ProjectID = projectID;
-            newTask.StudentID = task.StudentID;
-            newTask.InstructorID = task.InstructorID; // Giả sử sử dụng InstructorID từ dự án
-            newTask.StartDate = task.StartDate;
-            newTask.EndDate = task.EndDate;
-            newTask.isDelete = false; // Mặc định không được xóa
-            newTask.CreateDate = DateTime.Now;
-            newTask.UpdateDate = DateTime.Now;
-
+            var newTask = new InternshipManagement.Models.Task
+            {
+                TaskDescription = task.TaskDescription,
+                CompletionDate = null,
+                Status = task.Status,
+                ProjectID = projectID,
+                StudentID = task.StudentID,
+                InstructorID = task.InstructorID, // Giả sử sử dụng InstructorID từ dự án
+                StartDate = task.StartDate,
+                EndDate = task.EndDate,
+                isDelete = false, // Mặc định không được xóa
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now
+            };
 
             // Thêm đối tượng Task mới vào bảng Tasks
             iData.Tasks.Add(newTask);
@@ -650,8 +650,12 @@ namespace InternshipManagement.Controllers
             // Lưu các thay đổi vào cơ sở dữ liệu
             iData.SaveChanges();
 
-            // Chuyển hướng người dùng đến trang nào đó sau khi thêm nhiệm vụ thành công
-            return RedirectToAction("Tasks", new { projectID});
+            // Đặt thông báo thành công vào TempData
+            TempData["SuccessMessage"] = $"Tạo task thành công. <a href=\"{Url.Action("DetailTask", "Instructor", new { taskID = newTask.TaskID })}\">Xem ngay</a>";
+
+
+            // Chuyển hướng người dùng đến trang ProjectDetails sau khi thêm nhiệm vụ thành công
+            return RedirectToAction("ProjectDetails", new { id = projectID });
         }
         //Chức năng chỉnh sửa Task
         [HttpGet]
