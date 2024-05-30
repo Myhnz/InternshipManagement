@@ -271,10 +271,11 @@ namespace InternshipManagement.Controllers
         {
             ViewBag.Companies = new SelectList(iData.Companies.ToList().OrderBy(r => r.CompanyID), "CompanyID", "CompanyName");
             ViewBag.Tags = new MultiSelectList(iData.Tags.ToList().OrderBy(t => t.TagID), "TagID", "TagName"); // Tạo MultiSelectList của các tag
+            ViewBag.Specializations = new MultiSelectList(iData.Specializations.ToList().OrderBy(s => s.SpecializationID), "SpecializationID", "SpecializationName");
             return PartialView();
         }
         [HttpPost]
-        public ActionResult CreateProject(Project project, HttpPostedFileBase backgroundPicture, Instructor instructor, string[] Tags)
+        public ActionResult CreateProject(Project project, HttpPostedFileBase backgroundPicture, Instructor instructor, string[] Tags, string[] Specializations)
         {
             // Thêm thông báo lỗi vào ModelState cho các trường bỏ trống
             if (string.IsNullOrWhiteSpace(project.ProjectName))
@@ -289,8 +290,11 @@ namespace InternshipManagement.Controllers
             {
                 ModelState.AddModelError("MaxStudents", "Vui lòng nhập số lượng sinh viên tối đa sinh viên có thể tham gia.");
             }
+
+            //Các SelectList cho Công ty, Tags, Chuyên ngành
             ViewBag.Companies = new SelectList(iData.Companies.ToList().OrderBy(r => r.CompanyID), "CompanyID", "CompanyName");
             ViewBag.Tags = new MultiSelectList(iData.Tags.ToList().OrderBy(t => t.TagID), "TagID", "TagName"); // Tạo MultiSelectList của các tag
+            ViewBag.Specializations = new MultiSelectList(iData.Specializations.ToList().OrderBy(s => s.SpecializationID), "SpecializationID", "SpecializationName");
             int instructorId = (int)Session["UserID"];
             var instructorCompany = iData.Instructors.FirstOrDefault(i => i.UserID == instructorId);
 
@@ -315,6 +319,20 @@ namespace InternshipManagement.Controllers
                         string path = Path.Combine(Server.MapPath("~/Materials/BackgroundPicture"), fileName);
                         backgroundPicture.SaveAs(path); // Save the file to the server
                         project.BackgroundPicture = fileName; // Save the file name to the database
+                    }
+
+                    // Add specializations to ProjectSpecialization
+                    if (Specializations != null)
+                    {
+                        foreach (var specializationId in Specializations)
+                        {
+                            var projectSpecialization = new ProjectSpecialization
+                            {
+                                ProjectID = project.ProjectID,
+                                SpecializationID = int.Parse(specializationId)
+                            };
+                            iData.ProjectSpecializations.Add(projectSpecialization);
+                        }
                     }
 
                     iData.Projects.Add(project);
