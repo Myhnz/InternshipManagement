@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/InternshipManagement/Web.config
+/InternshipManagement/Web.Debug.config
+/InternshipManagement/Web.Release.config
