@@ -142,7 +142,7 @@ namespace InternshipManagement.Controllers
                 }
 
                 iData.SaveChanges();
-                return RedirectToAction("InstructorPage", new { instructorID = instructor.InstructorID});
+                return RedirectToAction("InstructorPage", new { instructorID = instructor.InstructorID });
             }
             return View(updateInstructor);
         }
@@ -415,7 +415,7 @@ namespace InternshipManagement.Controllers
                 updateProject.MaxStudents = project.MaxStudents;
                 updateProject.UpdateDate = DateTime.Now;
                 iData.SaveChanges();
-                return RedirectToAction("EditProjects", new { projectID = project.ProjectID});
+                return RedirectToAction("EditProjects", new { projectID = project.ProjectID });
             }
             return View(updateProject);
         }
@@ -458,6 +458,12 @@ namespace InternshipManagement.Controllers
                                     .Select(q => q.Student)
                                     .ToList()
             };
+
+            // Pass the success message to the view if it exists
+            if (TempData["SuccessMessage"] != null)
+            {
+                ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            }
 
             // Pass the ProjectDetails object to the view
             return View(projectDetails);
@@ -582,7 +588,7 @@ namespace InternshipManagement.Controllers
         }
         public ActionResult Tasks(int projectID)
         {
-            var tasksInProject = iData.Tasks.SingleOrDefault(t => t.ProjectID == projectID);
+            var tasksInProject = iData.Tasks.FirstOrDefault(t => t.ProjectID == projectID);
             return View(tasksInProject);
         }
         //Chức năng tạo Task cho sinh viên
@@ -651,12 +657,13 @@ namespace InternshipManagement.Controllers
             iData.SaveChanges();
 
             // Đặt thông báo thành công vào TempData
-            TempData["SuccessMessage"] = $"Tạo task thành công. <a href=\"{Url.Action("DetailTask", "Instructor", new { taskID = newTask.TaskID })}\">Xem ngay</a>";
+            TempData["SuccessMessage"] = $"Tạo task thành công.";
 
 
             // Chuyển hướng người dùng đến trang ProjectDetails sau khi thêm nhiệm vụ thành công
             return RedirectToAction("ProjectDetails", new { id = projectID });
         }
+
         //Chức năng chỉnh sửa Task
         [HttpGet]
         public ActionResult EditTask(int taskID)
@@ -695,6 +702,35 @@ namespace InternshipManagement.Controllers
             }
             return View(detailTask);
         }
+        [HttpPost]
+        public ActionResult UpdateTaskStatus(int taskID, string newStatus)
+        {
+            // Tìm task có ID tương ứng trong cơ sở dữ liệu
+            var taskToUpdate = iData.Tasks.SingleOrDefault(t => t.TaskID == taskID);
+
+            // Kiểm tra nếu task tồn tại
+            if (taskToUpdate != null)
+            {
+                // Cập nhật trạng thái mới cho task
+                taskToUpdate.Status = newStatus;
+
+                // Lưu các thay đổi vào cơ sở dữ liệu
+                iData.SaveChanges();
+
+                // Tính toán lại tiến độ dự án
+                if (iData.Projects.Any())
+                {
+                    int completedTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID && t.Status == "Completed");
+                    int totalTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID);
+                    int percentage = totalTasksCount > 0 ? (completedTasksCount * 100 / totalTasksCount) : 0;
+
+                    return Json(new { success = true, percentage = percentage, completedTasksCount = completedTasksCount, totalTasksCount = totalTasksCount });
+                }
+            }
+
+            // Trả về kết quả lỗi nếu không tìm thấy task
+            return Json(new { success = false, error = "Task not found" });
+        }
         //Chức năng xóa Task
         public ActionResult DeleteTask(int taskID)
         {
@@ -725,6 +761,19 @@ namespace InternshipManagement.Controllers
                 iData.SaveChanges();
             }
             return RedirectToAction("Companies");
+        }
+        [HttpPost]
+        public ActionResult UpdateStatus(int taskId, string newStatus)
+        {
+            var context = new InternshipManagementEntities();
+            var task = context.Tasks.FirstOrDefault(t => t.TaskID == taskId);
+            if (task != null)
+            {
+                task.Status = newStatus;
+                context.SaveChanges();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
         }
         //Chức năng đánh giá Sinh viên
         [HttpGet]
