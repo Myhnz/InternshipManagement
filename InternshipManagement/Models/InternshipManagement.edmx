@@ -271,7 +271,7 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
-        <Association Name="FK__Profile__UserID__7A672E12">
+        <Association Name="FK__Profile__UserID__160F4887">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Profile" Type="Self.Profile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -640,7 +640,7 @@
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Profile__UserID__7A672E12" Association="Self.FK__Profile__UserID__7A672E12">
+          <AssociationSet Name="FK__Profile__UserID__160F4887" Association="Self.FK__Profile__UserID__160F4887">
             <End Role="Users" EntitySet="Users" />
             <End Role="Profile" EntitySet="Profile" />
           </AssociationSet>

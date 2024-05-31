@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Configuration.Internal;
 using System.IO;
 using System.Linq;
@@ -271,11 +272,11 @@ namespace InternshipManagement.Controllers
         {
             ViewBag.Companies = new SelectList(iData.Companies.ToList().OrderBy(r => r.CompanyID), "CompanyID", "CompanyName");
             ViewBag.Tags = new MultiSelectList(iData.Tags.ToList().OrderBy(t => t.TagID), "TagID", "TagName"); // Tạo MultiSelectList của các tag
-            ViewBag.Specializations = new MultiSelectList(iData.Specializations.ToList().OrderBy(s => s.SpecializationID), "SpecializationID", "SpecializationName");
+            ViewBag.Specializations = new SelectList(iData.Specializations.ToList().OrderBy(s => s.SpecializationID), "SpecializationID", "SpecializationName");
             return PartialView();
         }
         [HttpPost]
-        public ActionResult CreateProject(Project project, HttpPostedFileBase backgroundPicture, Instructor instructor, string[] Tags, string[] Specializations)
+        public ActionResult CreateProject(Project project, HttpPostedFileBase backgroundPicture, Instructor instructor, string[] Tags, int? SpecializationID)
         {
             // Thêm thông báo lỗi vào ModelState cho các trường bỏ trống
             if (string.IsNullOrWhiteSpace(project.ProjectName))
@@ -294,7 +295,7 @@ namespace InternshipManagement.Controllers
             //Các SelectList cho Công ty, Tags, Chuyên ngành
             ViewBag.Companies = new SelectList(iData.Companies.ToList().OrderBy(r => r.CompanyID), "CompanyID", "CompanyName");
             ViewBag.Tags = new MultiSelectList(iData.Tags.ToList().OrderBy(t => t.TagID), "TagID", "TagName"); // Tạo MultiSelectList của các tag
-            ViewBag.Specializations = new MultiSelectList(iData.Specializations.ToList().OrderBy(s => s.SpecializationID), "SpecializationID", "SpecializationName");
+            ViewBag.Specializations = new SelectList(iData.Specializations.ToList().OrderBy(s => s.SpecializationID), "SpecializationID", "SpecializationName");
             int instructorId = (int)Session["UserID"];
             var instructorCompany = iData.Instructors.FirstOrDefault(i => i.UserID == instructorId);
 
@@ -322,18 +323,12 @@ namespace InternshipManagement.Controllers
                     }
 
                     // Add specializations to ProjectSpecialization
-                    if (Specializations != null)
+                    var projectSpecialization = new ProjectSpecialization
                     {
-                        foreach (var specializationId in Specializations)
-                        {
-                            var projectSpecialization = new ProjectSpecialization
-                            {
-                                ProjectID = project.ProjectID,
-                                SpecializationID = int.Parse(specializationId)
-                            };
-                            iData.ProjectSpecializations.Add(projectSpecialization);
-                        }
-                    }
+                        ProjectID = project.ProjectID,
+                        SpecializationID = SpecializationID.Value
+                    };
+                    iData.ProjectSpecializations.Add(projectSpecialization);
 
                     iData.Projects.Add(project);
                     iData.SaveChanges();
