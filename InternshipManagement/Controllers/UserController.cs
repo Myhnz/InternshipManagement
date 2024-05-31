@@ -452,6 +452,82 @@ namespace InternshipManagement.Controllers
         }
 
         [HttpGet]
+        public ActionResult EditCV()
+        {
+            // Kiểm tra xem người dùng đã đăng nhập chưa
+            if (Session["UserID"] == null)
+            {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+                return RedirectToAction("Login");
+            }
+
+            int userID = (int)Session["UserID"];
+
+            var user = data.Users.FirstOrDefault(u => u.UserID == userID);
+            var profile = data.Profiles.FirstOrDefault(p => p.UserID == userID);
+
+            if (user == null || profile == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewModel = new EditCVViewModel
+            {
+                User = user,
+                Profile = profile
+            };
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCV(EditCVViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                int userID = (int)Session["UserID"];
+
+                var user = data.Users.Find(userID);
+                var profile = data.Profiles.FirstOrDefault(p => p.UserID == userID);
+
+                // Cập nhật các thuộc tính của User
+                user.FirstName = viewModel.User.FirstName;
+                user.LastName = viewModel.User.LastName;
+                user.DateOfBirth = viewModel.User.DateOfBirth;
+                user.Phone = viewModel.User.Phone;
+                user.Email = viewModel.User.Email;
+                user.Avatar = viewModel.User.Avatar;
+                user.Address = viewModel.User.Address;
+                user.Gender = viewModel.User.Gender;
+                user.Password = viewModel.User.Password;
+                user.UpdateDate = DateTime.Now;
+                // Cập nhật các thuộc tính khác của User
+
+                // Cập nhật các thuộc tính của Profile
+                if (profile == null)
+                {
+                    profile = new Profile
+                    {
+                        UserID = userID,
+                        CreatedAt = DateTime.Now
+                    };
+                    data.Profiles.Add(profile);
+                }
+
+                profile.Bio = viewModel.Profile.Bio;
+                profile.Skills = viewModel.Profile.Skills;
+                profile.Experience = viewModel.Profile.Experience;
+                profile.Certifications = viewModel.Profile.Certifications;
+                profile.Website = viewModel.Profile.Website;
+
+                data.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
         public ActionResult ResetPassword()
         {
             return View();

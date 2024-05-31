@@ -52,6 +52,8 @@
         <AssociationConnector Association="InternshipManagementModel.FK_Users_UserRoles" ManuallyRouted="false" />
         <EntityTypeShape EntityType="InternshipManagementModel.Personalize" Width="1.5" PointX="7.5" PointY="0.75" />
         <AssociationConnector Association="InternshipManagementModel.FK_ProjectPersonalize" />
+        <EntityTypeShape EntityType="InternshipManagementModel.Profile" Width="1.5" PointX="3" PointY="2.125" />
+        <AssociationConnector Association="InternshipManagementModel.FK__Profile__UserID__7A672E12" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

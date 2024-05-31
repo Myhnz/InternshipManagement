@@ -44,5 +44,6 @@ namespace InternshipManagement.Models
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Personalize> Personalizes { get; set; }
+        public virtual DbSet<Profile> Profiles { get; set; }
     }
 }

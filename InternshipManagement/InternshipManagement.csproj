@@ -157,6 +157,7 @@
     <Compile Include="Models\DeletedUser.cs">
       <DependentUpon>InternshipManagement.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EditCVViewModel.cs" />
     <Compile Include="Models\EmailService.cs" />
     <Compile Include="Models\FavoriteProject.cs">
       <DependentUpon>InternshipManagement.tt</DependentUpon>
@@ -195,6 +196,9 @@
     <Compile Include="Models\OTPStorage.cs" />
     <Compile Include="Models\PasswordHasher.cs" />
     <Compile Include="Models\Personalize.cs">
+      <DependentUpon>InternshipManagement.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Profile.cs">
       <DependentUpon>InternshipManagement.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Project.cs">
@@ -2739,6 +2743,7 @@
     <Content Include="Views\Admin\CheckOTP.cshtml" />
     <Content Include="Views\Admin\ResetPassword.cshtml" />
     <Content Include="Views\Student\DetailProject .cshtml" />
+    <Content Include="Views\User\EditCV.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

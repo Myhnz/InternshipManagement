@@ -70,7 +70,10 @@
                                             <span class="badge badge-primary">@(@Model.IsActive ? "Đang mở" : "Đã đóng")</span>
                                         </dd>
                                     </dl>
-                                    <div class="mb-3">@Model.Description</div>
+                                    <dl class="row">
+                                        <dt class="col-2">Mô tả:</dt>
+                                        <dd class="col-sm-7">@Model.Description</dd>
+                                    </dl>
                                 </div>
                             </div>
                             <div class="row">

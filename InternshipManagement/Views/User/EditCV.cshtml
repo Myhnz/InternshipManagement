@@ -1,0 +1,93 @@
+﻿@model InternshipManagement.Models.EditCVViewModel
+
+@{
+    ViewBag.Title = "EditCV";
+    Layout = "~/Views/Shared/_LTELayout.cshtml";
+}
+
+<div class="container">
+    <div class="view-account">
+        <section class="module">
+            <div class="module-inner">
+                <div class="side-bar">
+                    <div class="user-info">
+                        <img class="img-profile img-circle img-responsive center-block" src="@Model.User.Avatar" alt="">
+                        <ul class="meta list list-unstyled">
+                            <li class="name">@Model.User.FirstName @Model.User.LastName</li>
+                            <li class="email"><a href="#">@Model.User.Email</a></li>
+                            <li class="activity">Last logged in: @DateTime.Now.ToString("MMMM dd, yyyy 'at' hh:mm tt")</li>
+                        </ul>
+                    </div>
+                    <nav class="side-menu">
+                        <ul class="nav">
+                            <li class="active"><a href="#"><span class="fa fa-user"></span> Profile</a></li>
+                            <li><a href="#"><span class="fa fa-cog"></span> Settings</a></li>
+                            <li><a href="#"><span class="fa fa-credit-card"></span> Billing</a></li>
+                            <li><a href="#"><span class="fa fa-envelope"></span> Messages</a></li>
+                            <li><a href="user-drive.html"><span class="fa fa-th"></span> Drive</a></li>
+                            <li><a href="#"><span class="fa fa-clock-o"></span> Reminders</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="content-panel">
+                    <h2 class="title">Profile<span class="pro-label label label-warning">PRO</span></h2>
+                    @using (Html.BeginForm("EditCV", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <fieldset class="fieldset">
+                            <h3 class="fieldset-title">Personal Info</h3>
+                            <div class="form-group avatar">
+                                <figure class="figure col-md-2 col-sm-3 col-xs-12">
+                                    <img class="img-rounded img-responsive" src="@Model.User.Avatar" alt="">
+                                </figure>
+                                <div class="form-inline col-md-10 col-sm-9 col-xs-12">
+                                    <input type="file" name="User.Avatar" class="file-uploader pull-left">
+                                    <button type="submit" class="btn btn-sm btn-default-alt pull-left">Update Image</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 col-sm-3 col-xs-12 control-label">First Name</label>
+                                <div class="col-md-10 col-sm-9 col-xs-12">
+                                    @Html.TextBoxFor(model => model.User.FirstName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
+                                <div class="col-md-10 col-sm-9 col-xs-12">
+                                    @Html.TextBoxFor(model => model.User.LastName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="fieldset">
+                            <h3 class="fieldset-title">Contact Info</h3>
+                            <div class="form-group">
+                                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
+                                <div class="col-md-10 col-sm-9 col-xs-12">
+                                    @Html.TextBoxFor(model => model.User.Email, new { @class = "form-control" })
+                                    <p class="help-block">This is the email</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Phone</label>
+                                <div class="col-md-10 col-sm-9 col-xs-12">
+                                    @Html.TextBoxFor(model => model.User.Phone, new { @class = "form-control" })
+                                    <p class="help-block">Your phone number</p>
+                                </div>
+                            </div>
+                            <!-- Add more fields as needed -->
+                        </fieldset>
+
+                        <hr>
+                        <div class="form-group">
+                            <div class="col-md-10 col-sm-9 col-xs-12 col-md-push-2 col-sm-push-3 col-xs-push-0">
+                                <input class="btn btn-primary" type="submit" value="Update Profile">
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

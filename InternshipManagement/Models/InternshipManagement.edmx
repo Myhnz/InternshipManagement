@@ -140,6 +140,20 @@
           <Property Name="Color" Type="varchar" MaxLength="10" />
           <Property Name="Pinned" Type="bit" />
         </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+          </Key>
+          <Property Name="ProfileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Bio" Type="text" />
+          <Property Name="Certifications" Type="text" />
+          <Property Name="Website" Type="varchar" MaxLength="255" />
+          <Property Name="Experience" Type="text" />
+          <Property Name="Skills" Type="text" />
+          <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="UpdatedAt" Type="datetime" />
+        </EntityType>
         <EntityType Name="Projects">
           <Key>
             <PropertyRef Name="ProjectID" />
@@ -257,6 +271,18 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
+        <Association Name="FK__Profile__UserID__7A672E12">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Profile" Type="Self.Profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Profile">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DeletedUsers_UserRoles">
           <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="0..1" />
           <End Role="DeletedUsers" Type="Self.DeletedUsers" Multiplicity="*" />
@@ -604,6 +630,7 @@
           <EntitySet Name="InternshipQueue" EntityType="Self.InternshipQueue" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Personalize" EntityType="Self.Personalize" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profile" EntityType="Self.Profile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectSpecializations" EntityType="Self.ProjectSpecializations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectTags" EntityType="Self.ProjectTags" Schema="dbo" store:Type="Tables" />
@@ -613,6 +640,10 @@
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Profile__UserID__7A672E12" Association="Self.FK__Profile__UserID__7A672E12">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Profile" EntitySet="Profile" />
+          </AssociationSet>
           <AssociationSet Name="FK_DeletedUsers_UserRoles" Association="Self.FK_DeletedUsers_UserRoles">
             <End Role="UserRoles" EntitySet="UserRoles" />
             <End Role="DeletedUsers" EntitySet="DeletedUsers" />
@@ -1027,6 +1058,7 @@
           <NavigationProperty Name="Messages1" Relationship="Self.FK_Messages_Users_Senders" FromRole="Users" ToRole="Messages" />
           <NavigationProperty Name="Students" Relationship="Self.FK_Students_Users" FromRole="Users" ToRole="Students" />
           <NavigationProperty Name="UserRole" Relationship="Self.FK_Users_UserRoles" FromRole="Users" ToRole="UserRoles" />
+          <NavigationProperty Name="Profiles" Relationship="InternshipManagementModel.FK__Profile__UserID__7A672E12" FromRole="User" ToRole="Profile" />
         </EntityType>
         <Association Name="FK_Instructors_Companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="0..1" />
@@ -1484,6 +1516,11 @@
             <End Role="Project" EntitySet="Projects" />
             <End Role="Personalize" EntitySet="Personalizes" />
           </AssociationSet>
+          <EntitySet Name="Profiles" EntityType="InternshipManagementModel.Profile" />
+          <AssociationSet Name="FK__Profile__UserID__7A672E12" Association="InternshipManagementModel.FK__Profile__UserID__7A672E12">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Profile" EntitySet="Profiles" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Personalize">
           <Key>
@@ -1504,6 +1541,33 @@
             </Principal>
             <Dependent Role="Personalize">
               <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+          </Key>
+          <Property Name="ProfileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Bio" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Certifications" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Website" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Experience" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Skills" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="InternshipManagementModel.FK__Profile__UserID__7A672E12" FromRole="Profile" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__Profile__UserID__7A672E12">
+          <End Type="InternshipManagementModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="InternshipManagementModel.Profile" Role="Profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Profile">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1781,6 +1845,21 @@
                 <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="PersonalizeID" ColumnName="PersonalizeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profiles">
+            <EntityTypeMapping TypeName="InternshipManagementModel.Profile">
+              <MappingFragment StoreEntitySet="Profile">
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Skills" ColumnName="Skills" />
+                <ScalarProperty Name="Experience" ColumnName="Experience" />
+                <ScalarProperty Name="Website" ColumnName="Website" />
+                <ScalarProperty Name="Certifications" ColumnName="Certifications" />
+                <ScalarProperty Name="Bio" ColumnName="Bio" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
