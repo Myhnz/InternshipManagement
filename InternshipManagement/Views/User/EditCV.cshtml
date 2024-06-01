@@ -4,59 +4,210 @@
     ViewBag.Title = "EditCV";
     Layout = "~/Views/Shared/_LTELayout.cshtml";
 }
-<h2>Edit CV</h2>
-
-@using (Html.BeginForm("EditCV", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    @* Check if there is a success message in TempData and display it *@
-    if (TempData["SuccessMessage"] != null)
+<link href="~/Content/EditCV.css" rel="stylesheet" />
+<div class="container">
+    @using (Html.BeginForm("EditCV", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
+        @Html.AntiForgeryToken()
+
+        <div class="row gutters">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="account-settings">
+                            <div class="user-profile">
+                                <div class="user-avatar" id="avatar-container" style="position: relative; overflow: hidden; border-radius: 50%;">
+                                    <img src="~/Content/AvatarImages/@Model.User.Avatar" alt="Avatar" id="current-avatar">
+                                    <div class="avatar-overlay" id="avatar-overlay">
+                                        <i class="upload-icon fas fa-upload" id="upload-icon"></i>
+                                        <i class="cancel-icon fas fa-times" id="cancel-icon" style="display: none;"></i>
+                                    </div>
+                                    <input type="file" id="AvatarImage" name="AvatarImage" style="display: none;" accept="image/*">
+                                </div>
+                                <h5 class="user-name">@Model.User.FirstName @Model.User.LastName</h5>
+                                <h6>@@@Model.User.Username</h6>
+                                <h6 class="user-email"><i class="fa fa-envelope"></i> @Model.User.Email</h6>
+                                @if (Model.Profile != null && !string.IsNullOrEmpty(Model.Profile.Website))
+                                {
+                                    <h6 class="user-email"><i class="fa fa-globe"></i> @Model.Profile.Website</h6>
+                                }
+                            </div>
+
+                            <div class="about">
+                                @if (Model.Profile != null && Model.Profile.Bio != null)
+                                {
+                                    <h5>About</h5>
+                                    <p>@Model.Profile.Bio</p>
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="custom-alert custom-alert-info">
+                                @TempData["SuccessMessage"]
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+
+                        <div class="row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <h5 class="mb-2 text-primary">Thông tin cá nhân</h5>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="User_FirstName">Họ và tên</label>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            @Html.EditorFor(model => model.User.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.User.LastName, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-6">
+                                            @Html.EditorFor(model => model.User.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.User.FirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Personal Details -->
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="User_DateOfBirth">Ngày sinh</label>
+                                    @Html.EditorFor(model => model.User.DateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.User.DateOfBirth, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="User_Phone">Số điện thoại</label>
+                                    @Html.EditorFor(model => model.User.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.User.Phone, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="User_Email">Email</label>
+                                    @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="User_Address">Địa chỉ</label>
+                                    @Html.EditorFor(model => model.User.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.User.Address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label for="User_Gender">Giới tính</label>
+                                    @Html.EditorFor(model => model.User.Gender, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.User.Gender, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <!-- Profile Details -->
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <h5 class="mb-2 text-primary">Hồ sơ</h5>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="Profile_Bio">Giới thiệu</label>
+                                    @Html.TextAreaFor(model => model.Profile.Bio, new { @class = "form-control", rows = 3 })
+                                    @Html.ValidationMessageFor(model => model.Profile.Bio, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="Profile_Skills">Kỹ năng</label>
+                                    @Html.TextAreaFor(model => model.Profile.Skills, new { @class = "form-control", rows = 3 })
+                                    @Html.ValidationMessageFor(model => model.Profile.Skills, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="Profile_Experience">Kinh nghiệm làm việc</label>
+                                    @Html.TextAreaFor(model => model.Profile.Experience, new { @class = "form-control", rows = 3 })
+                                    @Html.ValidationMessageFor(model => model.Profile.Experience, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="Profile_Certifications">Chứng chỉ</label>
+                                    @Html.TextAreaFor(model => model.Profile.Certifications, new { @class = "form-control", rows = 3 })
+                                    @Html.ValidationMessageFor(model => model.Profile.Certifications, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label for="Profile_Website">Trang web cá nhân</label>
+                                    @Html.EditorFor(model => model.Profile.Website, new { htmlAttributes = new { @class = "form-control", placeholder = "www.example.com" } })
+                                    @Html.ValidationMessageFor(model => model.Profile.Website, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     }
-    <div>
-        @Html.LabelFor(m => m.AvatarImage, "Avatar Image")
-        @Html.TextBoxFor(m => m.AvatarImage, new { type = "file" })
-        @Html.ValidationMessageFor(m => m.AvatarImage)
-    </div>
-    <div>
-        @Html.LabelFor(m => m.User.FirstName)
-        @Html.TextBoxFor(m => m.User.FirstName)
-    </div>
+</div>
+<script>
+    document.getElementById('avatar-container').addEventListener('click', function () {
+        document.getElementById('AvatarImage').click();
+    });
+    document.getElementById('AvatarImage').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('current-avatar').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    // Function to handle hover event on the avatar image
+    document.getElementById('avatar-container').addEventListener('mouseenter', function () {
+        document.getElementById('avatar-overlay').style.display = 'flex';
+    });
+    document.getElementById('avatar-container').addEventListener('mouseleave', function () {
+        document.getElementById('avatar-overlay').style.display = 'none';
+    });
 
-    <div>
-        @Html.LabelFor(m => m.User.LastName)
-        @Html.TextBoxFor(m => m.User.LastName)
-    </div>
+    // Function to handle file selection
+    const fileInput = document.getElementById('AvatarImage');
+    const uploadIcon = document.getElementById('upload-icon');
+    const cancelIcon = document.getElementById('cancel-icon');
 
-    <!-- Add other user fields here -->
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length > 0) {
+            uploadIcon.style.display = 'none';
+            cancelIcon.style.display = 'block';
+        } else {
+            uploadIcon.style.display = 'block';
+            cancelIcon.style.display = 'none';
+        }
+    });
 
-    <div>
-        @Html.LabelFor(m => m.Profile.Bio)
-        @Html.TextBoxFor(m => m.Profile.Bio)
-    </div>
-
-    <!-- Add other profile fields here -->
-
-    <h3>Change Password</h3>
-
-    <div>
-        @Html.LabelFor(m => m.OldPassword, "Old Password")
-        @Html.PasswordFor(m => m.OldPassword)
-    </div>
-
-    <div>
-        @Html.LabelFor(m => m.NewPassword, "New Password")
-        @Html.PasswordFor(m => m.NewPassword)
-    </div>
-
-    <div>
-        @Html.LabelFor(m => m.ConfirmPassword, "Confirm New Password")
-        @Html.PasswordFor(m => m.ConfirmPassword)
-    </div>
-
-    <button type="submit">Save Changes</button>
-}
+    // Function to handle cancel icon click
+    cancelIcon.addEventListener('click', function () {
+        fileInput.value = ''; // Xóa giá trị của input file
+        uploadIcon.style.display = 'block';
+        cancelIcon.style.display = 'none';
+    });
+</script>
