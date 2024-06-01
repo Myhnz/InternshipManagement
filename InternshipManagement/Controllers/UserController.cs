@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
@@ -462,11 +463,10 @@ namespace InternshipManagement.Controllers
             }
 
             int userID = (int)Session["UserID"];
-
             var user = data.Users.FirstOrDefault(u => u.UserID == userID);
             var profile = data.Profiles.FirstOrDefault(p => p.UserID == userID);
 
-            if (user == null || profile == null)
+            if (user == null)
             {
                 return HttpNotFound();
             }
@@ -490,20 +490,63 @@ namespace InternshipManagement.Controllers
                 var user = data.Users.Find(userID);
                 var profile = data.Profiles.FirstOrDefault(p => p.UserID == userID);
 
-                // Cập nhật các thuộc tính của User
-                user.FirstName = viewModel.User.FirstName;
-                user.LastName = viewModel.User.LastName;
-                user.DateOfBirth = viewModel.User.DateOfBirth;
-                user.Phone = viewModel.User.Phone;
-                user.Email = viewModel.User.Email;
-                user.Avatar = viewModel.User.Avatar;
-                user.Address = viewModel.User.Address;
-                user.Gender = viewModel.User.Gender;
-                user.Password = viewModel.User.Password;
-                user.UpdateDate = DateTime.Now;
-                // Cập nhật các thuộc tính khác của User
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
 
-                // Cập nhật các thuộc tính của Profile
+                // Update user details if they are not null or empty
+                if (!string.IsNullOrEmpty(viewModel.User.FirstName))
+                    user.FirstName = viewModel.User.FirstName;
+
+                if (!string.IsNullOrEmpty(viewModel.User.LastName))
+                    user.LastName = viewModel.User.LastName;
+
+                if (viewModel.User.DateOfBirth != null)
+                    user.DateOfBirth = viewModel.User.DateOfBirth;
+
+                if (!string.IsNullOrEmpty(viewModel.User.Phone))
+                    user.Phone = viewModel.User.Phone;
+
+                if (!string.IsNullOrEmpty(viewModel.User.Email))
+                    user.Email = viewModel.User.Email;
+
+                if (!string.IsNullOrEmpty(viewModel.User.Avatar))
+                    user.Avatar = viewModel.User.Avatar;
+
+                if (!string.IsNullOrEmpty(viewModel.User.Address))
+                    user.Address = viewModel.User.Address;
+
+                if (!string.IsNullOrEmpty(viewModel.User.Gender))
+                    user.Gender = viewModel.User.Gender;
+
+                user.UpdateDate = DateTime.Now;
+
+                // Handle password change
+                if (!string.IsNullOrEmpty(viewModel.OldPassword) || !string.IsNullOrEmpty(viewModel.NewPassword) || !string.IsNullOrEmpty(viewModel.ConfirmPassword))
+                {
+                    if (!VerifyPassword(viewModel.OldPassword, user.Password))
+                    {
+                        ModelState.AddModelError("OldPassword", "Mật khẩu hiện tại không đúng");
+                        return View(viewModel);
+                    }
+
+                    if (string.IsNullOrEmpty(viewModel.NewPassword) || viewModel.NewPassword.Length < 6)
+                    {
+                        ModelState.AddModelError("NewPassword", "Mật khẩu phải trên 6 kí tự");
+                        return View(viewModel);
+                    }
+
+                    if (viewModel.NewPassword != viewModel.ConfirmPassword)
+                    {
+                        ModelState.AddModelError("ConfirmPassword", "Mật khẩu mới không khớp với mật khẩu cũ");
+                        return View(viewModel);
+                    }
+
+                    user.Password = PasswordHasher.HashPassword(viewModel.NewPassword);
+                }
+
+                // Update profile details
                 if (profile == null)
                 {
                     profile = new Profile
@@ -513,19 +556,47 @@ namespace InternshipManagement.Controllers
                     };
                     data.Profiles.Add(profile);
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(viewModel.Profile.Bio))
+                        profile.Bio = viewModel.Profile.Bio;
 
-                profile.Bio = viewModel.Profile.Bio;
-                profile.Skills = viewModel.Profile.Skills;
-                profile.Experience = viewModel.Profile.Experience;
-                profile.Certifications = viewModel.Profile.Certifications;
-                profile.Website = viewModel.Profile.Website;
+                    if (!string.IsNullOrEmpty(viewModel.Profile.Skills))
+                        profile.Skills = viewModel.Profile.Skills;
+
+                    if (!string.IsNullOrEmpty(viewModel.Profile.Experience))
+                        profile.Experience = viewModel.Profile.Experience;
+
+                    if (!string.IsNullOrEmpty(viewModel.Profile.Certifications))
+                        profile.Certifications = viewModel.Profile.Certifications;
+
+                    if (!string.IsNullOrEmpty(viewModel.Profile.Website))
+                        profile.Website = viewModel.Profile.Website;
+                }
+                // Handle avatar image upload
+                if (viewModel.AvatarImage != null && viewModel.AvatarImage.ContentLength > 0)
+                {
+                    string fileExtension = Path.GetExtension(viewModel.AvatarImage.FileName);
+                    string fileName = Guid.NewGuid().ToString() + fileExtension;
+                    string path = Path.Combine(Server.MapPath("~/Content/AvatarImages"), fileName);
+                    viewModel.AvatarImage.SaveAs(path);
+                    user.Avatar = fileName;
+                }
+                else
+                {
+                    user.Avatar = user.Avatar; 
+                }
 
                 data.SaveChanges();
-                return RedirectToAction("Index", "Home");
+
+                TempData["SuccessMessage"] = "Cập nhật thông tin thành công";
+
+                return RedirectToAction("EditCV");
             }
 
             return View(viewModel);
         }
+
 
         [HttpGet]
         public ActionResult ResetPassword()
