@@ -2220,6 +2220,7 @@
     <Content Include="Global.asax" />
     <Content Include="Materials\background\login.jpg" />
     <Content Include="Materials\logo.svg" />
+    <Content Include="Materials\LogoCompany\default.jpg" />
     <Content Include="Materials\user\default.jpg" />
     <Content Include="Models\InternshipManagement.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -2433,7 +2434,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\AvatarImages\" />
     <Folder Include="Materials\BackgroundPicture\" />
-    <Folder Include="Materials\LogoCompany\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap\bootstrap-grid.css.map" />
