@@ -65,15 +65,26 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.setting-menu .setting-item {
+.setting-menu .setting-item{
     display: block;
     text-decoration: none;
     color: #212529;
     padding: 6px 30px;
     width: 100%
 }
+.notification-menu{
+    padding: 10px 10px;
+}
+.notification-menu .notification-item {
+    display: block;
+    border-bottom: 1px solid #e6e6e6;
+    text-decoration: none;
+    color: #212529;
+    padding: 6px 10px;
+    width: 100%
+}
 
-    .setting-menu .setting-item:hover {
+    .setting-menu .setting-item:hover, .notification-menu .notification-item:hover {
         background-color: #e6e6e6
     }
 

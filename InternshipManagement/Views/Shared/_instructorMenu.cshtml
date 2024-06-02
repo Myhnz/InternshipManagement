@@ -1,7 +1,11 @@
 ﻿@model InternshipManagement.Models.User
 
 <div>
+    <div class="absolute-card" id="noti" style="width: 18rem; padding: 5px 0; display: none;">
+        <div class="notification-menu">
 
+        </div>
+    </div>
     <div class="absolute-card" id="setting" style="width: 18rem; padding: 5px 0; display: none;">
         <div class=" setting-menu">
             <div id="Language" class="carousel slide" data-bs-interval="false">
@@ -50,8 +54,8 @@
                id="dropdownNoti"
                aria-expanded="false">
                 <i class="fas fa-bell fs-5"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    99+
+                <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    0 <!-- Initially, there are no notifications -->
                     <span class="visually-hidden">Thông báo</span>
                 </span>
             </a>
@@ -73,6 +77,45 @@
         </div>
     </div>
 </div>
+<script>
+    function toggleNotifications() {
+        var notificationDropdown = document.getElementById("noti");
+        var settingMenu = document.getElementById("setting");
+        settingMenu.style.display = "none";
+        if (notificationDropdown.style.display === "none") {
+            // If the dropdown is hidden, show it
+            notificationDropdown.style.display = "block";
+            // Fetch latest notifications and update the dropdown content
+            $.ajax({
+                url: '@Url.Action("LatestNotifications", "User")',
+                type: 'GET',
+                success: function (data) {
+                    $(".notification-menu").html(data);
+                }
+            });
+        } else {
+            // If the dropdown is shown, hide it
+            notificationDropdown.style.display = "none";
+        }
+    }
 
+    // Call the toggleNotifications function when clicking the notification bell icon
+    document.getElementById("dropdownNoti").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the default action of the anchor tag
+        toggleNotifications(); // Call the toggleNotifications function
+    });
+
+    // Periodically update the count of unread notifications
+    setInterval(function () {
+        $.ajax({
+            url: '@Url.Action("UnreadNotificationsCount", "User")',
+            type: 'GET',
+            success: function (data) {
+                // Update the badge with the count of unread notifications
+                $("#notificationBadge").text(data.count);
+            }
+        });
+    }, 2000);
+</script>
 
 

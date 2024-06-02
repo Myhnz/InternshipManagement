@@ -1,0 +1,23 @@
+﻿@model IEnumerable<InternshipManagement.Models.Notification>
+
+
+@if (Model != null && Model.Any())
+{
+    foreach (var notification in Model)
+    {
+        <div class="notification-item">
+            <div class="notification-content">
+                <p class="notification-message">@notification.NotificationText</p>
+                <small>@Convert.ToDateTime(notification.NotificationDateTime).ToString("dd/MM/yyyy HH:mm")</small>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Chưa có thông báo nào.</p>
+}
+
+<div class="text-center mt-3 px-2">
+    <a href="@Url.Action("Notifications", "User")" class="btn btn-secondary form-control">Xem tất cả thông báo</a>
+</div>

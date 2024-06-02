@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -22,20 +24,57 @@ namespace InternshipManagement.Controllers
         }
         private void SendNotification(int receiverId, string message)
         {
-            var notification = new Notification
+            try
             {
-                ReceiverID = receiverId,
-                NotificationType = "Info",
-                NotificationText = message,
-                NotificationDateTime = DateTime.Now,
-                CreateDate = DateTime.Now,
-                UpdateDate = DateTime.Now,
-                IsRead = false
-            };
+                var receiver = sData.Users.SingleOrDefault(u => u.UserID == receiverId);
+                if (receiver == null)
+                {
+                    receiver = new User
+                    {
+                        UserID = receiverId,
+                        // Set other properties of the User as needed
+                    };
+                    sData.Users.Add(receiver);
+                    sData.SaveChanges();
+                }
 
-            sData.Notifications.Add(notification);
-            sData.SaveChanges();
+                var notification = new Notification
+                {
+                    ReceiverID = receiver.UserID,
+                    NotificationType = "Info",
+                    NotificationText = message,
+                    NotificationDateTime = DateTime.Now,
+                    CreateDate = DateTime.Now,
+                    UpdateDate = DateTime.Now,
+                    IsRead = false
+                };
+
+                sData.Notifications.Add(notification);
+                sData.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                // Handle entity validation errors
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Console.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                    }
+                }
+                // Rollback changes if a new user was added
+                if (sData.ChangeTracker.HasChanges())
+                {
+                    foreach (var entry in sData.ChangeTracker.Entries().Where(e => e.State == EntityState.Added))
+                    {
+                        entry.State = EntityState.Detached;
+                    }
+                }
+                // Handle or log the validation errors appropriately
+            }
         }
+
+
         public ActionResult Navigation()
         {
             // Retrieve UserID from session
@@ -278,7 +317,7 @@ namespace InternshipManagement.Controllers
                 var instructor = sData.Users.Find(project.InstructorID);
                 var instructorName = $"{instructor.FirstName} {instructor.LastName}";
 
-                SendNotification(studentID, $"Bạn đã nộp đơn xin tham gia dự án {project.ProjectName}.");
+                SendNotification(userID, $"Bạn đã nộp đơn xin tham gia dự án {project.ProjectName}.");
                 SendNotification(project.InstructorID.Value, $"Sinh viên {studentName} đã yêu cầu tham gia vào dự án {project.ProjectName}.");
 
                 return RedirectToAction("SearchProject");

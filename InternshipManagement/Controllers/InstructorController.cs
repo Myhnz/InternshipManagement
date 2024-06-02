@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Configuration.Internal;
+using System.Data.Entity.Validation;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
@@ -149,6 +151,11 @@ namespace InternshipManagement.Controllers
         }
         private void SendNotification(int receiverId, string message)
         {
+            if (!iData.Users.Any(u => u.UserID == receiverId))
+            {
+                throw new InvalidOperationException($"User with ID {receiverId} does not exist.");
+            }
+
             var notification = new Notification
             {
                 ReceiverID = receiverId,
@@ -575,9 +582,9 @@ namespace InternshipManagement.Controllers
             var instructor = iData.Users.Find(project.InstructorID);
             string studentName = $"{student.FirstName} {student.LastName}";
             string instructorName = $"{instructor.FirstName} {instructor.LastName}";
+            int userId = student.UserID.Value;
 
-            SendNotification(studentId, $"Bạn đã được chấp nhận vào dự án {project.ProjectName}.");
-            SendNotification(project.InstructorID.Value, $"{studentName} đã được chấp nhận vào dự án của bạn.");
+            SendNotification(userId, $"Bạn đã được chấp nhận vào dự án {project.ProjectName}.");
 
             return RedirectToAction("ProjectDetails", new { id = projectId });
         }
@@ -598,8 +605,8 @@ namespace InternshipManagement.Controllers
             // Send notification
             var student = iData.Students.Find(studentId);
             string studentName = $"{student.FirstName} {student.LastName}";
-
-            SendNotification(studentId, $"Bạn đã bị từ chối tham gia vào dự án {projectId}.");
+            int userId = student.UserID.Value;
+            SendNotification(userId, $"Bạn đã bị từ chối tham gia vào dự án {projectId}.");
 
             return RedirectToAction("ProjectDetails", new { id = projectId });
         }
@@ -697,8 +704,11 @@ namespace InternshipManagement.Controllers
             // Send notification
             var student = iData.Students.Find(task.StudentID);
             string studentName = $"{student.FirstName} {student.LastName}";
+            int studentID = task.StudentID.Value;
+            int? userID = iData.Students.FirstOrDefault(s => s.StudentID == studentID)?.UserID;
 
-            SendNotification(task.StudentID.Value, $"Bạn đã được giao một nhiệm vụ mới trong dự án {projectID}.");
+
+            SendNotification(userID.Value, $"Bạn đã được giao một nhiệm vụ mới trong dự án {iData.Projects.Find(projectID).ProjectName}.");
 
             TempData["SuccessMessage"] = "Tạo task thành công.";
             return RedirectToAction("ProjectDetails", new { id = projectID });
@@ -751,13 +761,17 @@ namespace InternshipManagement.Controllers
             {
                 taskToUpdate.Status = newStatus;
                 iData.SaveChanges();
-
+                
                 // Send notification
                 var student = iData.Students.Find(taskToUpdate.StudentID);
                 string studentName = $"{student.FirstName} {student.LastName}";
-
-                SendNotification(taskToUpdate.StudentID.Value, $"Trạng thái nhiệm vụ của bạn trong dự án {taskToUpdate.ProjectID} đã được cập nhật thành {newStatus}.");
-
+                int userId = student.UserID.Value;
+                // Get project name
+                var project = iData.Projects.Find(taskToUpdate.ProjectID);
+                string projectName = project != null ? project.ProjectName : "Unknown Project";
+                int userID = Convert.ToInt32(Session["UserID"]);
+                SendNotification(userId, $"Trạng thái của {taskToUpdate.TaskDescription} trong dự án {projectName} đã được cập nhật thành {newStatus}.");
+                SendNotification(userID, $"Trạng thái của {taskToUpdate.TaskDescription} trong dự án {projectName} đã được cập nhật thành {newStatus}.");
                 int completedTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID && t.Status == "Completed");
                 int totalTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID);
                 int percentage = totalTasksCount > 0 ? (completedTasksCount * 100 / totalTasksCount) : 0;

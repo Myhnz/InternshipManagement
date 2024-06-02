@@ -1,6 +1,9 @@
 ﻿
 function toggleMenu() {
     var settingMenu = document.getElementById("setting");
+    var notificationDropdown = document.getElementById("noti"); 
+    notificationDropdown.style.display = "none";
+
     if (settingMenu.style.display === "none") {
         settingMenu.style.display = "block";
     } else {

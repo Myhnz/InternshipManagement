@@ -695,5 +695,27 @@ namespace InternshipManagement.Controllers
 
             return RedirectToAction("Notifications");
         }
+        public ActionResult LatestNotifications()
+        {
+            int userId = Convert.ToInt32(Session["UserID"]);
+            var notifications = data.Notifications
+                                    .Where(n => n.ReceiverID == userId)
+                                    .OrderByDescending(n => n.NotificationDateTime)
+                                    .Take(5)
+                                    .ToList();
+            return PartialView("_LatestNotifications", notifications);
+        }
+
+
+        // Method to get the count of unread notifications
+        public ActionResult UnreadNotificationsCount()
+        {
+            int userId = Convert.ToInt32(Session["UserID"]);
+
+            int unreadCount = data.Notifications
+                                  .Count(n => n.ReceiverID == userId && !n.IsRead);
+
+            return Json(new { count = unreadCount }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
