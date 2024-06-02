@@ -619,7 +619,7 @@ namespace InternshipManagement.Controllers
                     if (avatarFile != null && avatarFile.ContentLength > 0)
                     {
                         string fileName = Path.GetFileName(avatarFile.FileName);
-                        string path = Path.Combine(Server.MapPath("~/Materials/Avatars"), fileName);
+                        string path = Path.Combine(Server.MapPath("~/Materials/AvatarImages"), fileName);
                         avatarFile.SaveAs(path); // Save the file to the server
                         updateUser.Avatar = fileName; // Save the file name to the database
                     }

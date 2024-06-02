@@ -361,7 +361,7 @@ namespace InternshipManagement.Controllers
                             graphics.DrawString(initial, font, brush, position);
 
                             string avatarFileName = $"{Guid.NewGuid()}.jpg";
-                            string avatarFilePath = Server.MapPath($"~/Content/avatars/{avatarFileName}");
+                            string avatarFilePath = Server.MapPath($"~/Content/AvatarImages/{avatarFileName}");
                             bitmap.Save(avatarFilePath, ImageFormat.Jpeg);
 
                             return avatarFileName;
