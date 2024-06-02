@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -234,7 +236,7 @@ namespace InternshipManagement.Controllers
             {
                 // Hash password
                 user.Password = PasswordHasher.HashPassword(user.Password);
-                user.Avatar = "default.jpg";
+                user.Avatar = GenerateDefaultAvatar(user.FirstName);
                 user.CreateDate = DateTime.Now;
                 user.UpdateDate = DateTime.Now;
                 user.RoleID = 1;
@@ -242,38 +244,32 @@ namespace InternshipManagement.Controllers
 
                 // Disable validation on save for the current context
                 data.Configuration.ValidateOnSaveEnabled = false;
-                // Assuming Session["Email"] is a valid string
-                string email = Session["Email"].ToString();
 
-                // Find the index of '@' character
+                string email = Session["Email"].ToString();
                 int atIndex = email.IndexOf('@');
-                // Check if the '@' character is found
                 if (atIndex != -1)
                 {
-                    // Extract the substring from the beginning of the email string up to (but not including) the '@' character
-                    string username = email.Substring(0, atIndex);
-
-                    // Now username contains the part of the email before the '@' character
-                    user.Username = username;
+                    user.Username = email.Substring(0, atIndex);
                 }
 
-                var existingStudent = new Student();
-                existingStudent.FirstName = user.FirstName;
-                existingStudent.LastName = user.LastName;
-                existingStudent.DateOfBirth = user.DateOfBirth;
-                existingStudent.Email = user.Email;
-                existingStudent.Phone = user.Phone;
-                existingStudent.Avatar = user.Avatar;
-                existingStudent.Description = null;
-                existingStudent.CV = null;
-                existingStudent.Class = null;
-                existingStudent.UserID = user.UserID;
-                existingStudent.isActive = true;
-                existingStudent.isDelete = false;
-                existingStudent.CreateDate = DateTime.Now;
-                existingStudent.UpdateDate = DateTime.Now;
+                var existingStudent = new Student
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DateOfBirth = user.DateOfBirth,
+                    Email = user.Email,
+                    Phone = user.Phone,
+                    Avatar = user.Avatar,
+                    Description = null,
+                    CV = null,
+                    Class = null,
+                    UserID = user.UserID,
+                    isActive = true,
+                    isDelete = false,
+                    CreateDate = DateTime.Now,
+                    UpdateDate = DateTime.Now
+                };
                 data.Students.Add(existingStudent);
-
 
                 // Add user to database
                 data.Users.Add(user);
@@ -300,7 +296,7 @@ namespace InternshipManagement.Controllers
             {
                 // Hash password
                 user.Password = PasswordHasher.HashPassword(user.Password);
-                user.Avatar = "default.jpg";
+                user.Avatar = GenerateDefaultAvatar(user.FirstName);
                 user.CreateDate = DateTime.Now;
                 user.UpdateDate = DateTime.Now;
                 user.RoleID = 2;
@@ -308,35 +304,30 @@ namespace InternshipManagement.Controllers
 
                 // Disable validation on save for the current context
                 data.Configuration.ValidateOnSaveEnabled = false;
-                // Assuming Session["Email"] is a valid string
-                string email = Session["Email"].ToString();
 
-                // Find the index of '@' character
+                string email = Session["Email"].ToString();
                 int atIndex = email.IndexOf('@');
-                // Check if the '@' character is found
                 if (atIndex != -1)
                 {
-                    // Extract the substring from the beginning of the email string up to (but not including) the '@' character
-                    string username = email.Substring(0, atIndex);
-
-                    // Now username contains the part of the email before the '@' character
-                    user.Username = username;
+                    user.Username = email.Substring(0, atIndex);
                 }
 
-                var existingInstructor = new Instructor();
-                existingInstructor.FirstName = user.FirstName;
-                existingInstructor.LastName = user.LastName;
-                existingInstructor.DateOfBirth = user.DateOfBirth;
-                existingInstructor.Email = user.Email;
-                existingInstructor.Phone = user.Phone;
-                existingInstructor.Avatar = user.Avatar;
-                existingInstructor.Description = null;
-                existingInstructor.CompanyID = CompanyID.Value;
-                existingInstructor.UserID = user.UserID;
-                existingInstructor.isActive = true;
-                existingInstructor.isDelete = false;
-                existingInstructor.CreateDate = DateTime.Now;
-                existingInstructor.UpdateDate = DateTime.Now;
+                var existingInstructor = new Instructor
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DateOfBirth = user.DateOfBirth,
+                    Email = user.Email,
+                    Phone = user.Phone,
+                    Avatar = user.Avatar,
+                    Description = null,
+                    CompanyID = CompanyID.Value,
+                    UserID = user.UserID,
+                    isActive = true,
+                    isDelete = false,
+                    CreateDate = DateTime.Now,
+                    UpdateDate = DateTime.Now
+                };
                 data.Instructors.Add(existingInstructor);
 
                 // Add user to database
@@ -345,6 +336,39 @@ namespace InternshipManagement.Controllers
                 return RedirectToAction("Index", "Instructor");
             }
             return RedirectToAction("RegisterEmail");
+        }
+        private string GenerateDefaultAvatar(string firstName)
+        {
+            int width = 400;
+            int height = 400;
+
+            using (Bitmap bitmap = new Bitmap(width, height))
+            {
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                {
+                    Random random = new Random();
+                    Color randomColor = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+                    graphics.Clear(randomColor);
+
+                    using (Font font = new Font("Arial", 200, FontStyle.Bold, GraphicsUnit.Pixel))
+                    {
+                        using (SolidBrush brush = new SolidBrush(Color.White))
+                        {
+                            string initial = firstName[0].ToString();
+                            SizeF textSize = graphics.MeasureString(initial, font);
+                            PointF position = new PointF((width - textSize.Width) / 2, (height - textSize.Height) / 2);
+
+                            graphics.DrawString(initial, font, brush, position);
+
+                            string avatarFileName = $"{Guid.NewGuid()}.jpg";
+                            string avatarFilePath = Server.MapPath($"~/Content/avatars/{avatarFileName}");
+                            bitmap.Save(avatarFilePath, ImageFormat.Jpeg);
+
+                            return avatarFileName;
+                        }
+                    }
+                }
+            }
         }
         //Chức năng đổi mật khẩu 
         [HttpGet]
@@ -699,7 +723,7 @@ namespace InternshipManagement.Controllers
         {
             int userId = Convert.ToInt32(Session["UserID"]);
             var notifications = data.Notifications
-                                    .Where(n => n.ReceiverID == userId)
+                                    .Where(n => n.ReceiverID == userId && !n.IsRead)
                                     .OrderByDescending(n => n.NotificationDateTime)
                                     .Take(5)
                                     .ToList();

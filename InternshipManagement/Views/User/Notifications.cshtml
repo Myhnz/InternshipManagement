@@ -2,34 +2,49 @@
     ViewBag.Title = "Notifications";
     Layout = "~/Views/Shared/_LTELayout.cshtml";
 }
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Notification</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var notification in Model)
-        {
-            <tr>
-                <td>@notification.NotificationText</td>
-                <td>@notification.NotificationDateTime?.ToString("g")</td>
-                <td>@(notification.IsRead ? "Read" : "Unread")</td>
-                <td>
-                    @if (!notification.IsRead)
-                    {
-                        using (Html.BeginForm("MarkAsRead", "User", FormMethod.Post))
+<style>
+    body{
+        background-color: #f4f6f9;
+    }
+</style>
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Tất cả thông báo</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Thông báo</th>
+                            <th>Ngày</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var notification in Model)
                         {
-                            @Html.Hidden("notificationId", (object)notification.NotificationID)
-                            <button type="submit" class="btn btn-primary">Mark as Read</button>
+                            <tr>
+                                <td>@notification.NotificationText</td>
+                                <td>@Convert.ToDateTime(notification.NotificationDateTime).ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@(notification.IsRead ? "Đã đọc" : "Chưa đọc")</td>
+                                <td>
+                                    @if (!notification.IsRead)
+                                    {
+                                        using (Html.BeginForm("MarkAsRead", "User", FormMethod.Post))
+                                        {
+                                            @Html.Hidden("notificationId", (object)notification.NotificationID)
+                                            <button type="submit" class="btn btn-primary">Đánh dấu là đã đọc</button>
+                                        }
+                                    }
+                                </td>
+                            </tr>
                         }
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

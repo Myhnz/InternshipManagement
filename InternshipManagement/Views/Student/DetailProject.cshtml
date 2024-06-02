@@ -12,21 +12,18 @@
     <div class="project-detail">
         <h2 class="my-4">@Model.ProjectName</h2>
         <div class="row">
-            <div class="col-md-3">
-                <img src="@Model.CompanyLogo" class="img-fluid" alt="Company Logo" />
-            </div>
             <div class="col-md-9">
-                <h4>Company: @Model.CompanyName</h4>
-                <h4>Instructor: @Model.InstructorName</h4>
+                <h5>Công ty: @Model.CompanyName</h5>
+                <h5>Giảng viên: @Model.InstructorName</h5>
             </div>
         </div>
         <div class="members my-4">
-            <h3>Project Members</h3>
+            <h3>Thành viên</h3>
             <div class="row">
                 @foreach (var member in Model.Members)
                 {
-                    <div class="col-md-2 text-center">
-                        <img src="~/Content/AvatarImages/@member.Avatar" class="img-thumbnail mb-2 rounded-circle" alt="avt" />
+                    <div class="ml-3">
+                        <img src="~/Content/AvatarImages/@member.Avatar" class="img-thumbnail mb-2 rounded-circle" style="width:40px;height:40px" alt="avt" />
                     </div>
                 }
             </div>
