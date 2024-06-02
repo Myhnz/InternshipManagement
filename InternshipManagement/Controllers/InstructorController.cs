@@ -32,14 +32,8 @@ namespace InternshipManagement.Controllers
             {
                 var project = iData.Projects.FirstOrDefault(p => p.InstructorID == instructorID);
 
-                if (project != null)
-                {
                     return RedirectToAction("Projects");
-                }
-                else
-                {
-                    return RedirectToAction("CreateProject");
-                }
+                
             }
             else
             {
@@ -213,10 +207,6 @@ namespace InternshipManagement.Controllers
                 .ThenBy(p => p.ProjectName)
                 .ToList();
 
-            if (projectsDetails == null || !projectsDetails.Any())
-            {
-                return View("EmptyProjectsView");
-            }
 
             return View(projectsDetails);
         }
