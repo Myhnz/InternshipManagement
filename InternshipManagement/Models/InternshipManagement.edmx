@@ -119,6 +119,15 @@
           <Property Name="StudentID" Type="int" />
           <Property Name="ProjectID" Type="int" />
         </EntityType>
+        <EntityType Name="LoginHistory">
+          <Key>
+            <PropertyRef Name="LoginHistoryID" />
+          </Key>
+          <Property Name="LoginHistoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="LoginTime" Type="datetime" />
+          <Property Name="IPAddress" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Messages">
           <Key>
             <PropertyRef Name="MessageID" />
@@ -130,6 +139,21 @@
           <Property Name="SendDateTime" Type="datetime" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="isDelete" Type="bit" />
+        </EntityType>
+        <EntityType Name="Notifications">
+          <Key>
+            <PropertyRef Name="NotificationID" />
+          </Key>
+          <Property Name="NotificationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SenderID" Type="int" />
+          <Property Name="ReceiverID" Type="int" />
+          <Property Name="NotificationType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NotificationText" Type="nvarchar(max)" />
+          <Property Name="NotificationDateTime" Type="datetime" />
+          <Property Name="ProjectID" Type="int" />
+          <Property Name="IsRead" Type="bit" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Personalize">
           <Key>
@@ -271,7 +295,7 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
-        <Association Name="FK__Profile__UserID__160F4887">
+        <Association Name="FK__Profile__UserID__7A672E12">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Profile" Type="Self.Profile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -475,6 +499,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Notifications_Projects">
+          <End Role="Projects" Type="Self.Projects" Multiplicity="0..1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Projects">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Users_Receiver">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="ReceiverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Users_Sender">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProjectPersonalize">
           <End Role="Projects" Type="Self.Projects" Multiplicity="0..1" />
           <End Role="Personalize" Type="Self.Personalize" Multiplicity="*" />
@@ -628,7 +688,9 @@
           <EntitySet Name="Instructors" EntityType="Self.Instructors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InternshipInformations" EntityType="Self.InternshipInformations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InternshipQueue" EntityType="Self.InternshipQueue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginHistory" EntityType="Self.LoginHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notifications" EntityType="Self.Notifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Personalize" EntityType="Self.Personalize" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Profile" EntityType="Self.Profile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Projects" EntityType="Self.Projects" Schema="dbo" store:Type="Tables" />
@@ -640,7 +702,7 @@
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Profile__UserID__160F4887" Association="Self.FK__Profile__UserID__160F4887">
+          <AssociationSet Name="FK__Profile__UserID__7A672E12" Association="Self.FK__Profile__UserID__7A672E12">
             <End Role="Users" EntitySet="Users" />
             <End Role="Profile" EntitySet="Profile" />
           </AssociationSet>
@@ -707,6 +769,18 @@
           <AssociationSet Name="FK_Messages_Users_Senders" Association="Self.FK_Messages_Users_Senders">
             <End Role="Users" EntitySet="Users" />
             <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Projects" Association="Self.FK_Notifications_Projects">
+            <End Role="Projects" EntitySet="Projects" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Users_Receiver" Association="Self.FK_Notifications_Users_Receiver">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Users_Sender" Association="Self.FK_Notifications_Users_Sender">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Notifications" EntitySet="Notifications" />
           </AssociationSet>
           <AssociationSet Name="FK_ProjectPersonalize" Association="Self.FK_ProjectPersonalize">
             <End Role="Projects" EntitySet="Projects" />
@@ -937,6 +1011,7 @@
           <NavigationProperty Name="ProjectTags" Relationship="Self.FK_ProjectTags_Project" FromRole="Projects" ToRole="ProjectTags" />
           <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_Projects" FromRole="Projects" ToRole="Tasks" />
           <NavigationProperty Name="Personalizes" Relationship="InternshipManagementModel.FK_ProjectPersonalize" FromRole="Project" ToRole="Personalize" />
+          <NavigationProperty Name="Notifications" Relationship="InternshipManagementModel.FK_Notifications_Projects" FromRole="Project" ToRole="Notification" />
         </EntityType>
         <EntityType Name="ProjectSpecialization">
           <Key>
@@ -1059,6 +1134,8 @@
           <NavigationProperty Name="Students" Relationship="Self.FK_Students_Users" FromRole="Users" ToRole="Students" />
           <NavigationProperty Name="UserRole" Relationship="Self.FK_Users_UserRoles" FromRole="Users" ToRole="UserRoles" />
           <NavigationProperty Name="Profiles" Relationship="InternshipManagementModel.FK__Profile__UserID__7A672E12" FromRole="User" ToRole="Profile" />
+          <NavigationProperty Name="Notifications" Relationship="InternshipManagementModel.FK_Notifications_Users_Receiver" FromRole="User" ToRole="Notification" />
+          <NavigationProperty Name="Notifications1" Relationship="InternshipManagementModel.FK_Notifications_Users_Sender" FromRole="User" ToRole="Notification" />
         </EntityType>
         <Association Name="FK_Instructors_Companies">
           <End Role="Companies" Type="Self.Company" Multiplicity="0..1" />
@@ -1521,6 +1598,20 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Profile" EntitySet="Profiles" />
           </AssociationSet>
+          <EntitySet Name="LoginHistories" EntityType="InternshipManagementModel.LoginHistory" />
+          <EntitySet Name="Notifications" EntityType="InternshipManagementModel.Notification" />
+          <AssociationSet Name="FK_Notifications_Projects" Association="InternshipManagementModel.FK_Notifications_Projects">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Users_Receiver" Association="InternshipManagementModel.FK_Notifications_Users_Receiver">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Notifications_Users_Sender" Association="InternshipManagementModel.FK_Notifications_Users_Sender">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Personalize">
           <Key>
@@ -1568,6 +1659,69 @@
             </Principal>
             <Dependent Role="Profile">
               <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="LoginHistory">
+          <Key>
+            <PropertyRef Name="LoginHistoryID" />
+          </Key>
+          <Property Name="LoginHistoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="LoginTime" Type="DateTime" Precision="3" />
+          <Property Name="IPAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="NotificationID" />
+          </Key>
+          <Property Name="NotificationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SenderID" Type="Int32" />
+          <Property Name="ReceiverID" Type="Int32" />
+          <Property Name="NotificationType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NotificationText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NotificationDateTime" Type="DateTime" Precision="3" />
+          <Property Name="ProjectID" Type="Int32" />
+          <Property Name="IsRead" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Project" Relationship="InternshipManagementModel.FK_Notifications_Projects" FromRole="Notification" ToRole="Project" />
+          <NavigationProperty Name="User" Relationship="InternshipManagementModel.FK_Notifications_Users_Receiver" FromRole="Notification" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="InternshipManagementModel.FK_Notifications_Users_Sender" FromRole="Notification" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Notifications_Projects">
+          <End Type="InternshipManagementModel.Project" Role="Project" Multiplicity="0..1" />
+          <End Type="InternshipManagementModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Users_Receiver">
+          <End Type="InternshipManagementModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="InternshipManagementModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="ReceiverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Notifications_Users_Sender">
+          <End Type="InternshipManagementModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="InternshipManagementModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="SenderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1860,6 +2014,32 @@
                 <ScalarProperty Name="Bio" ColumnName="Bio" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginHistories">
+            <EntityTypeMapping TypeName="InternshipManagementModel.LoginHistory">
+              <MappingFragment StoreEntitySet="LoginHistory">
+                <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+                <ScalarProperty Name="LoginTime" ColumnName="LoginTime" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="LoginHistoryID" ColumnName="LoginHistoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="InternshipManagementModel.Notification">
+              <MappingFragment StoreEntitySet="Notifications">
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="NotificationDateTime" ColumnName="NotificationDateTime" />
+                <ScalarProperty Name="NotificationText" ColumnName="NotificationText" />
+                <ScalarProperty Name="NotificationType" ColumnName="NotificationType" />
+                <ScalarProperty Name="ReceiverID" ColumnName="ReceiverID" />
+                <ScalarProperty Name="SenderID" ColumnName="SenderID" />
+                <ScalarProperty Name="NotificationID" ColumnName="NotificationID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

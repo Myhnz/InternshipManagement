@@ -22,6 +22,8 @@ namespace InternshipManagement.Models
             this.Messages1 = new HashSet<Message>();
             this.Students = new HashSet<Student>();
             this.Profiles = new HashSet<Profile>();
+            this.Notifications = new HashSet<Notification>();
+            this.Notifications1 = new HashSet<Notification>();
         }
     
         public int UserID { get; set; }
@@ -50,5 +52,9 @@ namespace InternshipManagement.Models
         public virtual UserRole UserRole { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Profile> Profiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notifications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notifications1 { get; set; }
     }
 }

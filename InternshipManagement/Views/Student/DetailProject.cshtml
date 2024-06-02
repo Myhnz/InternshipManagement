@@ -3,8 +3,9 @@
     ViewBag.Title = "ProjectDetails";
     Layout = "~/Views/Shared/_LTELayout.cshtml";
 }
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<link href="~/AdminLTE/plugins/fullcalendar/main.css" rel="stylesheet" />
+<script src="~/AdminLTE/plugins/fullcalendar/main.js"></script>
+<script src="~/AdminLTE/plugins/fullcalendar/locales/vi.js"></script>
 <link href="~/Content/InstructorPd.css" rel="stylesheet" />
 
 <div class="container">
@@ -25,7 +26,7 @@
                 @foreach (var member in Model.Members)
                 {
                     <div class="col-md-2 text-center">
-                        <img src="~/Content/avatars/@member.Avatar" class="img-thumbnail mb-2 rounded-circle" alt="avt" />
+                        <img src="~/Content/AvatarImages/@member.Avatar" class="img-thumbnail mb-2 rounded-circle" alt="avt" />
                     </div>
                 }
             </div>
@@ -71,6 +72,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
+                    locale: 'vi',
                     initialView: 'dayGridMonth',
                     dayMaxEvents: 4,
                     events: function (fetchInfo, successCallback, failureCallback) {

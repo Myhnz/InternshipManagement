@@ -20,6 +20,22 @@ namespace InternshipManagement.Controllers
         {
             return View();
         }
+        private void SendNotification(int receiverId, string message)
+        {
+            var notification = new Notification
+            {
+                ReceiverID = receiverId,
+                NotificationType = "Info",
+                NotificationText = message,
+                NotificationDateTime = DateTime.Now,
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                IsRead = false
+            };
+
+            sData.Notifications.Add(notification);
+            sData.SaveChanges();
+        }
         public ActionResult Navigation()
         {
             // Retrieve UserID from session
@@ -55,6 +71,7 @@ namespace InternshipManagement.Controllers
             }
             return 0;
         }
+
 
         public ActionResult headerMenu(int uid)
         {
@@ -205,52 +222,40 @@ namespace InternshipManagement.Controllers
             return RedirectToAction("FavoriteProjects");
         }
         //Chức năng apply vào dự án 
-        [HttpPost]
         public ActionResult ApplyProject(int projectID)
         {
             try
             {
-                
-                // Lấy UserID từ Session
                 int userID = Convert.ToInt32(Session["UserID"]);
-
-                // Lấy StudentID từ UserID
                 int studentID = GetStudentIDFromSession(userID);
 
-                //Kiểm tra sinh viên đã trong dự án nào chưa? 
                 if (IsStudentInAnyProject(studentID))
                 {
                     ModelState.AddModelError("", "Sinh viên đã tham gia một dự án khác.");
                     return View();
                 }
 
-                // Kiểm tra xem StudentID và ProjectID đã tồn tại trong bảng Students và Projects chưa
                 var student = sData.Students.Find(studentID);
                 var project = sData.Projects.Find(projectID);
 
                 if (student == null)
                 {
                     ModelState.AddModelError("", "Sinh viên không tồn tại.");
-                    //return View("ApplyProject");
                     return View();
-                    
                 }
 
                 if (project == null)
                 {
                     ModelState.AddModelError("", "Dự án không tồn tại.");
-                    //return View("ApplyProject");
                     return View();
                 }
 
                 if (CheckMemberInProject(projectID))
                 {
                     ModelState.AddModelError("", "Dự án đã đủ thành viên.");
-                    //return View("ApplyProject");
                     return View();
                 }
 
-                // Kiểm tra xem cặp StudentID và ProjectID đã tồn tại trong bảng InternshipQueue chưa
                 var existingRecord = sData.InternshipQueues.FirstOrDefault(x => x.StudentID == studentID && x.ProjectID == projectID);
 
                 if (existingRecord != null)
@@ -259,7 +264,6 @@ namespace InternshipManagement.Controllers
                     return View("ApplyProject");
                 }
 
-                // Nếu không có dữ liệu trùng lặp, thêm mới dữ liệu vào bảng InternshipQueue
                 InternshipQueue newRecord = new InternshipQueue
                 {
                     StudentID = studentID,
@@ -268,6 +272,14 @@ namespace InternshipManagement.Controllers
 
                 sData.InternshipQueues.Add(newRecord);
                 sData.SaveChanges();
+
+                // Send notification
+                var studentName = $"{student.FirstName} {student.LastName}";
+                var instructor = sData.Users.Find(project.InstructorID);
+                var instructorName = $"{instructor.FirstName} {instructor.LastName}";
+
+                SendNotification(studentID, $"Bạn đã nộp đơn xin tham gia dự án {project.ProjectName}.");
+                SendNotification(project.InstructorID.Value, $"Sinh viên {studentName} đã yêu cầu tham gia vào dự án {project.ProjectName}.");
 
                 return RedirectToAction("SearchProject");
             }

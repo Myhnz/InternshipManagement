@@ -147,6 +147,23 @@ namespace InternshipManagement.Controllers
             }
             return View(updateInstructor);
         }
+        private void SendNotification(int receiverId, string message)
+        {
+            var notification = new Notification
+            {
+                ReceiverID = receiverId,
+                NotificationType = "Info",
+                NotificationText = message,
+                NotificationDateTime = DateTime.Now,
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                IsRead = false
+            };
+
+            iData.Notifications.Add(notification);
+            iData.SaveChanges();
+        }
+
         //Chức năng quản lý dự án của Giảng viên
         public ActionResult Projects()
         {
@@ -517,7 +534,6 @@ namespace InternshipManagement.Controllers
         [HttpPost]
         public ActionResult ApproveStudent(int studentId, int projectId)
         {
-            // Find the student in the queue
             var queueEntry = iData.InternshipQueues.SingleOrDefault(q => q.StudentID == studentId && q.ProjectID == projectId);
 
             if (queueEntry == null)
@@ -525,7 +541,6 @@ namespace InternshipManagement.Controllers
                 return HttpNotFound();
             }
 
-            // Remove student from the queue
             iData.InternshipQueues.Remove(queueEntry);
 
             var project = iData.Projects.SingleOrDefault(p => p.ProjectID == projectId);
@@ -539,26 +554,34 @@ namespace InternshipManagement.Controllers
             {
                 project.StudentsCount++;
 
-                var newInternship = new InternshipInformation();
-                newInternship.StudentID = studentId;
-                newInternship.ProjectID = projectId;
-                newInternship.CompanyID = project.CompanyID;
-                newInternship.InstructorID = project.InstructorID;
-                newInternship.StartDate = null;
-                newInternship.EndDate = null;
-                newInternship.CreateDate = DateTime.Now;
-                newInternship.UpdateDate = DateTime.Now;
-                newInternship.Description = null;
-                newInternship.isActive = true;
-                newInternship.isDelete = false;
+                var newInternship = new InternshipInformation
+                {
+                    StudentID = studentId,
+                    ProjectID = projectId,
+                    CompanyID = project.CompanyID,
+                    InstructorID = project.InstructorID,
+                    CreateDate = DateTime.Now,
+                    UpdateDate = DateTime.Now,
+                    isActive = true,
+                    isDelete = false
+                };
                 iData.InternshipInformations.Add(newInternship);
             }
-            // Save changes
+
             iData.SaveChanges();
 
-            // Redirect back to the project details
+            // Send notifications
+            var student = iData.Students.Find(studentId);
+            var instructor = iData.Users.Find(project.InstructorID);
+            string studentName = $"{student.FirstName} {student.LastName}";
+            string instructorName = $"{instructor.FirstName} {instructor.LastName}";
+
+            SendNotification(studentId, $"Bạn đã được chấp nhận vào dự án {project.ProjectName}.");
+            SendNotification(project.InstructorID.Value, $"{studentName} đã được chấp nhận vào dự án của bạn.");
+
             return RedirectToAction("ProjectDetails", new { id = projectId });
         }
+
         //Chức năng từ chối sinh viên tham gia vào dự án 
         public ActionResult RejectStudent(int studentId, int projectId)
         {
@@ -568,11 +591,19 @@ namespace InternshipManagement.Controllers
             {
                 return HttpNotFound();
             }
+
             iData.InternshipQueues.Remove(queueEntry);
             iData.SaveChanges();
 
+            // Send notification
+            var student = iData.Students.Find(studentId);
+            string studentName = $"{student.FirstName} {student.LastName}";
+
+            SendNotification(studentId, $"Bạn đã bị từ chối tham gia vào dự án {projectId}.");
+
             return RedirectToAction("ProjectDetails", new { id = projectId });
         }
+
         //Chức năng chỉnh sửa thông tin sinh viên trong dự án
         [HttpGet]
         public ActionResult EditInternship(int internshipID)
@@ -630,24 +661,21 @@ namespace InternshipManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateTask(InternshipManagement.Models.Task task, int projectID)
         {
-            // Lấy danh sách sinh viên có cùng ProjectID từ bảng InternshipInformations
             var studentsWithProjectID = iData.InternshipInformations
-                                            .Where(c => c.ProjectID == projectID)
-                                            .OrderBy(s => s.StudentID)
-                                            .Select(info => new
-                                            {
-                                                StudentId = info.StudentID,
-                                                FullName = info.Student.FirstName + " " + info.Student.LastName
-                                            })
-                                            .ToList();
+                                        .Where(c => c.ProjectID == projectID)
+                                        .OrderBy(s => s.StudentID)
+                                        .Select(info => new
+                                        {
+                                            StudentId = info.StudentID,
+                                            FullName = info.Student.FirstName + " " + info.Student.LastName
+                                        })
+                                        .ToList();
 
             if (studentsWithProjectID != null)
             {
-                // Tạo SelectList từ danh sách sinh viên
                 ViewBag.Students = new SelectList(studentsWithProjectID, "StudentId", "FullName");
             }
 
-            // Tạo một đối tượng Task mới
             var newTask = new InternshipManagement.Models.Task
             {
                 TaskDescription = task.TaskDescription,
@@ -655,25 +683,24 @@ namespace InternshipManagement.Controllers
                 Status = task.Status,
                 ProjectID = projectID,
                 StudentID = task.StudentID,
-                InstructorID = task.InstructorID, // Giả sử sử dụng InstructorID từ dự án
+                InstructorID = task.InstructorID,
                 StartDate = task.StartDate,
                 EndDate = task.EndDate,
-                isDelete = false, // Mặc định không được xóa
+                isDelete = false,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now
             };
 
-            // Thêm đối tượng Task mới vào bảng Tasks
             iData.Tasks.Add(newTask);
-
-            // Lưu các thay đổi vào cơ sở dữ liệu
             iData.SaveChanges();
 
-            // Đặt thông báo thành công vào TempData
-            TempData["SuccessMessage"] = $"Tạo task thành công.";
+            // Send notification
+            var student = iData.Students.Find(task.StudentID);
+            string studentName = $"{student.FirstName} {student.LastName}";
 
+            SendNotification(task.StudentID.Value, $"Bạn đã được giao một nhiệm vụ mới trong dự án {projectID}.");
 
-            // Chuyển hướng người dùng đến trang ProjectDetails sau khi thêm nhiệm vụ thành công
+            TempData["SuccessMessage"] = "Tạo task thành công.";
             return RedirectToAction("ProjectDetails", new { id = projectID });
         }
 
@@ -718,30 +745,26 @@ namespace InternshipManagement.Controllers
         [HttpPost]
         public ActionResult UpdateTaskStatus(int taskID, string newStatus)
         {
-            // Tìm task có ID tương ứng trong cơ sở dữ liệu
             var taskToUpdate = iData.Tasks.SingleOrDefault(t => t.TaskID == taskID);
 
-            // Kiểm tra nếu task tồn tại
             if (taskToUpdate != null)
             {
-                // Cập nhật trạng thái mới cho task
                 taskToUpdate.Status = newStatus;
-
-                // Lưu các thay đổi vào cơ sở dữ liệu
                 iData.SaveChanges();
 
-                // Tính toán lại tiến độ dự án
-                if (iData.Projects.Any())
-                {
-                    int completedTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID && t.Status == "Completed");
-                    int totalTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID);
-                    int percentage = totalTasksCount > 0 ? (completedTasksCount * 100 / totalTasksCount) : 0;
+                // Send notification
+                var student = iData.Students.Find(taskToUpdate.StudentID);
+                string studentName = $"{student.FirstName} {student.LastName}";
 
-                    return Json(new { success = true, percentage = percentage, completedTasksCount = completedTasksCount, totalTasksCount = totalTasksCount });
-                }
+                SendNotification(taskToUpdate.StudentID.Value, $"Trạng thái nhiệm vụ của bạn trong dự án {taskToUpdate.ProjectID} đã được cập nhật thành {newStatus}.");
+
+                int completedTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID && t.Status == "Completed");
+                int totalTasksCount = iData.Tasks.Count(t => t.ProjectID == taskToUpdate.ProjectID);
+                int percentage = totalTasksCount > 0 ? (completedTasksCount * 100 / totalTasksCount) : 0;
+
+                return Json(new { success = true, percentage = percentage, completedTasksCount = completedTasksCount, totalTasksCount = totalTasksCount });
             }
 
-            // Trả về kết quả lỗi nếu không tìm thấy task
             return Json(new { success = false, error = "Task not found" });
         }
         //Chức năng xóa Task

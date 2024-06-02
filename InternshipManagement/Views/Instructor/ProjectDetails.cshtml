@@ -98,7 +98,7 @@
                                             @foreach (var participant in Model.Members)
                                             {
                                                 <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
-                                                    <img alt="image" class="rounded-circle avatar" src="~/Content/avatars/@participant.Avatar">
+                                                    <img alt="image" class="rounded-circle avatar" src="~/Content/AvatarImages/@participant.Avatar">
                                                 </a>
                                             }
                                         </dd>
@@ -175,7 +175,7 @@
                                                                             @if (student != null && !string.IsNullOrEmpty(student.Avatar))
                                                                             {
                                                                                 <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{student.FirstName} {student.LastName}")" data-content="@($"Email: {student.Email}<br>Phone: {student.Phone}<br>Address: {student.Address}")">
-                                                                                    <img alt="image" class="rounded-circle avatar m-0" src="~/Content/avatars/@Url.Content(student.Avatar)" width="50" height="50">
+                                                                                    <img alt="image" class="rounded-circle avatar m-0" src="~/Content/AvatarImages/@Url.Content(student.Avatar)" width="50" height="50">
                                                                                 </a>
                                                                             }
 
@@ -243,7 +243,7 @@
                                     {
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <img src="~/Content/avatars/@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                                                <img src="~/Content/AvatarImages/@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
                                                 <span>@student.FirstName @student.LastName</span>
                                             </div>
                                             <div class="ml-auto d-flex">

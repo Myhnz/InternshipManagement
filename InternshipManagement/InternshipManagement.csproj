@@ -190,7 +190,13 @@
     <Compile Include="Models\InternshipQueue.cs">
       <DependentUpon>InternshipManagement.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoginHistory.cs">
+      <DependentUpon>InternshipManagement.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Message.cs">
+      <DependentUpon>InternshipManagement.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Notification.cs">
       <DependentUpon>InternshipManagement.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OTPStorage.cs" />
@@ -2746,6 +2752,7 @@
     <Content Include="Views\Admin\ResetPassword.cshtml" />
     <Content Include="Views\Student\DetailProject .cshtml" />
     <Content Include="Views\User\EditCV.cshtml" />
+    <Content Include="Views\User\Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

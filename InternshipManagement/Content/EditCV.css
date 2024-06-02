@@ -69,25 +69,25 @@
     margin-bottom: 1rem;
 }
 .avatar-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu xám hơi trong suốt */
-    display: none; /* Ban đầu ẩn */
-    justify-content: center;
-    align-items: center;
-    transform: translate(-50%, -50%);
-}
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        transform: translate(-50%, -50%);
+    }
 
-.upload-icon {
-    color: #fff; /* Màu trắng cho biểu tượng */
-    font-size: 24px; /* Kích thước của biểu tượng */
-}
+    .upload-icon {
+        color: #fff;
+        font-size: 24px;
+    }
 
-.cancel-icon {
-    color: #fff; /* Màu trắng cho biểu tượng */
-    font-size: 24px; /* Kích thước của biểu tượng */
-}
+    .cancel-icon {
+        color: #fff;
+        font-size: 24px;
+    }

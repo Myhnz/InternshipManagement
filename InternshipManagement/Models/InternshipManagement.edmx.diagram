@@ -54,6 +54,11 @@
         <AssociationConnector Association="InternshipManagementModel.FK_ProjectPersonalize" />
         <EntityTypeShape EntityType="InternshipManagementModel.Profile" Width="1.5" PointX="3" PointY="2.125" />
         <AssociationConnector Association="InternshipManagementModel.FK__Profile__UserID__7A672E12" />
+        <EntityTypeShape EntityType="InternshipManagementModel.LoginHistory" Width="1.5" PointX="10.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InternshipManagementModel.Notification" Width="1.5" PointX="13.5" PointY="9.375" />
+        <AssociationConnector Association="InternshipManagementModel.FK_Notifications_Projects" />
+        <AssociationConnector Association="InternshipManagementModel.FK_Notifications_Users_Receiver" />
+        <AssociationConnector Association="InternshipManagementModel.FK_Notifications_Users_Sender" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -68,21 +68,34 @@ namespace InternshipManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Mã hóa mật khẩu
+                // Mã hóa mật khẩu
                 string hashedPassword = PasswordHasher.HashPassword(password);
-                var user = data.Users.Where(u => u.Username.Equals(userName) && u.Password.Equals(hashedPassword)).ToList();
-                if (user.Count() > 0)
-                {
-                    Session["UserName"] = user.FirstOrDefault().Username;
-                    Session["UserID"] = user.FirstOrDefault().UserID;
+                var user = data.Users.FirstOrDefault(u => u.Username.Equals(userName) && u.Password.Equals(hashedPassword));
 
-                    var userID = Session["UserID"];
-                    var userRole = user.FirstOrDefault().RoleID;
-                    if (userRole == 1)
+                if (user != null)
+                {
+                    // Lưu thông tin đăng nhập vào lịch sử
+                    var loginHistory = new LoginHistory
+                    {
+                        UserID = user.UserID,
+                        LoginTime = DateTime.Now,
+                        IPAddress = Request.UserHostAddress // Lấy địa chỉ IP của người dùng
+                    };
+
+                    // Lưu lịch sử đăng nhập vào cơ sở dữ liệu
+                    data.LoginHistories.Add(loginHistory);
+                    data.SaveChanges();
+
+                    // Thiết lập session cho người dùng đăng nhập thành công
+                    Session["UserName"] = user.Username;
+                    Session["UserID"] = user.UserID;
+
+                    // Chuyển hướng người dùng đến trang tương ứng với vai trò của họ
+                    if (user.RoleID == 1)
                     {
                         return RedirectToAction("Index", "Student");
                     }
-                    if (userRole == 2)
+                    else if (user.RoleID == 2)
                     {
                         return RedirectToAction("Index", "Instructor");
                     }
@@ -95,6 +108,7 @@ namespace InternshipManagement.Controllers
             }
             return View(users);
         }
+
         // đăng ký
         public ActionResult Register(int? role)
         {
@@ -596,6 +610,24 @@ namespace InternshipManagement.Controllers
 
             return View(viewModel);
         }
+        public ActionResult Profile(int id)
+        {
+            var user = data.Users.FirstOrDefault(u => u.UserID == id);
+            var profile = data.Profiles.FirstOrDefault(p => p.UserID == id);
+
+            if (user == null || profile == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewModel = new EditCVViewModel
+            {
+                User = user,
+                Profile = profile
+            };
+
+            return View(viewModel);
+        }
 
 
         [HttpGet]
@@ -634,6 +666,34 @@ namespace InternshipManagement.Controllers
                     return RedirectToAction("Login"); // Hoặc chuyển hướng đến trang khác
                 }
             }
+        }
+        // Method to view notifications
+        public ActionResult Notifications()
+        {
+            int userId = Convert.ToInt32(Session["UserID"]);
+
+            var notifications = data.Notifications
+                                    .Where(n => n.ReceiverID == userId)
+                                    .OrderByDescending(n => n.NotificationDateTime)
+                                    .ToList();
+
+            return View(notifications);
+        }
+
+        // Optionally, mark notifications as read
+        [HttpPost]
+        public ActionResult MarkAsRead(int notificationId)
+        {
+            var notification = data.Notifications.SingleOrDefault(n => n.NotificationID == notificationId);
+
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                notification.UpdateDate = DateTime.Now;
+                data.SaveChanges();
+            }
+
+            return RedirectToAction("Notifications");
         }
     }
 }

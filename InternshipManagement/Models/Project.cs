@@ -25,6 +25,7 @@ namespace InternshipManagement.Models
             this.ProjectTags = new HashSet<ProjectTag>();
             this.Tasks = new HashSet<Task>();
             this.Personalizes = new HashSet<Personalize>();
+            this.Notifications = new HashSet<Notification>();
         }
     
         public int ProjectID { get; set; }
@@ -59,5 +60,7 @@ namespace InternshipManagement.Models
         public virtual ICollection<Task> Tasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Personalize> Personalizes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }

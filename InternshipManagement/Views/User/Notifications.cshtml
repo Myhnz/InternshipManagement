@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Notifications";
+    Layout = "~/Views/Shared/_LTELayout.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Notification</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var notification in Model)
+        {
+            <tr>
+                <td>@notification.NotificationText</td>
+                <td>@notification.NotificationDateTime?.ToString("g")</td>
+                <td>@(notification.IsRead ? "Read" : "Unread")</td>
+                <td>
+                    @if (!notification.IsRead)
+                    {
+                        using (Html.BeginForm("MarkAsRead", "User", FormMethod.Post))
+                        {
+                            @Html.Hidden("notificationId", (object)notification.NotificationID)
+                            <button type="submit" class="btn btn-primary">Mark as Read</button>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

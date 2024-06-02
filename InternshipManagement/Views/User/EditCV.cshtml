@@ -24,12 +24,12 @@
                                     </div>
                                     <input type="file" id="AvatarImage" name="AvatarImage" style="display: none;" accept="image/*">
                                 </div>
-                                <h5 class="user-name">@Model.User.FirstName @Model.User.LastName</h5>
+                                <h5 class="user-name">@Model.User.LastName @Model.User.FirstName </h5>
                                 <h6>@@@Model.User.Username</h6>
-                                <h6 class="user-email"><i class="fa fa-envelope"></i> @Model.User.Email</h6>
+                                <h6 class="user-email mb-2"><i class="fa fa-envelope"></i> @Model.User.Email</h6>
                                 @if (Model.Profile != null && !string.IsNullOrEmpty(Model.Profile.Website))
                                 {
-                                    <h6 class="user-email"><i class="fa fa-globe"></i> @Model.Profile.Website</h6>
+                                    <a href="@Model.Profile.Website"><h6 class="user-email"><i class="fa fa-globe"></i> @Model.Profile.Website</h6></a>
                                 }
                             </div>
 
@@ -51,7 +51,7 @@
                     <div class="card-body">
                         @if (TempData["SuccessMessage"] != null)
                         {
-                            <div class="custom-alert custom-alert-info">
+                            <div class="alert custom-alert-info">
                                 @TempData["SuccessMessage"]
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -82,21 +82,25 @@
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="User_DateOfBirth">Ngày sinh</label>
-                                    @Html.EditorFor(model => model.User.DateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
+                                    @{
+                                        var formattedDate = Convert.ToDateTime(Model.User.DateOfBirth).ToString("yyyy-MM-dd");
+                                    }
+                                    @Html.EditorFor(model => model.User.DateOfBirth, new { htmlAttributes = new { @class = "form-control datepicker", @Value = formattedDate, Type = "date", @max = DateTime.Now.ToString("yyyy-MM-dd"), lang = "vi-VN" } })
+
                                     @Html.ValidationMessageFor(model => model.User.DateOfBirth, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="User_Phone">Số điện thoại</label>
-                                    @Html.EditorFor(model => model.User.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.User.Phone, new { htmlAttributes = new { @class = "form-control", Type="number" } })
                                     @Html.ValidationMessageFor(model => model.User.Phone, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="User_Email">Email</label>
-                                    @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control", Type="email" } })
                                     @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -135,7 +139,7 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <label for="Profile_Experience">Kinh nghiệm làm việc</label>
+                                    <label for="Profile_Experience">Lĩnh vực</label>
                                     @Html.TextAreaFor(model => model.Profile.Experience, new { @class = "form-control", rows = 3 })
                                     @Html.ValidationMessageFor(model => model.Profile.Experience, "", new { @class = "text-danger" })
                                 </div>
@@ -168,6 +172,7 @@
     }
 </div>
 <script>
+   
     document.getElementById('avatar-container').addEventListener('click', function () {
         document.getElementById('AvatarImage').click();
     });
@@ -198,9 +203,11 @@
         if (fileInput.files.length > 0) {
             uploadIcon.style.display = 'none';
             cancelIcon.style.display = 'block';
+            fileInput.readonly = true;
         } else {
             uploadIcon.style.display = 'block';
             cancelIcon.style.display = 'none';
+            fileInput.readonly = false; 
         }
     });
 
@@ -209,5 +216,6 @@
         fileInput.value = ''; // Xóa giá trị của input file
         uploadIcon.style.display = 'block';
         cancelIcon.style.display = 'none';
+        fileInput.readonly = false; 
     });
 </script>
