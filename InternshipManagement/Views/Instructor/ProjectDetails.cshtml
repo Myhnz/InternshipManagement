@@ -72,8 +72,17 @@
                                     </dl>
                                     <dl class="row">
                                         <dt class="col-2">Mô tả:</dt>
-                                        <dd class="col-sm-7">@Model.Description</dd>
+                                        <dd class="col-sm-7">
+                                            <span id="shortDescription">@Model.Description.Substring(0, Math.Min(Model.Description.Length, 100))</span>
+
+                                            <span id="fullDescription" style="display: none;">@Model.Description</span>
+                                            @if (Model.Description.Length > 100)
+                                            {
+                                                <a href="javascript:void(0);" id="toggleDescription" class="text-primary" onclick="toggleDescription()">Xem tất cả</a>
+                                            }
+                                        </dd>
                                     </dl>
+
                                 </div>
                             </div>
                             <div class="row">
@@ -97,10 +106,11 @@
                                         <dd class="col-8 project-people">
                                             @foreach (var participant in Model.Members)
                                             {
-                                                <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
+                                                <a class="avatar-popover" data-toggle="popover" title="@($"{participant.FirstName} {participant.LastName}")" data-trigger="hover" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")" data-modal-target="#cvModal" onclick="openPopoverAndModal(this, '@participant.UserID')">
                                                     <img alt="image" class="rounded-circle avatar" src="~/Content/AvatarImages/@participant.Avatar">
                                                 </a>
                                             }
+
                                         </dd>
                                     </dl>
                                 </div>
@@ -174,7 +184,7 @@
                                                                         <td>
                                                                             @if (student != null && !string.IsNullOrEmpty(student.Avatar))
                                                                             {
-                                                                                <a href="#" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{student.FirstName} {student.LastName}")" data-content="@($"Email: {student.Email}<br>Phone: {student.Phone}<br>Address: {student.Address}")">
+                                                                                <a href="#" class="avatar-popover" >
                                                                                     <img alt="image" class="rounded-circle avatar m-0" src="~/Content/AvatarImages/@Url.Content(student.Avatar)" width="50" height="50">
                                                                                 </a>
                                                                             }
@@ -244,7 +254,7 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
                                                 <img src="~/Content/AvatarImages/@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
-                                                <span>@student.FirstName @student.LastName</span>
+                                                <span class="student-name">@student.FirstName @student.LastName</span>
                                             </div>
                                             <div class="ml-auto d-flex">
                                                 <form action="@Url.Action("ApproveStudent", "Instructor")" method="post">
@@ -379,6 +389,22 @@
         /**/
         }
         );
+
+        function toggleDescription() {
+            var shortDescription = document.getElementById('shortDescription');
+            var fullDescription = document.getElementById('fullDescription');
+            var toggleButton = document.getElementById('toggleDescription');
+
+            if (shortDescription.style.display === 'none') {
+                shortDescription.style.display = 'inline';
+                fullDescription.style.display = 'none';
+                toggleButton.innerText = 'Xem tất cả';
+            } else {
+                shortDescription.style.display = 'none';
+                fullDescription.style.display = 'inline';
+                toggleButton.innerText = 'Thu gọn';
+            }
+        }
     function updateTaskStatus(selectElement, taskID) {
     var newStatus = selectElement.value;
     $.ajax({

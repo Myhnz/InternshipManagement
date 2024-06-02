@@ -41,9 +41,69 @@
         @RenderBody()
         @RenderSection("scripts", required: false)
 
+        <!-- CV Modal -->
+        <div id="cvModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">User CV</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <!-- Content will be loaded dynamically here -->
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- /.content-wrapper -->
     </div>
+    <script>
+        $(document).ready(function () {
+            $('.student-name').click(function () {
+                var studentId = $(this).data('student-id');
+                $('#cvModal').modal('show'); // Assuming your modal ID is cvModal
+                // Here you can fetch and display the CV for the clicked student using AJAX or other methods
+            });
+        });
+        function openPopoverAndModal(element, userId) {
+            // Open the popover
+            $(element).popover('show');
+
+            // Get the modal target from data attribute
+            var modalTarget = $(element).data('modal-target');
+
+            // Delay opening modal to prevent immediate closure of popover
+            setTimeout(function () {
+                // Close the popover
+                $(element).popover('hide');
+
+                // Open the modal
+                $(modalTarget).modal('show');
+
+                // Call function to load CV modal
+                openCVModal(userId);
+            }, 200);
+        }
+
+        // AJAX request to load user's CV in modal
+        function loadCVModal(userId) {
+            $.ajax({
+                url: '/User/LoadCVModal', // Change ControllerName to your actual controller name
+                type: 'GET',
+                data: { id: userId },
+                success: function (data) {
+                    $('#cvModal .modal-body').html(data);
+                    $('#cvModal').modal('show');
+                },
+                error: function () {
+                    alert('Error loading CV.');
+                }
+            });
+        }
+    </script>
     <!-- ./wrapper -->
     <script src="~/Scripts/home.js"></script>
     <!-- jQuery UI 1.11.4 -->
