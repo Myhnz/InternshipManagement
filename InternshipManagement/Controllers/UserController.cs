@@ -652,6 +652,11 @@ namespace InternshipManagement.Controllers
 
             return View(viewModel);
         }
+        public PartialViewResult LoadCVModal(int id)
+        {
+            var profile = data.Profiles.FirstOrDefault(p => p.UserID == id);
+            return PartialView("_CVModalPartial", profile);
+        }
 
 
         [HttpGet]

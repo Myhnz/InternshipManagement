@@ -336,13 +336,16 @@ namespace InternshipManagement.Controllers
                         project.BackgroundPicture = fileName; // Save the file name to the database
                     }
 
-                    // Add specializations to ProjectSpecialization
-                    var projectSpecialization = new ProjectSpecialization
+                    if (SpecializationID.HasValue)
                     {
-                        ProjectID = project.ProjectID,
-                        SpecializationID = SpecializationID.Value
-                    };
-                    iData.ProjectSpecializations.Add(projectSpecialization);
+                        var projectSpecialization = new ProjectSpecialization
+                        {
+                            ProjectID = project.ProjectID,
+                            SpecializationID = SpecializationID.Value
+                        };
+                        iData.ProjectSpecializations.Add(projectSpecialization);
+                    }
+
 
                     iData.Projects.Add(project);
                     iData.SaveChanges();

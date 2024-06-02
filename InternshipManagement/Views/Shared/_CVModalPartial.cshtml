@@ -1,0 +1,44 @@
+﻿@model InternshipManagement.Models.EditCVViewModel
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <img src="@Url.Content(Model.User.Avatar)" alt="Avatar" class="img-fluid rounded-circle mb-3" style="width: 120px; height: 120px;" />
+                <h5>@Model.User.FirstName @Model.User.LastName</h5>
+                <p>@Model.User.Email</p>
+            </div>
+            <div class="col-md-9">
+                <div>
+                    <h5>Bio:</h5>
+                    <p>@Model.Profile.Bio</p>
+                </div>
+                <div>
+                    <h5>Experience:</h5>
+                    <p>@Model.Profile.Experience</p>
+                </div>
+                <div>
+                    <h5>Skills:</h5>
+                    <p>@Model.Profile.Skills</p>
+                </div>
+                <div>
+                    <h5>Certifications:</h5>
+                    <p>@Model.Profile.Certifications</p>
+                </div>
+                <div>
+                    <h5>Website:</h5>
+                    <p>@Model.Profile.Website</p>
+                </div>
+                <div>
+                    <h5>Created At:</h5>
+                    <p>@Model.Profile.CreatedAt</p>
+                </div>
+                <div>
+                    <h5>Updated At:</h5>
+                    <p>@Model.Profile.UpdatedAt</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

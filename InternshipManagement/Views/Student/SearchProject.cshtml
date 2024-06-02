@@ -75,7 +75,7 @@
                                             }
                                         </ul>
                                         <h4 class="mb-1"><a href="@Url.Action("singleProject", new { ProjectID = project.ProjectID })">@project.ProjectName</a></h4>
-                                        <small>@project.Description</small>
+                                        <small>@(project.Description.Length > 100 ? project.Description.Substring(0, 90) + "..." : project.Description)</small>
                                     </div>
                                 </div>
                                 <hr class="m-2" />
