@@ -215,8 +215,39 @@
                                                     </div>
                                                 </div>
                                                 <div class="tab-pane" id="tab-3">
-                                                    <!-- Your last activity content -->
+                                                    <h4>Danh sách thành viên</h4>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Họ và tên</th>
+                                                                    <th>Email</th>
+                                                                    <th>Avatar</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var member in Model.Members)
+                                                                {
+                                                                    <tr style="cursor: pointer;" onclick="profile('@member.UserID')">
+                                                                        <td>@member.LastName @member.FirstName </td>
+                                                                        <td>@member.Email</td>
+                                                                        <td>
+                                                                            @if (!string.IsNullOrEmpty(member.Avatar))
+                                                                            {
+                                                                                    <img alt="image" class="rounded-circle avatar m-0" src="~/Content/AvatarImages/@Url.Content(member.Avatar)" width="50" height="50">
+                                                                           }
+                                                                            else
+                                                                            {
+                                                                                <span>No avatar</span>
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
