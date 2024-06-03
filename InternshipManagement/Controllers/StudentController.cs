@@ -87,14 +87,8 @@ namespace InternshipManagement.Controllers
             {
                 var internshipInfo = sData.InternshipInformations.FirstOrDefault(i => i.StudentID == studentID);
 
-                if (internshipInfo != null)
-                {
                     return RedirectToAction("DetailProject", new { studentID = studentID });
-                }
-                else
-                {
-                    return RedirectToAction("SearchProject");
-                }
+                
             }
             else
             {
@@ -433,7 +427,8 @@ namespace InternshipManagement.Controllers
                                     {
                                         StudentID = i.Student.StudentID,
                                         StudentName = i.Student.LastName + " " + i.Student.FirstName,
-                                        Avatar = i.Student.Avatar
+                                        Avatar = i.Student.Avatar,
+                                        UserID = i.Student.UserID
                                     }).ToList(),
                 Tasks = internship.Project.Tasks
                                      .Where(t => t.StudentID == studentID && t.isDelete == false)

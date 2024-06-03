@@ -22,7 +22,7 @@
             <div class="row">
                 @foreach (var member in Model.Members)
                 {
-                    <div class="ml-3">
+                    <div onclick="profile('@member.UserID')" class="ml-3">
                         <img src="~/Content/AvatarImages/@member.Avatar" class="img-thumbnail mb-2 rounded-circle" style="width:40px;height:40px" alt="avt" />
                     </div>
                 }

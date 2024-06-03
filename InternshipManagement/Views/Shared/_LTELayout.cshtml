@@ -61,48 +61,14 @@
         <!-- /.content-wrapper -->
     </div>
     <script>
-        $(document).ready(function () {
-            $('.student-name').click(function () {
-                var studentId = $(this).data('student-id');
-                $('#cvModal').modal('show'); // Assuming your modal ID is cvModal
-                // Here you can fetch and display the CV for the clicked student using AJAX or other methods
-            });
-        });
-        function openPopoverAndModal(element, userId) {
-            // Open the popover
-            $(element).popover('show');
 
-            // Get the modal target from data attribute
-            var modalTarget = $(element).data('modal-target');
-
-            // Delay opening modal to prevent immediate closure of popover
-            setTimeout(function () {
-                // Close the popover
-                $(element).popover('hide');
-
-                // Open the modal
-                $(modalTarget).modal('show');
-
-                // Call function to load CV modal
-                openCVModal(userId);
-            }, 200);
-        }
-
-        // AJAX request to load user's CV in modal
-        function loadCVModal(userId) {
-            $.ajax({
-                url: '/User/LoadCVModal', // Change ControllerName to your actual controller name
-                type: 'GET',
-                data: { id: userId },
-                success: function (data) {
-                    $('#cvModal .modal-body').html(data);
-                    $('#cvModal').modal('show');
-                },
-                error: function () {
-                    alert('Error loading CV.');
-                }
-            });
-        }
+       function profile(userId) {
+        parent.$(parent.document).data('multitabs').create({
+            iframe: true,
+            title: 'Hồ sơ',
+            url: '@Url.Action("Profile", "User")?id=' + userId
+        }, true);
+    }
     </script>
     <!-- ./wrapper -->
     <script src="~/Scripts/home.js"></script>

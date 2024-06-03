@@ -28,17 +28,10 @@ namespace InternshipManagement.Controllers
         {
             int instructorID = GetInstructorIDFromSession();
 
-            if (instructorID != 0)
-            {
                 var project = iData.Projects.FirstOrDefault(p => p.InstructorID == instructorID);
 
                     return RedirectToAction("Projects");
                 
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
         }
 
         private int GetInstructorIDFromSession()
@@ -350,8 +343,7 @@ namespace InternshipManagement.Controllers
                     iData.Projects.Add(project);
                     iData.SaveChanges();
                     // Get the tag names corresponding to the selected tag IDs
-                    var selectedTagNames = iData.Tags.Where(t => Tags.Contains(t.TagID.ToString())).Select(t => t.TagName).ToArray();
-                    return AddTag(project.ProjectID, selectedTagNames);
+                    return AddTag(project.ProjectID, Tags);
                 }
             }
             return View(project);
@@ -421,7 +413,6 @@ namespace InternshipManagement.Controllers
             return RedirectToAction("Projects");
         }
 
-        public List<Tag> Tags { get; set; }
         //Chức năng chỉnh sửa Dự án (Project)
         [HttpGet]
         public ActionResult EditProjects(int projectID)

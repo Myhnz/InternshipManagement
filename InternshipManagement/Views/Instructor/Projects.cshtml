@@ -97,7 +97,7 @@
                                 {
                                     foreach (var participant in project.Members)
                                     {
-                                        <a class="avatar-popover" data-toggle="popover" title="@($"{participant.FirstName} {participant.LastName}")" data-trigger="hover" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")" data-modal-target="#cvModal" onclick="openPopoverAndModal(this, '@participant.UserID')">
+                                        <a href="javascript:void(0)" onclick="profile('@participant.UserID')" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
                                             <img alt="image" class="rounded-circle avatar" src="~/Content/AvatarImages/@participant.Avatar">
                                         </a>
                                     }

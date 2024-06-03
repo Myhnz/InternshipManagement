@@ -21,6 +21,7 @@ namespace InternshipManagement.Models
         public int StudentID { get; set; }
         public string StudentName { get; set; }
         public string Avatar { get; set; }
+        public int? UserID { get; set; }
     }
 
     public class TaskViewModel

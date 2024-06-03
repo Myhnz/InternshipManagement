@@ -360,8 +360,15 @@ namespace InternshipManagement.Controllers
 
                             graphics.DrawString(initial, font, brush, position);
 
+                            string avatarFolder = Server.MapPath("~/Content/AvatarImages/");
+                            // Ensure the folder exists
+                            if (!Directory.Exists(avatarFolder))
+                            {
+                                Directory.CreateDirectory(avatarFolder);
+                            }
+
                             string avatarFileName = $"{Guid.NewGuid()}.jpg";
-                            string avatarFilePath = Server.MapPath($"~/Content/AvatarImages/{avatarFileName}");
+                            string avatarFilePath = Path.Combine(avatarFolder, avatarFileName);
                             bitmap.Save(avatarFilePath, ImageFormat.Jpeg);
 
                             return avatarFileName;
@@ -370,6 +377,7 @@ namespace InternshipManagement.Controllers
                 }
             }
         }
+
         //Chức năng đổi mật khẩu 
         [HttpGet]
         public ActionResult ChangePassword(int userID)
@@ -540,7 +548,7 @@ namespace InternshipManagement.Controllers
                 if (!string.IsNullOrEmpty(viewModel.User.LastName))
                     user.LastName = viewModel.User.LastName;
 
-                if (viewModel.User.DateOfBirth != null)
+                if (viewModel.User.DateOfBirth != null && viewModel.User.DateOfBirth != new DateTime(0001, 01, 01))
                     user.DateOfBirth = viewModel.User.DateOfBirth;
 
                 if (!string.IsNullOrEmpty(viewModel.User.Phone))
@@ -639,7 +647,7 @@ namespace InternshipManagement.Controllers
             var user = data.Users.FirstOrDefault(u => u.UserID == id);
             var profile = data.Profiles.FirstOrDefault(p => p.UserID == id);
 
-            if (user == null || profile == null)
+            if (user == null)
             {
                 return HttpNotFound();
             }
@@ -736,9 +744,13 @@ namespace InternshipManagement.Controllers
         }
 
 
-        // Method to get the count of unread notifications
         public ActionResult UnreadNotificationsCount()
         {
+            if (Session["UserID"] == null)
+            {
+                return Json(new { redirectToLogin = true }, JsonRequestBehavior.AllowGet);
+            }
+
             int userId = Convert.ToInt32(Session["UserID"]);
 
             int unreadCount = data.Notifications
@@ -746,5 +758,6 @@ namespace InternshipManagement.Controllers
 
             return Json(new { count = unreadCount }, JsonRequestBehavior.AllowGet);
         }
+
     }
 }

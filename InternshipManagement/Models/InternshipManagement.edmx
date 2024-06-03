@@ -147,7 +147,7 @@
           <Property Name="NotificationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SenderID" Type="int" />
           <Property Name="ReceiverID" Type="int" />
-          <Property Name="NotificationType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NotificationType" Type="nvarchar" MaxLength="50" />
           <Property Name="NotificationText" Type="nvarchar(max)" />
           <Property Name="NotificationDateTime" Type="datetime" />
           <Property Name="ProjectID" Type="int" />
@@ -295,7 +295,7 @@
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
-        <Association Name="FK__Profile__UserID__7A672E12">
+        <Association Name="FK__Profile__UserID__72C60C4A">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Profile" Type="Self.Profile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -702,7 +702,7 @@
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Profile__UserID__7A672E12" Association="Self.FK__Profile__UserID__7A672E12">
+          <AssociationSet Name="FK__Profile__UserID__72C60C4A" Association="Self.FK__Profile__UserID__72C60C4A">
             <End Role="Users" EntitySet="Users" />
             <End Role="Profile" EntitySet="Profile" />
           </AssociationSet>
@@ -1678,7 +1678,7 @@
           <Property Name="NotificationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="SenderID" Type="Int32" />
           <Property Name="ReceiverID" Type="Int32" />
-          <Property Name="NotificationType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NotificationType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="NotificationText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NotificationDateTime" Type="DateTime" Precision="3" />
           <Property Name="ProjectID" Type="Int32" />

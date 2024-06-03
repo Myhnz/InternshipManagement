@@ -106,9 +106,9 @@
                                         <dd class="col-8 project-people">
                                             @foreach (var participant in Model.Members)
                                             {
-                                                <a class="avatar-popover" data-toggle="popover" title="@($"{participant.FirstName} {participant.LastName}")" data-trigger="hover" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")" data-modal-target="#cvModal" onclick="openPopoverAndModal(this, '@participant.UserID')">
-                                                    <img alt="image" class="rounded-circle avatar" src="~/Content/AvatarImages/@participant.Avatar">
-                                                </a>
+                                               <a  href="javascript:void(0)" onclick="profile('@participant.UserID')" class="avatar-popover" data-toggle="popover" data-trigger="hover" title="@($"{participant.FirstName} {participant.LastName}")" data-content="@($"Email: {participant.Email}<br>Phone: {participant.Phone}<br>Address: {participant.Address}")">
+                                                   <img alt="image" class="rounded-circle avatar" src="~/Content/AvatarImages/@participant.Avatar">
+                                               </a>
                                             }
 
                                         </dd>
@@ -184,7 +184,7 @@
                                                                         <td>
                                                                             @if (student != null && !string.IsNullOrEmpty(student.Avatar))
                                                                             {
-                                                                                <a href="#" class="avatar-popover" >
+                                                                                <a href="javascript:void(0)" onclick="profile('@student.UserID')" class="avatar-popover">
                                                                                     <img alt="image" class="rounded-circle avatar m-0" src="~/Content/AvatarImages/@Url.Content(student.Avatar)" width="50" height="50">
                                                                                 </a>
                                                                             }
@@ -252,10 +252,13 @@
                                     @foreach (var student in Model.QueueStudents)
                                     {
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div class="d-flex align-items-center">
-                                                <img src="~/Content/AvatarImages/@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
-                                                <span class="student-name">@student.FirstName @student.LastName</span>
-                                            </div>
+                                            <a href="javascript:void(0)" onclick="profile('@student.UserID')" class="text-decoration-none text-dark">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="~/Content/AvatarImages/@student.Avatar" alt="image" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                                                    <span class="student-name">@student.FirstName @student.LastName</span>
+                                                </div>
+                                            </a>
+
                                             <div class="ml-auto d-flex">
                                                 <form action="@Url.Action("ApproveStudent", "Instructor")" method="post">
                                                     <input type="hidden" name="studentId" value="@student.StudentID" />
@@ -270,6 +273,7 @@
                                             </div>
                                         </li>
                                     }
+
                                 </ul>
                             }
                             else
@@ -359,7 +363,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
+<script>
         $(document).ready(function () {
             // Initialize Bootstrap popovers
             $('.avatar-popover').popover({
@@ -442,5 +446,5 @@
     });
 }
 
-    </script>
+</script>
 }

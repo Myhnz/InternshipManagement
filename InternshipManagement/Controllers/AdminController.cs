@@ -575,7 +575,15 @@ namespace InternshipManagement.Controllers
                             graphics.DrawString(initial, font, brush, position);
 
                             string avatarFileName = $"{Guid.NewGuid()}.jpg";
-                            string avatarFilePath = Server.MapPath($"~/Content/AvatarImages/{avatarFileName}");
+                            string avatarFolderPath = Server.MapPath("~/Content/AvatarImages");
+
+                            // Ensure the directory exists
+                            if (!Directory.Exists(avatarFolderPath))
+                            {
+                                Directory.CreateDirectory(avatarFolderPath);
+                            }
+
+                            string avatarFilePath = Path.Combine(avatarFolderPath, avatarFileName);
                             bitmap.Save(avatarFilePath, ImageFormat.Jpeg);
 
                             return avatarFileName;
@@ -584,6 +592,7 @@ namespace InternshipManagement.Controllers
                 }
             }
         }
+
 
 
         // Chức năng chỉnh sửa Người dùng

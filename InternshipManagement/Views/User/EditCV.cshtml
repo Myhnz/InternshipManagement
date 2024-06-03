@@ -29,8 +29,14 @@
                                 <h6 class="user-email mb-2"><i class="fa fa-envelope"></i> @Model.User.Email</h6>
                                 @if (Model.Profile != null && !string.IsNullOrEmpty(Model.Profile.Website))
                                 {
-                                    <a href="@Model.Profile.Website"><h6 class="user-email"><i class="fa fa-globe"></i> @Model.Profile.Website</h6></a>
+                                    var website = Model.Profile.Website.StartsWith("http://") || Model.Profile.Website.StartsWith("https://")
+                                        ? Model.Profile.Website
+                                        : "http://" + Model.Profile.Website;
+                                    <a href="@Html.Raw(website)" target="_blank">
+                                        <h6 class="user-email"><i class="fa fa-globe"></i> @Model.Profile.Website</h6>
+                                    </a>
                                 }
+
                             </div>
 
                             <div class="about">

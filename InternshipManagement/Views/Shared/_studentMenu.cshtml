@@ -105,17 +105,24 @@
         toggleNotifications(); // Call the toggleNotifications function
     });
 
-    // Periodically update the count of unread notifications
     setInterval(function () {
-        $.ajax({
-            url: '@Url.Action("UnreadNotificationsCount", "User")',
-            type: 'GET',
-            success: function (data) {
+    $.ajax({
+        url: '@Url.Action("UnreadNotificationsCount", "User")',
+        type: 'GET',
+        success: function (data) {
+            if (data.redirectToLogin) {
+                window.location.href = '@Url.Action("Login", "User")';
+            } else {
                 // Update the badge with the count of unread notifications
                 $("#notificationBadge").text(data.count);
             }
-        });
-    }, 2000);
+        },
+        error: function (xhr, status, error) {
+            console.error('An error occurred:', error);
+        }
+    });
+}, 2000);
+
 </script>
 
 
