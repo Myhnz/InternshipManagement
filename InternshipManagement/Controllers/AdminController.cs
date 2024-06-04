@@ -487,6 +487,7 @@ namespace InternshipManagement.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    var userPassword = user.Password;
                     user.Password = PasswordHasher.HashPassword(user.Password);
                     user.Avatar = GenerateDefaultAvatar(user.FirstName);
                     user.CreateDate = DateTime.Now;
@@ -538,7 +539,7 @@ namespace InternshipManagement.Controllers
                     string userEmail = user.Email;
                     // Gửi email thông báo tài khoản và mật khẩu
                     string subject = "Thông tin tài khoản của bạn";
-                    string body = $"Tài khoản của bạn đã được tạo thành công. Tên đăng nhập: {user.Username}, Mật khẩu: {user.Password}";
+                    string body = $"Tài khoản của bạn đã được tạo thành công. Tên đăng nhập: {user.Username}, Mật khẩu: {userPassword}";
                     otpStorage.SendEmail(userEmail, subject, body);
                     return RedirectToAction("Users");
                 }
