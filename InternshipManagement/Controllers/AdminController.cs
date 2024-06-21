@@ -388,67 +388,12 @@ namespace InternshipManagement.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public JsonResult GetUsers(DataTableParameters parameters, string sortColumn, string sortDirection)
+        [HttpGet]
+        public ActionResult GetUsers(int? limit, int? offset, string search, string sort, string order)
         {
-            int draw = parameters.Draw;
-            int start = parameters.Start;
-            int length = parameters.Length;
-            string searchValue = parameters.Search.Value;
-
-            IQueryable<User> query = aData.Users;
-
-            if (!string.IsNullOrEmpty(searchValue))
+            var query = aData.Users.Select(u => new
             {
-                query = query.Where(u => u.FirstName.Contains(searchValue) ||
-                                         u.LastName.Contains(searchValue) ||
-                                         u.Username.Contains(searchValue) ||
-                                         u.Email.Contains(searchValue) ||
-                                         u.Phone.Contains(searchValue));
-            }
-            if (!string.IsNullOrEmpty(sortColumn))
-            {
-                switch (sortColumn)
-                {
-                    case "FirstName":
-                        query = sortDirection == "asc" ? query.OrderBy(u => u.FirstName) : query.OrderByDescending(u => u.FirstName);
-                        break;
-                    case "LastName":
-                        query = sortDirection == "asc" ? query.OrderBy(u => u.LastName) : query.OrderByDescending(u => u.LastName);
-                        break;
-                    case "Username":
-                        query = sortDirection == "asc" ? query.OrderBy(u => u.Username) : query.OrderByDescending(u => u.Username);
-                        break;
-                    case "Email":
-                        query = sortDirection == "asc" ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email);
-                        break;
-                    case "Phone":
-                        query = sortDirection == "asc" ? query.OrderBy(u => u.Phone) : query.OrderByDescending(u => u.Phone);
-                        break;
-                    default:
-                        query =  query.OrderByDescending(u => u.UpdateDate);
-                        break;
-                }
-            }
-
-            int recordsTotal = aData.Users.Count();
-
-            if (length == -1) // Kiểm tra nếu chọn "All"
-            {
-                length = recordsTotal; // Thiết lập độ dài là tổng số bản ghi
-            }
-
-            int recordsFiltered = !string.IsNullOrEmpty(searchValue) ? query.Count() : recordsTotal;
-
-            var data = query.ToList().Skip(start).Take(length).ToList();
-
-
-            // Tính toán số thứ tự
-            int sequenceNumber = start + 1;
-
-            var formattedData = data.Select(u => new
-            {
-                SequenceNumber = sequenceNumber++,
+                UserID = u.UserID,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Username = u.Username,
@@ -456,13 +401,66 @@ namespace InternshipManagement.Controllers
                 Phone = u.Phone
             });
 
+            // Apply search filter
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(u =>
+                    u.FirstName.Contains(search) ||
+                    u.LastName.Contains(search) ||
+                    u.Username.Contains(search) ||
+                    u.Email.Contains(search) ||
+                    u.Phone.Contains(search));
+            }
+
+            // Apply sorting
+            if (!string.IsNullOrEmpty(sort) && !string.IsNullOrEmpty(order))
+            {
+                switch (sort.ToLower())
+                {
+                    case "userid":
+                        query = (order.ToLower() == "asc") ? query.OrderBy(u => u.UserID) : query.OrderByDescending(u => u.UserID);
+                        break;
+                    case "firstname":
+                        query = (order.ToLower() == "asc") ? query.OrderBy(u => u.FirstName) : query.OrderByDescending(u => u.FirstName);
+                        break;
+                    case "lastname":
+                        query = (order.ToLower() == "asc") ? query.OrderBy(u => u.LastName) : query.OrderByDescending(u => u.LastName);
+                        break;
+                    case "username":
+                        query = (order.ToLower() == "asc") ? query.OrderBy(u => u.Username) : query.OrderByDescending(u => u.Username);
+                        break;
+                    case "email":
+                        query = (order.ToLower() == "asc") ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email);
+                        break;
+                    case "phone":
+                        query = (order.ToLower() == "asc") ? query.OrderBy(u => u.Phone) : query.OrderByDescending(u => u.Phone);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                // Default sorting to prevent error with Skip
+                query = query.OrderBy(u => u.UserID);
+            }
+
+            // Calculate total count
+            int total = query.Count();
+
+            // Apply paging
+            if (limit.HasValue && offset.HasValue)
+            {
+                query = query.Skip(offset.Value).Take(limit.Value);
+            }
+
+            var users = query.ToList();
+
             return Json(new
             {
-                draw = draw,
-                recordsTotal = recordsTotal,
-                recordsFiltered = recordsFiltered,
-                data = formattedData
-            });
+                total = total,
+                rows = users
+            }, JsonRequestBehavior.AllowGet);
         }
 
 
