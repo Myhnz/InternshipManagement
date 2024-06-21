@@ -1,348 +1,59 @@
 ﻿@model IEnumerable<InternshipManagement.Models.User>
-
 @{
     ViewBag.Title = "Users";
-    Layout = "~/Views/Shared/_LTELayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="~/Content/datatables.min.css" rel="stylesheet" />
-
-
-<div class="m-3">
-    <div class="col-12 card shadow-sm">
-        <!-- /.card-header -->
+<div class="container-lg mt-4">
+    <div class="card shadow-sm">
         <div class="card-body">
-            <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                <div class="row">
-                    <div style="overflow-x:auto" class="col-sm-12">
-                        <table id="userTable" class="table table-bordered">
-                            <thead class="thead1">
-                                <tr style="white-space: nowrap;">
-                                    <th>#</th>
-                                    <th>Họ đệm</th>
-                                    <th>Tên</th>
-                                    <th>Tên người dùng</th>
-                                    <th>Email</th>
-                                    <th>Điện thoại</th>
-                                </tr>
-
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
+            <table id="Usertable"
+                   data-toggle="table"
+                   data-ajax="ajaxRequest"
+                   data-search="true"
+                   data-side-pagination="server"
+                   data-pagination="true"
+                   data-click-to-select="true"
+                   data-show-export="true"
+                   data-show-columns="true"
+                   data-checkbox-header="true"
+                   data-locale="vi-VN">
+                <thead style="background-color: #f2f3fb">
+                    <tr>
+                        <th data-checkbox="true"></th>
+                        <th data-field="UserID">ID</th>
+                        <th data-field="LastName" data-sortable="true">Họ</th>
+                        <th data-field="FirstName" data-sortable="true">Tên</th>
+                        <th data-field="Username" data-sortable="true">Tên người dùng</th>
+                        <th data-field="Email" data-sortable="true">Email</th>
+                        <th data-field="Phone" data-sortable="true">Số điện thoại</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
-        <!-- /.card-body -->
-        <!-- /.card -->
-        <!-- Edit User Modal -->
-        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal content will be loaded dynamically -->
-                </div>
-            </div>
-        </div>
-        <!-- Add User Modal -->
-        <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal content will be loaded dynamically -->
-                </div>
-            </div>
-        </div>
-        <!-- View User Modal -->
-        <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="max-width:800px">
-                <div class="modal-content">
-                    <!-- Modal content will be loaded dynamically -->
-                </div>
-            </div>
-        </div>
-
-
     </div>
 </div>
 
-@section scripts {
-    <!-- DataTables -->
-    <link rel="stylesheet" href="~/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <link href="~/AdminLTE/plugins/datatables-select/css/select.bootstrap4.min.css" rel="stylesheet" />
-    <link href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
 
-    <!-- DataTables  & Plugins -->
-    <script src="~/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="~/AdminLTE/plugins/jszip/jszip.min.js"></script>
-    <script src="~/AdminLTE/plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="~/AdminLTE/plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-select/js/dataTables.select.min.js"></script>
-    <script src="~/AdminLTE/plugins/datatables-select/js/select.bootstrap4.min.js"></script>
-    <script src="~/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
-
+@section Scripts {
+    <script src="~/Scripts/popper.min.js"></script>
+    <link href="~/Content/bootstrapTable/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/Content/bootstrapTable/bootstrap-table.min.js"></script>
+    <script src="~/Content/bootstrapTable/bootstrap-table-locale-all.min.js"></script>
+    <script src="~/Content/bootstrapTable/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
     <script>
-
-        $(document).ready(function () {
-            var table = $('#userTable').DataTable({
-                // DataTable initialization options
-                "processing": true,
-                "serverSide": true,
-                "responsive": true,
-                "ajax": {
-                    "url": "/Admin/GetUsers",
-                    "type": "POST",
-                    "data": function (d) {
-                        // Default column name for sorting if columnIndex is not found
-                        var defaultColumnName = "SequenceNumber";
-
-                        // Get the column index of the clicked header
-                        var columnIndex = d.order[0] && d.order[0].column ? d.order[0].column : null;
-
-                        // Get the column name using the column index, or use the default column name
-                        var columnName = columnIndex !== null ? d.columns[columnIndex].data : defaultColumnName;
-
-                        // Pass column name and sorting direction to the server
-                        d.sortColumn = columnName;
-                        d.sortDirection = d.order[0] ? d.order[0].dir : "asc"; // Default sorting direction
-                    }
-                },
-                "columns": [
-                    { "data": "SequenceNumber", "orderable": false }, // Cột số thứ tự
-                    { "data": "LastName" },
-                    { "data": "FirstName" },
-                    { "data": "Username" },
-                    { "data": "Email" },
-                    { "data": "Phone" },
-                ],
-                "language": {
-                    "decimal": "",
-                    "emptyTable": "Không có dữ liệu",
-                    "info": "Hiển thị _START_ đến _END_ của tổng số _TOTAL_ bản ghi",
-                    "infoEmpty": "Hiển thị 0 đến 0 của tổng số 0 bản ghi",
-                    "infoFiltered": "(đã lọc từ tổng số _MAX_ bản ghi)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Hiển thị _MENU_ bản ghi",
-                    "loadingRecords": "Đang tải...",
-                    "processing": "",
-                    "search": "",
-                    "searchPlaceholder": "Tìm kiếm...",
-                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp",
-                    "paginate": {
-                        "first": "Đầu",
-                        "last": "Cuối",
-                        "next": "Tiếp",
-                        "previous": "Trước"
-                    },
-                    "aria": {
-                        "sortAscending": ": sắp xếp tăng dần",
-                        "sortDescending": ": sắp xếp giảm dần"
-                    },
-                    "select": {
-                        "rows": {
-                            "_": "%d hàng đã chọn",
-                            "0": "",
-                            "1": "1 hàng đã chọn"
-                        }
-                    }
-                },
-                "pagingType": "full_numbers", // Bootstrap style pagination
-                "ordering": true, // Enable ordering
-                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                "select": {
-                    style: 'multi',
-                },
-                "paging": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "dom": '<"top"<"float-right"f>lB>rt<"bottom"ip><"clear">',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf' // Export buttons
-                ]
-            });
-
-            // Function to enable/disable buttons based on selection
-            function toggleButtons() {
-                var selectedRows = table.rows({ selected: true }).count();
-                var editButton = $(".btn-edituser");
-                var deleteButton = $(".btn-danger");
-                var viewButton = $(".btn-viewuser");
-
-                if (selectedRows === 0) {
-                    editButton.prop("disabled", true);
-                    deleteButton.prop("disabled", true);
-                    viewButton.prop("disabled", true); // Disable view button if no row is selected
-                } else if (selectedRows === 1) {
-                    editButton.prop("disabled", false);
-                    deleteButton.prop("disabled", false);
-                    viewButton.prop("disabled", false); // Enable view button if only one row is selected
-                } else {
-                    editButton.prop("disabled", true);
-                    deleteButton.prop("disabled", false);
-                    viewButton.prop("disabled", true); // Disable view button if multiple rows are selected
-                }
-            }
-
-            // Initial toggle of edit and delete buttons
-            toggleButtons();
-
-            // Event listener for row selection
-            table.on('select deselect', function () {
-                toggleButtons(); // Call function to toggle button states
-            });
-
-            // Append CRUD buttons to the "float-right" element within a button group
-            var btnGroup = $('<div class="btn-group"></div>');
-            btnGroup.append('<button class="btn btn-success btn-adduser">Thêm</button>'); 
-            btnGroup.append('<button class="btn btn-info btn-viewuser" disabled>Chi tiết</button>');
-            btnGroup.append('<button class="btn btn-warning btn-edituser" disabled>Chỉnh sửa</button>');
-            btnGroup.append('<button class="btn btn-danger btn-deleteuser" disabled>Xóa</button>'); 
-            $(".float-right").append(btnGroup);
-
-
-            // Append Filter button next to the search input
-            $(".dataTables_filter").append('<button id="filterButton" class="btn btn-info btn-sm">Lọc</button>');
-
-            // Add click event listener for the Filter button
-            $("#filterButton").on("click", function () {
-                // Implement filter functionality here
-                alert("Filter button clicked!");
-            });
-
-            // Event listener for Edit User button
-            $(".btn-edituser").on("click", function () {
-                var selectedRowData = table.row({ selected: true }).data(); // Retrieve selected row data
-                if (selectedRowData) {
-                    var username = selectedRowData.Username; // Get the username of the selected user
-                    // Open the modal and pass the username to the controller
-                    $.ajax({
-                        url: '/Admin/EditUserAccount',
-                        type: 'GET',
-                        data: { username: username },
-                        success: function (data) {
-                            $('#editUserModal .modal-content').html(data); // Populate modal with user data
-                            $('#editUserModal').modal('show'); // Show the modal
-                        },
-                        error: function () {
-                            // Show error message using SweetAlert2
-                            Swal.fire({
-                                title: "Error!",
-                                text: "Đã xảy ra lỗi khi tìm nạp dữ liệu người dùng.",
-                                icon: "error"
-                            });
-                        }
-                    });
-                }
-            });
-            // Event listener for Add User button
-            $(".btn-adduser").on("click", function () {
-                // Open the modal for adding user
-                $.ajax({
-                    url: '/Admin/CreateUserAccount',
-                    type: 'GET',
-                    success: function (data) {
-                        $('#addUserModal .modal-content').html(data); // Populate modal content
-                        $('#addUserModal').modal('show'); // Show the modal
-                    },
-                    error: function () {
-                        // Show error message using SweetAlert2
-                        Swal.fire({
-                            title: "Error!",
-                            text: "Đã xảy ra lỗi khi tải biểu mẫu thêm người dùng.",
-                            icon: "error"
-                        });
-                    }
-                });
-            });
-            // Event listener for View User button
-            $(".btn-viewuser").on("click", function () {
-                var selectedRowData = table.row({ selected: true }).data(); // Retrieve selected row data
-                if (selectedRowData) {
-                    var username = selectedRowData.Username; // Get the username of the selected user
-                    // Open the modal and pass the username to the controller
-                    $.ajax({
-                        url: '/Admin/DetailUserAccount',
-                        type: 'GET',
-                        data: { username: username },
-                        success: function (data) {
-                            $('#viewUserModal .modal-content').html(data); // Populate modal with user data
-                            $('#viewUserModal').modal('show'); // Show the modal
-                        }
-                    });
-                }
-            });
-            // Event listener for Delete User button
-            $(".btn-deleteuser").on("click", function () {
-                var selectedRowsData = table.rows({ selected: true }).data(); // Retrieve selected rows data
-
-                if (selectedRowsData.length > 0) {
-                    // Show confirmation dialog using SweetAlert2
-                    Swal.fire({
-                        title: "Xác nhận xóa",
-                        text: "Bạn có chắc chắn muốn xóa người dùng đã chọn không?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Có, hãy xóa!"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            var usernames = selectedRowsData.toArray().map(row => row.Username); // Get usernames of selected users
-                            // Send AJAX request to delete selected users
-                            $.ajax({
-                                url: '/Admin/DeleteSelectedUserAccounts',
-                                type: 'POST',
-                                traditional: true,
-                                data: { usernames: usernames },
-                                success: function () {
-                                    // Show success message using SweetAlert2
-                                    Swal.fire({
-                                        title: "Đã xóa!",
-                                        text: "Người dùng đã được xóa thành công.",
-                                        icon: "success"
-                                    }).then(() => {
-                                        // Reload the page after deletion
-                                        location.reload();
-                                    });
-                                },
-                                error: function () {
-                                    // Show error message using SweetAlert2
-                                    Swal.fire({
-                                        title: "Error!",
-                                        text: "Đã xảy ra lỗi khi xóa người dùng.",
-                                        icon: "error"
-                                    });
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    // If no rows are selected, show a warning using SweetAlert2
-                    Swal.fire({
-                        title: "Warning!",
-                        text: "Please select at least one user to delete.",
-                        icon: "warning"
-                    });
-                }
-            });
-
+        $(function () {
+            $('#Usertable').bootstrapTable();
         });
-
-
+        // Custom AJAX request function
+        function ajaxRequest(params) {
+            var url = '@Url.Action("GetUsers", "Admin")';
+            $.get(url + '?' + $.param(params.data)).then(function (res) {
+                params.success(res);
+            });
+        }
     </script>
 }
-
 
