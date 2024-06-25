@@ -7,6 +7,20 @@
 <div class="container-lg mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
+            <div id="toolbar">
+                <button id="create" class="btn-circle" title="Tạo mới">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="delete" class="btn-circle" style="display:none;" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button id="viewDetails" class="btn-circle" style="display:none;" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button id="edit" class="btn-circle" style="display:none;" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
             <table id="Usertable"
                    data-toggle="table"
                    data-ajax="ajaxRequest"
@@ -16,12 +30,14 @@
                    data-click-to-select="true"
                    data-show-export="true"
                    data-show-columns="true"
+                   data-page-list="[5, 10, 25, 50, 100, 'All']"
                    data-checkbox-header="true"
+                   data-toolbar="#toolbar"
                    data-locale="vi-VN">
                 <thead style="background-color: #f2f3fb">
                     <tr>
                         <th data-checkbox="true"></th>
-                        <th data-field="UserID">ID</th>
+                        <th data-formatter="indexFormatter">#</th>
                         <th data-field="LastName" data-sortable="true">Họ</th>
                         <th data-field="FirstName" data-sortable="true">Tên</th>
                         <th data-field="Username" data-sortable="true">Tên người dùng</th>
@@ -34,6 +50,31 @@
     </div>
 </div>
 
+<!-- Modals -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal content will be loaded dynamically -->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal content will be loaded dynamically -->
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal content will be loaded dynamically -->
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/Scripts/popper.min.js"></script>
@@ -41,19 +82,30 @@
     <script src="~/Content/bootstrapTable/bootstrap-table.min.js"></script>
     <script src="~/Content/bootstrapTable/bootstrap-table-locale-all.min.js"></script>
     <script src="~/Content/bootstrapTable/extensions/export/bootstrap-table-export.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/extensions/export/bootstrap-table-export.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.29.0/tableExport.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="~/Scripts/IMTable.js"></script>
     <script>
-        $(function () {
-            $('#Usertable').bootstrapTable();
+    var tableType = 'user';
+    var $table = $('#Usertable');
+    var $deleteBtn = $('#delete');
+    var $editBtn = $('#edit');
+    var $viewDetailsBtn = $('#viewDetails');
+    var $createBtn = $('#create');
+    var $selectedCount = $('#selectedCount');
+
+    initializeTable($table, $deleteBtn, $editBtn, $viewDetailsBtn, $selectedCount);
+
+    handleDelete($table, $deleteBtn, $selectedCount, '@Url.Action("DeleteSelectedUserAccounts", "Admin")', tableType);
+    handleEdit($table, $editBtn, '@Url.Action("EditUserAccount", "Admin")', '#editUserModal', tableType);
+    handleViewDetails($table, $viewDetailsBtn, '@Url.Action("DetailUserAccount", "Admin")', '#viewUserModal', tableType);
+    handleCreate($createBtn, '@Url.Action("CreateUserAccount", "Admin")', '#createUserModal', tableType);
+
+    function ajaxRequest(params) {
+        var url = '@Url.Action("GetUsers", "Admin")';
+        $.get(url + '?' + $.param(params.data)).then(function (res) {
+            params.success(res);
         });
-        // Custom AJAX request function
-        function ajaxRequest(params) {
-            var url = '@Url.Action("GetUsers", "Admin")';
-            $.get(url + '?' + $.param(params.data)).then(function (res) {
-                params.success(res);
-            });
-        }
+    }
     </script>
 }
-

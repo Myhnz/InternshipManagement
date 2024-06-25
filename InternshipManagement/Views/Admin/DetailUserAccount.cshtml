@@ -1,18 +1,38 @@
 ﻿@model InternshipManagement.Models.User
-<div class="modal-header"> <h5 class="modal-title" id="userDetailModalLabel">Hồ sơ người dùng</h5> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button> </div> <div class="modal-body">
+<div class="modal-header">
+    <h5 class="modal-title" id="userDetailModalLabel">Hồ sơ người dùng</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
     <div class="row">
-        <div class="col-md-4"> <div class="card"> <div class=" mb-3 row"> <div class="square m-0 col-5 col-md-12"> <img src="~/Content/AvatarImages/@Model.Avatar" class="w-100" alt="Avatar"> </div> <div class=" col-7 col-md-12 m-0"> <h4 class="text-center mt-2">@Model.FirstName @Model.LastName</h4> <p class="m-3"> Tên đăng nhập: @Model.Username <br> Email: @Model.Email <br> Số điện thoại: @Model.Phone <br> Địa chỉ: @Model.Address <br> Vai trò: @Model.UserRole.RoleName </p> </div> </div> </div> </div> <div class="col-md-8">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="row mb-3">
+                    <div class="square col-5 col-md-12 m-0">
+                        <img src="~/Content/AvatarImages/@Model.Avatar" class="w-100" alt="Avatar">
+                    </div>
+                    <div class="col-7 col-md-12 m-0">
+                        <h4 class="text-center mt-2">@Model.FirstName @Model.LastName</h4>
+                        <p class="m-3">
+                            Tên đăng nhập: @Model.Username <br>
+                            Email: @Model.Email <br>
+                            Số điện thoại: @Model.Phone <br>
+                            Địa chỉ: @Model.Address <br>
+                            Vai trò: @Model.UserRole.RoleName
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
                     <dl class="row">
-                        
-
                         <dt class="col-sm-4">Ngày sinh:</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(model => model.DateOfBirth)</dd>
 
                         <dt class="col-sm-4">Giới tính:</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(model => model.Gender)</dd>
-
 
                         <dt class="col-sm-4">Ngày tạo:</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(model => model.CreateDate)</dd>
@@ -24,4 +44,7 @@
             </div>
         </div>
     </div>
-</div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button> </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+</div>

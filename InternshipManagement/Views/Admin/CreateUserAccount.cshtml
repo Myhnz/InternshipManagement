@@ -1,13 +1,10 @@
 ﻿@model InternshipManagement.Models.User
 
-
 @using (Html.BeginForm("CreateUserAccount", "Admin", FormMethod.Post, new { id = "createUserForm", @enctype = "multipart/form-data" }))
 {
     <div class="modal-header">
         <h5 class="modal-title" id="createUserModalLabel">Tạo Tài Khoản</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
         @Html.AntiForgeryToken()
@@ -15,71 +12,52 @@
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Họ đệm: </label>
-                    <div>
-                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                    </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Họ đệm:</label>
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                 </div>
-
-                <div class="form-group col-md-6">
-                    <label class="control-label">Tên: </label>
-                    <div>
-                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                    </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Tên:</label>
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Tên đăng nhập: </label>
-                    <div>
-                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                    </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Tên đăng nhập:</label>
+                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                 </div>
-
-                <div class="form-group col-md-6">
-                    <label class="control-label">Mật khẩu: </label>
-                    <div>
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password" } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Mật khẩu:</label>
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="control-label">Email: </label>
-                <div>
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control"} })
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Email:</label>
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
-
-            <div class="form-group">
-                <label class="control-label">Vai trò: </label>
-                <div>
-                    @Html.DropDownList("RoleID", ViewBag.Roles as SelectList, "Chọn vai trò", new { @class = "form-control", id = "roleDropdown" })
-                    @Html.ValidationMessage("RoleID", "", new { @class = "text-danger" })
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Vai trò:</label>
+                @Html.DropDownList("RoleID", ViewBag.Roles as SelectList, "Chọn vai trò", new { @class = "form-select", id = "roleDropdown" })
+                @Html.ValidationMessage("RoleID", "", new { @class = "text-danger" })
             </div>
-
-            <div class="form-group" id="companyDropdownContainer" style="display:none;">
-                <label class="control-label">Công ty: </label>
-                <div>
-                    @Html.DropDownList("CompanyID", ViewBag.Companies as SelectList, "Chọn công ty ", new { @class = "form-control", id = "companyDropdown" })
-                    @Html.ValidationMessage("CompanyID", "", new { @class = "text-danger" })
-                </div>
+            <div class="mb-3" id="companyDropdownContainer" style="display:none;">
+                <label class="form-label">Công ty:</label>
+                @Html.DropDownList("CompanyID", ViewBag.Companies as SelectList, "Chọn công ty ", new { @class = "form-select", id = "companyDropdown" })
+                @Html.ValidationMessage("CompanyID", "", new { @class = "text-danger" })
             </div>
         </div>
-
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <!-- Button to submit edited user data -->
-        <button type="submit" value="Save" class="btn btn-primary" id="saveChangesButton">Tạo tài khoản</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="submit" value="Save" class="btn btn-primary" id="saveChangesButton">
+            <span id="submitText">Tạo tài khoản</span>
+            <span id="loadingIcon" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+        </button>
     </div>
 }
 
@@ -88,51 +66,44 @@
         $('#roleDropdown').change(function () {
             if ($(this).val() == "2") {
                 $('#companyDropdownContainer').show();
-                $('#companyDropdown').prop('required', true); // Make company dropdown required
+                $('#companyDropdown').prop('required', true);
             } else {
                 $('#companyDropdownContainer').hide();
-                $('#companyDropdown').prop('required', false); // Remove required attribute
-                $('#companyDropdown').val(''); // Reset dropdown value
+                $('#companyDropdown').prop('required', false);
+                $('#companyDropdown').val('');
             }
         });
     });
-    $('#createUserForm').submit(function (e) {
-    // Ngăn chặn hành động mặc định của form
-    e.preventDefault();
 
-    // Lấy danh sách các trường cần kiểm tra lỗi
+    $('#createUserForm').submit(function (e) {
+        e.preventDefault();
+
         var fieldsToCheck = ["LastName", "Username", "FirstName", "Password", "RoleID", "Email"];
 
+        var formData = $(this).serialize();
 
+        var user = {};
+        $(this).serializeArray().map(function (x) { user[x.name] = x.value; });
 
-      // Lấy dữ liệu từ form
-      var formData = $(this).serialize();
+        $.ajax({
+            url: '@Url.Action("CheckErrors")',
+            type: 'POST',
+            data: { formData: user, fieldsToCheck: fieldsToCheck },
+            success: function (response) {
+                $('.text-danger').text('');
+                $('.form-control').removeClass('is-invalid');
 
-      // Tạo đối tượng user từ dữ liệu form
-      var user = {};
-      $(this).serializeArray().map(function (x) { user[x.name] = x.value; });
+                $.each(response, function (key, value) {
+                    $('[name="' + key + '"]').addClass('is-invalid').next('.text-danger').text(value);
+                });
 
-    // Gửi dữ liệu đến action để kiểm tra lỗi
-    $.ajax({
-        url: '@Url.Action("CheckErrors")',
-        type: 'POST',
-        data: { formData: user, fieldsToCheck: fieldsToCheck },
-        success: function (response) {
-            // Xóa tất cả thông báo lỗi hiện có
-            $('.text-danger').text('');
-            $('.form-control').removeClass('is-invalid');
-
-            // Hiển thị các thông báo lỗi mới
-            $.each(response, function (key, value) {
-                $('[name="' + key + '"]').addClass('is-invalid').next('.text-danger').text(value);
-            });
-
-            // Nếu không có lỗi, tiến hành submit form
-            if ($.isEmptyObject(response)) {
-                $('#createUserForm').unbind('submit').submit();
+                if ($.isEmptyObject(response)) {
+                    $('#saveChangesButton').prop('disabled', true);
+                    $('#submitText').hide();
+                    $('#loadingIcon').show();
+                    $('#createUserForm').unbind('submit').submit();
+                }
             }
-        }
+        });
     });
-});
-
 </script>

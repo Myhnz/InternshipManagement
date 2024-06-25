@@ -2504,6 +2504,7 @@
     <Content Include="Scripts\fullcalendar\main.js" />
     <Content Include="Scripts\fullcalendar\main.min.js" />
     <Content Include="Scripts\home.js" />
+    <Content Include="Scripts\IMTable.js" />
     <Content Include="Scripts\Jquery.js" />
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\simpleUpload.js" />

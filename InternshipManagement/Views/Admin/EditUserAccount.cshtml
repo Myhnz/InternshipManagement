@@ -6,80 +6,75 @@
 
 <div class="modal-header">
     <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa người dùng</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-
 @using (Html.BeginForm("EditUserAccount", "Admin", FormMethod.Post, new { id = "editUserForm" }))
 {
     @Html.AntiForgeryToken()
-    <div class="modal-body">
-        <div class="form-horizontal">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.UserID)
-
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Họ đệm</label>
-                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label class="control-label">Tên</label>
-                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                </div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.LastName, new { @class = "form-label" })
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
             </div>
-
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Ngày sinh</label>
-                    @Html.TextBoxFor(model => model.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-
-                    @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
-                </div>
-
-
-
-                <div class="form-group col-md-6">
-                    <label class="control-label">Giới tính</label>
-                    @Html.DropDownListFor(model => model.Gender, new SelectList(new[]
-                    {
-                        new SelectListItem { Text = "Nam", Value = "Nam" },
-                        new SelectListItem { Text = "Nữ", Value = "Nữ" }
-                    }, "Value", "Text"), "Chọn giới tính", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Địa chỉ</label>
-                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
-            </div>
-
-
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Email</label>
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label">Điện thoại</label>
-                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
         </div>
-
+        <div class="col-md-6">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.FirstName, new { @class = "form-label" })
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.DateOfBirth, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Gender, new { @class = "form-label" })
+                @Html.DropDownListFor(model => model.Gender, new SelectList(new[]
+                {
+                    new SelectListItem { Text = "Nam", Value = "Nam" },
+                    new SelectListItem { Text = "Nữ", Value = "Nữ" }
+                }, "Value", "Text"), "Chọn giới tính", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.Address, new { @class = "form-label" })
+        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Email, new { @class = "form-label" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Phone, new { @class = "form-label" })
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <!-- Button to submit edited user data -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
         <button type="submit" value="Save" class="btn btn-primary" id="saveChangesButton">Lưu thay đổi</button>
     </div>
 }
