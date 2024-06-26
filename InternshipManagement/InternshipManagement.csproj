@@ -56,6 +56,9 @@
     <Reference Include="Microsoft.VisualStudio.LiveShare, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.LiveShare.1.1.57\lib\net461\Microsoft.VisualStudio.LiveShare.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -117,9 +120,6 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -2302,6 +2302,7 @@
     <Content Include="Content\InstructorPd.css" />
     <Content Include="Content\loading.css" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\page.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\searchpage.css" />
     <Content Include="Content\tabpage.css" />
@@ -2782,6 +2783,7 @@
     <Content Include="Content\bootstrapTable\themes\bootstrap-table\fonts\bootstrap-table.eot" />
     <Content Include="Content\bootstrapTable\themes\bootstrap-table\fonts\bootstrap-table.ttf" />
     <Content Include="Content\bootstrapTable\themes\bootstrap-table\fonts\bootstrap-table.woff" />
+    <Content Include="Content\background\download.webp" />
     <None Include="packages.config" />
     <Content Include="Scripts\bootstrap\bootstrap.bundle.js.map" />
     <Content Include="Scripts\bootstrap\bootstrap.bundle.min.js.map" />
@@ -2799,7 +2801,6 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Admin\DetailUserAccount.cshtml" />
     <Content Include="Views\Admin\EditUserAccount.cshtml" />
     <Content Include="Views\Admin\DetailAdminAccount.cshtml" />
@@ -2850,6 +2851,7 @@
     <Content Include="Views\Shared\_LatestNotifications.cshtml" />
     <Content Include="Views\Shared\_CVModalPartial.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

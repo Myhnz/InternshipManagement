@@ -1,0 +1,19 @@
+﻿body {
+}
+.btn-circle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    padding: 0;
+    line-height: 40px;
+    transition: background-color 0.3s, color 0.3s;
+    color: #6c757d;
+    background-color: transparent;
+    border: none;
+}
+
+    .btn-circle:hover {
+        background-color: #F2F2F2;
+        color: #495057;
+    }

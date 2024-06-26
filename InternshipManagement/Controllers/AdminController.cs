@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using static System.Net.WebRequestMethods;
 using System.Web.Helpers;
+using Newtonsoft.Json;
 
 namespace InternshipManagement.Controllers
 {
@@ -118,6 +119,64 @@ namespace InternshipManagement.Controllers
         {
             return View();
         }
+        public ActionResult getDashboardData()
+        {
+            var loginStats = aData.LoginHistories
+                .Where(l => l.LoginTime.HasValue)
+                .ToList()
+                .GroupBy(l => l.LoginTime.Value.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("dd-MM-yyyy"),
+                    Count = g.Count()
+                })
+                .ToList();
+
+            var studentCount = aData.Students.Count();
+            var instructorCount = aData.Instructors.Count();
+
+            var newRegistrations = aData.Users
+                .Where(u => u.CreateDate.HasValue)
+                .ToList()
+                .GroupBy(u => u.CreateDate.Value.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("dd-MM-yyyy"),
+                    StudentCount = g.Count(u => aData.Students.Any(s => s.UserID == u.UserID)),
+                    InstructorCount = g.Count(u => aData.Instructors.Any(i => i.UserID == u.UserID))
+                })
+                .ToList();
+
+            var projectStats = aData.Projects
+                .Where(p => p.CreateDate.HasValue)
+                .ToList()
+                .GroupBy(p => p.CreateDate.Value.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("dd-MM-yyyy"),
+                    Count = g.Count()
+                })
+                .ToList();
+
+            var data = new
+            {
+                LoginStats = loginStats,
+                StudentCount = studentCount,
+                InstructorCount = instructorCount,
+                NewRegistrations = newRegistrations,
+                ProjectStats = projectStats
+            };
+
+            // Cấu hình Newtonsoft.Json để chuyển đổi ngày tháng đúng định dạng
+            var settings = new JsonSerializerSettings
+            {
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.Local
+            };
+
+            return Content(JsonConvert.SerializeObject(data, settings), "application/json");
+        }
+
         public ActionResult headerMenu()
         {
             return PartialView("_adminMenu");
